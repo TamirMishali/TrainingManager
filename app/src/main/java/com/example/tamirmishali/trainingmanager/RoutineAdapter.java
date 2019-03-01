@@ -103,6 +103,17 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineH
                     }
                 }
             });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener(){
+                @Override
+                public boolean onLongClick(View v){
+                    int position = getAdapterPosition();
+                    if(longListener != null && position != RecyclerView.NO_POSITION) {
+                        longListener.onItemLongClick(routines.get(position));
+                    }
+                    return true;
+                }
+            });
         }
     }
 

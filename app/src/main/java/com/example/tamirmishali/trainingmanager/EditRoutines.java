@@ -18,9 +18,10 @@ import android.widget.Toast;
 
 import java.util.List;
 
-public class EditWorkout extends AppCompatActivity {
+public class EditRoutines extends AppCompatActivity {
     public static final int ADD_ROUTINE_REQUEST = 1;
     public static final int EDIT_ROUTINE_REQUEST = 2;
+    public static final int EDIT_WORKOUTS_REQUEST = 3;
     private RoutineViewModel routineViewModel;
 
     @Override
@@ -33,7 +34,7 @@ public class EditWorkout extends AppCompatActivity {
         buttonAddRoutine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditWorkout.this,AddEditRoutineActivity.class);
+                Intent intent = new Intent(EditRoutines.this,AddEditRoutineActivity.class);
                 startActivityForResult(intent,ADD_ROUTINE_REQUEST);
             }
         });
@@ -67,24 +68,33 @@ public class EditWorkout extends AppCompatActivity {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 routineViewModel.delete(adapter.getRoutineAt(viewHolder.getAdapterPosition()));
-                Toast.makeText(EditWorkout.this , "Routine deleted" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditRoutines.this , "Routine deleted" , Toast.LENGTH_SHORT).show();
             }
         }).attachToRecyclerView(recyclerView);
 
-        //edit routine
-        adapter.setOnItemClickListener(new RoutineAdapter.OnItemClickListener() {
+        adapter.setOnItemLongClickListener(new RoutineAdapter.OnItemLongClickListener() {
             @Override
-            public void onItemClick(Routine routine) {
-                Intent intent = new Intent(EditWorkout.this, AddEditRoutineActivity.class);
+            public void onItemLongClick(Routine routine) {
+                Intent intent = new Intent(EditRoutines.this, AddEditRoutineActivity.class);
                 intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID,routine.getUid());
                 intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_NAME, routine.getRoutineName());
                 intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_DATE, routine.getRoutineDate().toString());
                 startActivityForResult(intent, EDIT_ROUTINE_REQUEST);
             }
         });
+
+        //edit routine
+        adapter.setOnItemClickListener(new RoutineAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Routine routine) {
+                Intent intent = new Intent(EditRoutines.this, AddEditRoutineActivity.class); //EditWorkouts
+                intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID,routine.getUid());
+                //intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_NAME, routine.getRoutineName());
+                //intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_DATE, routine.getRoutineDate().toString());
+                startActivityForResult(intent, EDIT_WORKOUTS_REQUEST);
+            }
+        });
     }
-
-
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);

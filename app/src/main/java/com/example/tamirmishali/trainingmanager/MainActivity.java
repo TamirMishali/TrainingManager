@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         button_EditWorkout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), EditWorkout.class);
+                Intent intent = new Intent(v.getContext(), EditRoutines.class);
                 startActivity(intent);
             }
         });
