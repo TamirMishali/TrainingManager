@@ -18,24 +18,24 @@ public class Routine {
 
     //private ArrayList<workout> m_workoutsArrayList;
     @ColumnInfo(name = "exercise")
-    private String exercise;
+    private String routineName;
 
 
 
     //------------------------Constructor----------------------
-    public Routine(String exercise, String date) {
+    public Routine(String routineName, String date) {
         this.uid = 0;
         java.sql.Date d = java.sql.Date.valueOf(date);
         this.routineDate = d;
-        this.exercise = exercise;
+        this.routineName = routineName;
     }
 
     public Routine() {
     }
 
     //------------------------Getters and Setters----------------------
-    public String getExercise() { return exercise; }
-    public void setExercise(String exercise) { this.exercise = exercise; }
+    public String getRoutineName() { return routineName; }
+    public void setRoutineName(String routineName) { this.routineName = routineName; }
 
     public int getUid() { return uid; }
     public void setUid(int uid) {this.uid = uid; }

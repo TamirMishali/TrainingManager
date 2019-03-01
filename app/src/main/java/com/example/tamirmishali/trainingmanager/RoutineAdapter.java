@@ -22,47 +22,22 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineH
     private List<Workout> workouts = new ArrayList<>();
     private Context context;
 
-
-/*    //declare interface
-    private OnItemClicked onClick;
-
-    //make interface like this
-    public interface OnItemClicked {
-        void onItemClick(int position);
-    }
-
-    public RoutineAdapter(Context context,List<Routine> r) {
-        this.context = context;
-        this.routines = r;
-    }
-    public void setOnClick(OnItemClicked onClick) {
-        this.onClick=onClick;
-    }*/
-
     @NonNull
     @Override
     public RoutineHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.routine_item,parent,false);
-        //itemView.setOnClickListener(mOnClickListener);
         return new RoutineHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RoutineHolder holder, final int position) {
 
-/*        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClick.onItemClick(position);
-                getWorkoutsForRoutine
-            }
-        });*/
         Routine curretRoutine = routines.get(position);
         //workouts.getWorkoutsForRoutine(curretRoutine.getUid());
-        //holder.textViewRoutine.setText(curretRoutine.getRoutineDate().toString());
+        holder.textViewRoutine.setText(curretRoutine.getRoutineName());
         holder.textViewroutinedate.setText(curretRoutine.getRoutineDate().toString());
-        holder.textViewDescription.setText(curretRoutine.getExercise());
+        holder.textViewDescription.setText("empty for now");
         //holder.textViewDescription.setText(String.valueof(currentRoutine.getpriority())));
         holder.itemView.setOnClickListener(mClickListener);
         holder.itemView.setTag(holder);
