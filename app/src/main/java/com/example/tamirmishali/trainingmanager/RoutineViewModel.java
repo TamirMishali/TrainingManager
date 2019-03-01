@@ -10,32 +10,49 @@ import java.util.List;
 public class RoutineViewModel extends AndroidViewModel {
     private RoutineRepository repository;
     private LiveData<List<Routine>> allRoutines;
+    private LiveData<List<Workout>> allWorkouts;
 
 
     public RoutineViewModel(@NonNull Application application) {
         super(application);
         repository = new RoutineRepository(application);
         allRoutines = repository.getAllRoutines();
+        allWorkouts = repository.getAllWorkouts();
     }
 
     public void insert(Routine routine){
         repository.insert(routine);
     }
-
     public void update(Routine routine){
         repository.update(routine);
     }
-
     public void delete(Routine routine){
         repository.delete(routine);
     }
-
     public void deleteAll(){
         repository.deleteAll();
     }
-
     public LiveData<List<Routine>> getAllRoutines(){
         return allRoutines;
     }
+
+
+
+    public void insert(Workout workout){
+        repository.insert(workout);
+    }
+    public void update(Workout workout){
+        repository.update(workout);
+    }
+    public void delete(Workout workout){
+        repository.delete(workout);
+    }
+    public void deleteAllWorkouts(){
+        repository.deleteAllworkouts();
+    }
+    public LiveData<List<Workout>> getAllWorkouts(){
+        return allWorkouts;
+    }
+    public LiveData<List<Workout>> getWorkoutsForRoutine(int id){ return repository.getWorkoutsForRoutine(id); }
 
 }

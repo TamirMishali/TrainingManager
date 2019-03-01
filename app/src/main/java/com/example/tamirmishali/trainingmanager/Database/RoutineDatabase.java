@@ -4,18 +4,25 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import com.example.tamirmishali.trainingmanager.Converters;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.RoutineDao;
+import com.example.tamirmishali.trainingmanager.Database.DAOs.WorkoutDao;
 import com.example.tamirmishali.trainingmanager.Routine;
+import com.example.tamirmishali.trainingmanager.Workout;
+import static java.lang.Math.toIntExact;
 
+@Database(version = 4,entities = {Routine.class, Workout.class})
+@TypeConverters({Converters.class})
 
-@Database(version = 2,entities = {Routine.class,})// TableSetsHistory.class, TableWorkouts.class, TableWorkoutTypesHistory.class})
 public abstract class RoutineDatabase extends RoomDatabase {
 
-    // DAO's Declarations
+    //DAO's Declarations
     public abstract RoutineDao routineDao();
+    public abstract WorkoutDao workoutDao();
 
     // Prevention of opening the same database to RAM twice.
     private static final String DATABASE_NAME = "routines_database";
@@ -45,14 +52,26 @@ public abstract class RoutineDatabase extends RoomDatabase {
 
     private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
         private RoutineDao routineDao;
+        private WorkoutDao workoutDao;
 
         private PopulateDbAsyncTask(RoutineDatabase db) {
             routineDao = db.routineDao();
+            workoutDao = db.workoutDao();
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            routineDao.insert(new Routine("10.12.15","Back Biceps"));
+            Routine routine = new Routine("Back Biceps","2019-02-25");//, "20-02-2019");
+            //routineDao.insert(routine);
+
+            //routine = new Routine(0, "Chest Triceps");
+            long longId = routineDao.insert(routine);
+            int routineId = toIntExact(longId);
+
+            Workout workout = new Workout(routineId,"A", Boolean.TRUE);
+            workoutDao.insert(workout);
+            //workoutDao.insert(new Workout(routine.getUid(),"B", Boolean.TRUE));
+            //workoutDao.insert(new Workout(routine.getUid(),"C", Boolean.TRUE));
             //routineDao.insert(new Routine("12.12.15","Chest Triceps"));
             //routineDao.insert(new Routine("13.12.15","Legs Shoulders"));
             return null;

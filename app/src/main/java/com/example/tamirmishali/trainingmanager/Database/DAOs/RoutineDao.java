@@ -12,8 +12,11 @@ import java.util.List;
 
 @Dao
 public interface RoutineDao{
+    //@Insert
+    //void insert(Routine routine);
+
     @Insert
-    void insert(Routine routine);
+    long insert(Routine routine);
 
     @Update
     void update(Routine routine);

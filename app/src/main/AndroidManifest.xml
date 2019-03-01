@@ -16,9 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".EditWorkout" />
+        <activity android:name=".EditWorkout"
+            android:launchMode="singleTop"/>
+        <activity android:name=".AddRoutineActivity"
+            android:parentActivityName=".EditWorkout"
+            android:launchMode="singleTop"/>
     </application>
 
 </manifest>
