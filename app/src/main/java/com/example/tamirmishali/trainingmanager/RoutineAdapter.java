@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,8 @@ import java.util.List;
 public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineHolder> {
 
     private List<Routine> routines = new ArrayList<>();
+    private OnItemLongClickListener longListener;
+    private OnItemClickListener listener;
     //private RoutineRepository repository = new RoutineRepository();
     private List<Workout> workouts = new ArrayList<>();
     private Context context;
@@ -26,7 +29,7 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineH
     @Override
     public RoutineHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.routine_item,parent,false);
+                .inflate(R.layout.routine_item, parent, false);
         return new RoutineHolder(itemView);
     }
 
@@ -39,31 +42,36 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineH
         holder.textViewroutinedate.setText(curretRoutine.getRoutineDate().toString());
         holder.textViewDescription.setText("empty for now");
         //holder.textViewDescription.setText(String.valueof(currentRoutine.getpriority())));
-        holder.itemView.setOnClickListener(mClickListener);
+        //holder.itemView.setOnClickListener(mClickListener);
         holder.itemView.setTag(holder);
     }
 
-    View.OnClickListener mClickListener = new View.OnClickListener() {
+    /*View.OnClickListener mClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             RoutineHolder holder = (RoutineHolder) view.getTag();
             int position = holder.getAdapterPosition();
 
-            Toast.makeText(view.getContext(), "worked?",Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(), "worked?", Toast.LENGTH_SHORT).show();
         }
-    };
+    };*/
 
     @Override
     public int getItemCount() {
         return routines.size();
     }
 
-    public void setRoutines(List<Routine> routines){
-        this.routines=routines;
+    public void setRoutines(List<Routine> routines) {
+        this.routines = routines;
         notifyDataSetChanged(); //use itemchanged later
     }
-    public void setWorkouts(List<Workout> workouts){
-        this.workouts=workouts;
+
+    public Routine getRoutineAt(int position) {
+        return routines.get(position);
+    }
+
+    public void setWorkouts(List<Workout> workouts) {
+        this.workouts = workouts;
         notifyDataSetChanged(); //use itemchanged later
     }
 
@@ -74,7 +82,7 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineH
         Toast.makeText(mContext, item, Toast.LENGTH_LONG).show();
     }*/
 
-    class RoutineHolder extends RecyclerView.ViewHolder{
+    class RoutineHolder extends RecyclerView.ViewHolder {
         private TextView textViewRoutine;
         private TextView textViewroutinedate;
         private TextView textViewDescription;
@@ -86,6 +94,33 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineH
             textViewroutinedate = itemView.findViewById(R.id.text_view_routinedate);
             textViewDescription = itemView.findViewById(R.id.text_view_description);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (listener != null && position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(routines.get(position));
+                    }
+                }
+            });
         }
+    }
+
+    public interface OnItemLongClickListener {
+        void onItemLongClick(Routine routine);
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        this.longListener = listener;
+    }
+
+
+    public interface OnItemClickListener {
+        void onItemClick(Routine routine);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+
     }
 }

@@ -29,7 +29,7 @@ public class RoutineViewModel extends AndroidViewModel {
     public void delete(Routine routine){
         repository.delete(routine);
     }
-    public void deleteAll(){
+    public void deleteAllRoutines(){
         repository.deleteAll();
     }
     public LiveData<List<Routine>> getAllRoutines(){

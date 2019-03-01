@@ -18,7 +18,7 @@
         </activity>
         <activity android:name=".EditWorkout"
             android:launchMode="singleTop"/>
-        <activity android:name=".AddRoutineActivity"
+        <activity android:name=".AddEditRoutineActivity"
             android:parentActivityName=".EditWorkout"
             android:launchMode="singleTop"/>
     </application>

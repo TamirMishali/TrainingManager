@@ -9,27 +9,31 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
-import com.example.tamirmishali.trainingmanager.Database.DAOs.RoutineDao;
 
 import java.util.List;
 
 public class EditWorkout extends AppCompatActivity {
     public static final int ADD_ROUTINE_REQUEST = 1;
+    public static final int EDIT_ROUTINE_REQUEST = 2;
     private RoutineViewModel routineViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editworkout_layout);
+        setTitle("Routines");
 
         FloatingActionButton buttonAddRoutine = findViewById(R.id.button_add_routine);
         buttonAddRoutine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditWorkout.this,AddRoutineActivity.class);
+                Intent intent = new Intent(EditWorkout.this,AddEditRoutineActivity.class);
                 startActivityForResult(intent,ADD_ROUTINE_REQUEST);
             }
         });
@@ -52,28 +56,86 @@ public class EditWorkout extends AppCompatActivity {
             }
         });
 
+        //delete routine
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
 
-        //routineViewModel.insert(new Routine("11.22.33","B C K"));
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                routineViewModel.delete(adapter.getRoutineAt(viewHolder.getAdapterPosition()));
+                Toast.makeText(EditWorkout.this , "Routine deleted" , Toast.LENGTH_SHORT).show();
+            }
+        }).attachToRecyclerView(recyclerView);
+
+        //edit routine
+        adapter.setOnItemClickListener(new RoutineAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Routine routine) {
+                Intent intent = new Intent(EditWorkout.this, AddEditRoutineActivity.class);
+                intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID,routine.getUid());
+                intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_NAME, routine.getRoutineName());
+                intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_DATE, routine.getRoutineDate().toString());
+                startActivityForResult(intent, EDIT_ROUTINE_REQUEST);
+            }
+        });
     }
+
+
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
 
         if(requestCode == ADD_ROUTINE_REQUEST && resultCode == RESULT_OK){
-            String routineName = data.getStringExtra(AddRoutineActivity.EXTRA_ROUTINE_NAME);
-            String routineDate = data.getStringExtra(AddRoutineActivity.EXTRA_ROUTINE_DATE);
+            String routineName = data.getStringExtra(AddEditRoutineActivity.EXTRA_ROUTINE_NAME);
+            String routineDate = data.getStringExtra(AddEditRoutineActivity.EXTRA_ROUTINE_DATE);
 
             Routine routine = new Routine(routineName, routineDate);//, routineDate);
             routineViewModel.insert(routine);
 
             Toast.makeText(this,"Routine saved", Toast.LENGTH_SHORT).show();
         }
+        else if(requestCode == EDIT_ROUTINE_REQUEST && resultCode == RESULT_OK){
+            //check if valid id
+            int routineId = data.getIntExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID, -1);
+            if (routineId == -1){
+                Toast.makeText(this, "Routine can't be updated", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String routineName = data.getStringExtra(AddEditRoutineActivity.EXTRA_ROUTINE_NAME);
+            String routineDate = data.getStringExtra(AddEditRoutineActivity.EXTRA_ROUTINE_DATE);
 
+            Routine routine = new Routine(routineName, routineDate);//, routineDate);
+            routine.setUid(routineId);
+            routineViewModel.update(routine);
+            Toast.makeText(this,"Routine updated", Toast.LENGTH_SHORT).show();
+        }
         else {
             Toast.makeText(this,"Routine NOT saved", Toast.LENGTH_SHORT).show();
         }
 
-
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.editroutine_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_all_routines:
+                //routineViewModel.deleteAllRoutines();
+                Toast.makeText(this, "All routines deleted", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
 }

@@ -3,7 +3,6 @@ package com.example.tamirmishali.trainingmanager;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,8 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.Calendar;
 
-public class AddRoutineActivity extends AppCompatActivity {
-
+public class AddEditRoutineActivity extends AppCompatActivity {
+    public static final  String EXTRA_ROUTINE_ID =
+            "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
     public static final  String EXTRA_ROUTINE_NAME =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_NAME";
     public static final  String EXTRA_ROUTINE_DATE =
@@ -38,6 +38,17 @@ public class AddRoutineActivity extends AppCompatActivity {
         mDisplayDate = findViewById(R.id.text_view_routine_date);
         //mDisplayDate.setPaintFlags(mDisplayDate.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);//for underline
 
+        //check why we got here: Edit/Add
+        Intent intent = getIntent();
+        if (intent.hasExtra(EXTRA_ROUTINE_ID)) {
+            setTitle("Edit routine");
+            editTextRoutineName.setText(intent.getStringExtra(EXTRA_ROUTINE_NAME));
+            mDisplayDate.setText(intent.getStringExtra(EXTRA_ROUTINE_DATE));
+        }else{
+            setTitle("Add routine");
+        }
+
+
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         setTitle("Add Routine");
 
@@ -51,7 +62,7 @@ public class AddRoutineActivity extends AppCompatActivity {
                 int day = cal.get(Calendar.DAY_OF_MONTH);
 
                 DatePickerDialog dialog = new DatePickerDialog(
-                        AddRoutineActivity.this,
+                        AddEditRoutineActivity.this,
                         android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                         mDateSetListener,
                         year, month, day);
@@ -87,6 +98,10 @@ public class AddRoutineActivity extends AppCompatActivity {
         data.putExtra(EXTRA_ROUTINE_NAME,routineName);
         data.putExtra(EXTRA_ROUTINE_DATE,routineDate);
 
+        int id = getIntent().getIntExtra(EXTRA_ROUTINE_ID, -1);
+        if (id != -1) {
+            data.putExtra(EXTRA_ROUTINE_ID, id);
+        }
         setResult(RESULT_OK,data);
         finish();
     }
