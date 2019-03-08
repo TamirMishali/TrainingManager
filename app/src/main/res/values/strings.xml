@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Training Manager</string>
+    <string name="delete_entry_dialog_title">Delete Entry</string>
+    <string name="delete_workout_dialog">Are you sure you want to delete workout?</string>
+    <string name="delete_routine_dialog">Are you sure you want to delete routine?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

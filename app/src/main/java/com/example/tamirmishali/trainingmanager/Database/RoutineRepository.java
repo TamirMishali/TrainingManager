@@ -5,24 +5,22 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import com.example.tamirmishali.trainingmanager.Database.DAOs.RoutineDao;
-import com.example.tamirmishali.trainingmanager.Database.DAOs.WorkoutDao;
-import com.example.tamirmishali.trainingmanager.Routine;
-import com.example.tamirmishali.trainingmanager.Workout;
+import com.example.tamirmishali.trainingmanager.Routine.Routine;
 
 import java.util.List;
 
 public class RoutineRepository {
     private RoutineDao  routineDao;
-    private WorkoutDao  workoutDao;
+//    private WorkoutDao  workoutDao;
     private LiveData<List<Routine>> allRoutines;
-    private LiveData<List<Workout>> allWorkouts;
+//    private LiveData<List<Workout>> allWorkouts;
 
     public RoutineRepository(Application application){
         RoutineDatabase database = RoutineDatabase.getInstance(application);
         routineDao = database.routineDao();
-        workoutDao = database.workoutDao();
+ //       workoutDao = database.workoutDao();
         allRoutines = routineDao.getAllRoutines();
-        allWorkouts = workoutDao.getAllWorkouts();
+//        allWorkouts = workoutDao.getAllWorkouts();
     }
 
     //-----Routines------
@@ -97,6 +95,7 @@ public class RoutineRepository {
     }
 
 
+/*
 
     //-----Workouts-----
     public void insert(Workout workout){
@@ -171,4 +170,6 @@ public class RoutineRepository {
             return null;
         }
     }
+    */
 }
+

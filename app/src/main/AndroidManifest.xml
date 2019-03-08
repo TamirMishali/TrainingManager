@@ -16,11 +16,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EditRoutines"
+        <activity android:name=".Routine.EditRoutines"
             android:launchMode="singleTop"/>
-        <activity android:name=".AddEditRoutineActivity"
-            android:parentActivityName=".EditRoutines"
+        <activity android:name=".Routine.AddEditRoutineActivity"
+            android:parentActivityName=".Routine.EditRoutines"
             android:launchMode="singleTop"/>
+        <activity android:name=".Workout.EditWorkouts"
+            android:parentActivityName=".Routine.EditRoutines"></activity>
+        <activity android:name=".Workout.AddEditWorkoutActivity"
+            android:parentActivityName=".Workout.EditWorkouts"></activity>
 
         <meta-data
             android:name="preloaded_fonts"

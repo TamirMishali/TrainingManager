@@ -1,10 +1,13 @@
-package com.example.tamirmishali.trainingmanager;
+package com.example.tamirmishali.trainingmanager.Workout;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+
+import com.example.tamirmishali.trainingmanager.Routine.Routine;
+
 import java.sql.Date;
 import java.util.Calendar;
 import static android.arch.persistence.room.ForeignKey.CASCADE;
@@ -26,8 +29,8 @@ public class Workout {
     @ColumnInfo(name = "id_routine")
     private int id_routine;
 
-    @ColumnInfo(name = "type")
-    private String type; //=routineDate_Char(A/B/C)
+    @ColumnInfo(name = "name")
+    private String name; //=routineDate_Char(A/B/C)
 
     @ColumnInfo(name = "date")
     private Date date;
@@ -37,20 +40,32 @@ public class Workout {
     }
 
     /*When Abstract workout, Date=null. if real workout Date=currentDate */
-    public Workout(int id_routine, String type, boolean abstractWorkout) {
+    public Workout(int id_routine, String name, String date, boolean abstractWorkout) {
+        this.id = 0;
         this.id_routine = id_routine;
-        this.type = type;
+        this.name = name;
+        if (abstractWorkout){
+            this.date = null; }
+        else {
+            java.sql.Date d = java.sql.Date.valueOf(date);
+            this.date  = d;
+        }
+
+
+    }
+    public Workout(int id_routine, String name, boolean abstractWorkout) {
+        this.id = 0;
+        this.id_routine = id_routine;
+        this.name = name;
         if (abstractWorkout){
             this.date = null; }
         else {
             Calendar calendar = Calendar.getInstance();
             this.date  = new java.sql.Date(calendar.getTime().getTime());
         }
-
     }
 
-
-    public int getId() { return id; }
+    public int getId() {return id;}
 
     public void setId(int id) { this.id = id; }
 
@@ -58,16 +73,31 @@ public class Workout {
 
     public void setId_routine(int id_routine) { this.id_routine = id_routine; }
 
-    public String getType() { return type; }
+    public String getWorkoutName() { return name; }
 
-    public void setType(String type) { this.type = type; }
+    public void setWorkoutName(String name) { this.name = name; }
 
-    public Date getDate() { return date; }
+    public Date getWorkoutDate() { return date; }
 
-    public void setDate(Date date) { this.date = date; }
+    public void setWorkoutDate(Date date) { this.date = date; }
 
+    public String getName() {
+        return name;
+    }
 
-//ArrayList<Exercise> exercises; //-------------for now, late we will try the adapterJson thing
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    //ArrayList<Exercise> exercises; //-------------for now, late we will try the adapterJson thing
 }
 
 

@@ -6,43 +6,45 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".Routine.AddEditRoutineActivity">
+    tools:context=".Workout.AddEditWorkoutActivity">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/alegreya_black"
-        android:text="Routine Name:"
+        android:text="Workout Name:"
         android:textAppearance="@style/Base.Widget.AppCompat.Spinner.Underlined"
         android:textSize="25dp"
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/edit_text_routine_name"
+        android:id="@+id/edit_text_workout_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Mass, Fit etc"
+        android:hint="A,B,C,etc..."
         android:textSize="20dp"
         android:inputType="text"
         android:gravity="center" />
 
     <TextView
+        android:id="@+id/text_view_workout_date_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/alegreya_black"
-        android:text="Date:"
+        android:text="Date"
         android:textAppearance="@style/Base.Widget.AppCompat.Spinner.Underlined"
         android:textSize="25dp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/text_view_routine_date"
+        android:id="@+id/text_view_workout_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:inputType="textMultiLine"
         android:text="Select Date"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        android:textColor="@android:color/black"/>
 
 
 </LinearLayout>

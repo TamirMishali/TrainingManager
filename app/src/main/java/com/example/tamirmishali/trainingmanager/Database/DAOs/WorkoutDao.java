@@ -7,7 +7,7 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
-import com.example.tamirmishali.trainingmanager.Workout;
+import com.example.tamirmishali.trainingmanager.Workout.Workout;
 
 import java.util.List;
 

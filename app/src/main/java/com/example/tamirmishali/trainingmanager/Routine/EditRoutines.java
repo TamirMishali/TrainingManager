@@ -1,7 +1,9 @@
-package com.example.tamirmishali.trainingmanager;
+package com.example.tamirmishali.trainingmanager.Routine;
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,18 +18,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.tamirmishali.trainingmanager.R;
+import com.example.tamirmishali.trainingmanager.Workout.EditWorkouts;
+
 import java.util.List;
 
 public class EditRoutines extends AppCompatActivity {
     public static final int ADD_ROUTINE_REQUEST = 1;
     public static final int EDIT_ROUTINE_REQUEST = 2;
-    public static final int EDIT_WORKOUTS_REQUEST = 3;
+    public static final int ADD_WORKOUTS_REQUEST = 3;
     private RoutineViewModel routineViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.editworkout_layout);
+        setContentView(R.layout.editroutines_layout);
         setTitle("Routines");
 
         FloatingActionButton buttonAddRoutine = findViewById(R.id.button_add_routine);
@@ -40,9 +45,8 @@ public class EditRoutines extends AppCompatActivity {
         });
 
         //Init
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view_routine);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //recyclerView.setHasFixedSize(true);
 
         //RoutineAdapter Decleration
         final RoutineAdapter adapter = new RoutineAdapter();
@@ -66,35 +70,59 @@ public class EditRoutines extends AppCompatActivity {
             }
 
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                routineViewModel.delete(adapter.getRoutineAt(viewHolder.getAdapterPosition()));
-                Toast.makeText(EditRoutines.this , "Routine deleted" , Toast.LENGTH_SHORT).show();
+            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(EditRoutines.this);
+                alert.setTitle(R.string.delete_entry_dialog_title);
+                alert.setMessage(R.string.delete_routine_dialog);
+                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        routineViewModel.delete(adapter.getRoutineAt(viewHolder.getAdapterPosition()));
+                        Toast.makeText(EditRoutines.this , "Routine deleted" , Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+                alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // close dialog
+                        dialog.cancel();
+                        adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                    }
+                });
+                alert.show();
             }
         }).attachToRecyclerView(recyclerView);
 
+        //Edit Routine name and date
         adapter.setOnItemLongClickListener(new RoutineAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(Routine routine) {
                 Intent intent = new Intent(EditRoutines.this, AddEditRoutineActivity.class);
-                intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID,routine.getUid());
+                intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID, routine.getUid());
                 intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_NAME, routine.getRoutineName());
                 intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_DATE, routine.getRoutineDate().toString());
                 startActivityForResult(intent, EDIT_ROUTINE_REQUEST);
             }
         });
 
-        //edit routine
+        //Edit Workouts in that routine
         adapter.setOnItemClickListener(new RoutineAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Routine routine) {
-                Intent intent = new Intent(EditRoutines.this, AddEditRoutineActivity.class); //EditWorkouts
+                Intent intent = new Intent(EditRoutines.this, EditWorkouts.class); //EditWorkouts
                 intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID,routine.getUid());
-                //intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_NAME, routine.getRoutineName());
-                //intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_DATE, routine.getRoutineDate().toString());
-                startActivityForResult(intent, EDIT_WORKOUTS_REQUEST);
+                //startActivityForResult(intent, ADD_WORKOUTS_REQUEST);
+                startActivity(intent);
+
             }
         });
     }
+
+
+
+
+
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
@@ -102,10 +130,8 @@ public class EditRoutines extends AppCompatActivity {
         if(requestCode == ADD_ROUTINE_REQUEST && resultCode == RESULT_OK){
             String routineName = data.getStringExtra(AddEditRoutineActivity.EXTRA_ROUTINE_NAME);
             String routineDate = data.getStringExtra(AddEditRoutineActivity.EXTRA_ROUTINE_DATE);
-
             Routine routine = new Routine(routineName, routineDate);//, routineDate);
             routineViewModel.insert(routine);
-
             Toast.makeText(this,"Routine saved", Toast.LENGTH_SHORT).show();
         }
         else if(requestCode == EDIT_ROUTINE_REQUEST && resultCode == RESULT_OK){
@@ -117,12 +143,14 @@ public class EditRoutines extends AppCompatActivity {
             }
             String routineName = data.getStringExtra(AddEditRoutineActivity.EXTRA_ROUTINE_NAME);
             String routineDate = data.getStringExtra(AddEditRoutineActivity.EXTRA_ROUTINE_DATE);
-
             Routine routine = new Routine(routineName, routineDate);//, routineDate);
             routine.setUid(routineId);
             routineViewModel.update(routine);
             Toast.makeText(this,"Routine updated", Toast.LENGTH_SHORT).show();
         }
+/*        else if (requestCode == ADD_WORKOUTS_REQUEST && resultCode == RESULT_OK){
+            Toast.makeText(this,"Workouts added", Toast.LENGTH_SHORT).show();
+        }*/
         else {
             Toast.makeText(this,"Routine NOT saved", Toast.LENGTH_SHORT).show();
         }

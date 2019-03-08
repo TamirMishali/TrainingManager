@@ -1,4 +1,4 @@
-package com.example.tamirmishali.trainingmanager;
+package com.example.tamirmishali.trainingmanager.Routine;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -14,14 +14,17 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.tamirmishali.trainingmanager.R;
+
 import java.util.Calendar;
 
 public class AddEditRoutineActivity extends AppCompatActivity {
-    public static final  String EXTRA_ROUTINE_ID =
+    public static final String EXTRA_ROUTINE_ID =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
-    public static final  String EXTRA_ROUTINE_NAME =
+    public static final String EXTRA_ROUTINE_NAME =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_NAME";
-    public static final  String EXTRA_ROUTINE_DATE =
+    public static final String EXTRA_ROUTINE_DATE =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_DATE";
 
     private TextView mDisplayDate;
@@ -46,12 +49,11 @@ public class AddEditRoutineActivity extends AppCompatActivity {
             mDisplayDate.setText(intent.getStringExtra(EXTRA_ROUTINE_DATE));
         }else{
             setTitle("Add routine");
+            Calendar calendar = Calendar.getInstance();
+            mDisplayDate.setText(new java.sql.Date(calendar.getTime().getTime()).toString());
         }
 
-
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        setTitle("Add Routine");
-
 
         mDisplayDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,11 +78,7 @@ public class AddEditRoutineActivity extends AppCompatActivity {
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
                 String dateString = year + "-" + month + "-" + day;
-                //Log.d(TAG, "onDateSet: dd/mm/yyyy: " + dateString);
-
                 mDisplayDate.setText(dateString);
-
-
             }
         };
     }

@@ -11,11 +11,11 @@ import android.support.annotation.NonNull;
 import com.example.tamirmishali.trainingmanager.Converters;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.RoutineDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.WorkoutDao;
-import com.example.tamirmishali.trainingmanager.Routine;
-import com.example.tamirmishali.trainingmanager.Workout;
+import com.example.tamirmishali.trainingmanager.Routine.Routine;
+import com.example.tamirmishali.trainingmanager.Workout.Workout;
 import static java.lang.Math.toIntExact;
 
-@Database(version = 4,entities = {Routine.class, Workout.class})
+@Database(version = 5,entities = {Routine.class, Workout.class})
 @TypeConverters({Converters.class})
 
 public abstract class RoutineDatabase extends RoomDatabase {
