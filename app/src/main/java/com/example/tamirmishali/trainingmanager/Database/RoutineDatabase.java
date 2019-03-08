@@ -9,13 +9,17 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import com.example.tamirmishali.trainingmanager.Converters;
+import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractDao;
+import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.RoutineDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.WorkoutDao;
+import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
+import com.example.tamirmishali.trainingmanager.Exercise.ExerciseAbstract;
 import com.example.tamirmishali.trainingmanager.Routine.Routine;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 import static java.lang.Math.toIntExact;
 
-@Database(version = 5,entities = {Routine.class, Workout.class})
+@Database(version = 6,entities = {Routine.class, Workout.class, Exercise.class, ExerciseAbstract.class})
 @TypeConverters({Converters.class})
 
 public abstract class RoutineDatabase extends RoomDatabase {
@@ -23,6 +27,8 @@ public abstract class RoutineDatabase extends RoomDatabase {
     //DAO's Declarations
     public abstract RoutineDao routineDao();
     public abstract WorkoutDao workoutDao();
+    public abstract ExerciseDao exerciseDao();
+    public abstract ExerciseAbstractDao exerciseAbstractDao();
 
     // Prevention of opening the same database to RAM twice.
     private static final String DATABASE_NAME = "routines_database";
@@ -53,10 +59,14 @@ public abstract class RoutineDatabase extends RoomDatabase {
     private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
         private RoutineDao routineDao;
         private WorkoutDao workoutDao;
+        private ExerciseDao exerciseDao;
+        private ExerciseAbstractDao exerciseAbstractDao;
 
         private PopulateDbAsyncTask(RoutineDatabase db) {
             routineDao = db.routineDao();
             workoutDao = db.workoutDao();
+            exerciseDao = db.exerciseDao();
+            exerciseAbstractDao = db.exerciseAbstractDao();
         }
 
         @Override
@@ -69,7 +79,15 @@ public abstract class RoutineDatabase extends RoomDatabase {
             int routineId = toIntExact(longId);
 
             Workout workout = new Workout(routineId,"A", Boolean.TRUE);
-            workoutDao.insert(workout);
+            longId = workoutDao.insert(workout);
+            int workoutId = toIntExact(longId);
+
+            ExerciseAbstract exerciseAbstract = new ExerciseAbstract("Olympic bench chest press", "press of chest on bench and shit", "Chest");
+            longId = exerciseAbstractDao.insert(exerciseAbstract);
+            int exerciseAbsId = toIntExact(longId);
+
+            Exercise exercise = new Exercise(exerciseAbsId, workoutId, "", "7.5,8|7.5,8|7.5,10");
+            exerciseDao.insert(exercise);
             //workoutDao.insert(new Workout(routine.getUid(),"B", Boolean.TRUE));
             //workoutDao.insert(new Workout(routine.getUid(),"C", Boolean.TRUE));
             //routineDao.insert(new Routine("12.12.15","Chest Triceps"));

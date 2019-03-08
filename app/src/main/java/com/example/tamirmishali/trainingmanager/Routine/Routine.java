@@ -17,7 +17,7 @@ public class Routine {
     private java.sql.Date routineDate;
 
     //private ArrayList<workout> m_workoutsArrayList;
-    @ColumnInfo(name = "exercise") //change to name next time changing the DB
+    @ColumnInfo(name = "name") //change to name next time changing the DB
     private String routineName;
 
 

@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface WorkoutDao {
     @Insert
-    void insert(Workout workout);
+    long insert(Workout workout);
 
     @Update
     void update(Workout workout);

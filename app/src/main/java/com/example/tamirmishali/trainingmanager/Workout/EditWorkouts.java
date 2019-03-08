@@ -113,7 +113,10 @@ public class EditWorkouts extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // close dialog
                         dialog.cancel();
+
+                        //https://stackoverflow.com/questions/31787272/android-recyclerview-itemtouchhelper-revert-swipe-and-restore-view-holder
                         adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+
                     }
                 });
                 alert.show();
