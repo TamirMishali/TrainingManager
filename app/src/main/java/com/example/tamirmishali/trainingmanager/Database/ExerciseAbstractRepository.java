@@ -5,7 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractDao;
-import com.example.tamirmishali.trainingmanager.Exercise.ExerciseAbstract;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 
 import java.util.List;
 
@@ -29,15 +29,15 @@ public class ExerciseAbstractRepository {
     public void delete(ExerciseAbstract exerciseAbstract){
         new DeleteExerciseAbstractAsyncTask(exerciseAbstractDao).execute(exerciseAbstract);
     }
-    public void deleteAllexerciseAbstracts(){
+    public void deleteAllExerciseAbstracts(){
         new DeleteAllExerciseAbstractAsyncTask(exerciseAbstractDao).execute();
     }
     public LiveData<List<ExerciseAbstract>> getAllExerciseAbstracts(){
         return allExerciseAbstracts;
     }
-/*    public LiveData<List<ExerciseAbstract>> getExerciseAbstractsForWorkout(int workoutid){
+    public LiveData<List<ExerciseAbstract>> getExerciseAbstractsForWorkout(int workoutid){
         return exerciseAbstractDao.getExerciseAbstractsForWorkout(workoutid);
-    }*/
+    }
 
     //ExerciseAbstract - AsyncTasks
     private static class InsertExerciseAbstractAsyncTask extends AsyncTask<ExerciseAbstract, Void, Void>{

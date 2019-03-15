@@ -8,10 +8,12 @@ import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseDao;
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ExerciseRepository {
     private ExerciseDao  exerciseDao;
     private LiveData<List<Exercise>> allExercises;
+    private static Exercise exercise = new Exercise();
 
     public ExerciseRepository(Application application){
         RoutineDatabase database = RoutineDatabase.getInstance(application);
@@ -29,8 +31,25 @@ public class ExerciseRepository {
     public void delete(Exercise exercise){
         new DeleteExerciseAsyncTask(exerciseDao).execute(exercise);
     }
-    public void deleteAllexercises(){
+    public void deleteAllExercises(){
         new DeleteAllExerciseAsyncTask(exerciseDao).execute();
+    }
+    public Exercise getExerciseForWorkout(int exerciseastractid, int workoutid){
+        //Exercise exercise =
+        //return new GetExerciseForWorkoutAsyncTask(exerciseDao).execute(exerciseastractid,workoutid).get();
+        try {
+            exercise = new GetExerciseForWorkoutAsyncTask(exerciseDao).execute(exerciseastractid,workoutid).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        //new GetExerciseForWorkoutAsyncTask(exerciseDao).execute();
+        //return exercise;
+
+        //return GetExerciseForWorkoutAsyncTask
+        //return exerciseDao.getExerciseForWorkout(exerciseastractid, workoutid);
+        return exercise;
     }
     public LiveData<List<Exercise>> getAllExercises(){
         return allExercises;
@@ -79,10 +98,10 @@ public class ExerciseRepository {
             return null;
         }
     }
-    private static class DeleteAllExerciseAsyncTask extends AsyncTask<Void, Void, Void>{
+    private static class DeleteAllExerciseAsyncTask extends AsyncTask<Void, Void, Void> {
         private ExerciseDao exerciseDao;
 
-        private DeleteAllExerciseAsyncTask(ExerciseDao exerciseDao){
+        private DeleteAllExerciseAsyncTask(ExerciseDao exerciseDao) {
             this.exerciseDao = exerciseDao;
         }
 
@@ -92,4 +111,21 @@ public class ExerciseRepository {
             return null;
         }
     }
+
+    private static class GetExerciseForWorkoutAsyncTask extends AsyncTask<Integer, Integer, Exercise>{
+        private ExerciseDao exerciseDao;
+
+        private GetExerciseForWorkoutAsyncTask(ExerciseDao exerciseDao){
+            this.exerciseDao = exerciseDao;
+        }
+
+        @Override
+        protected Exercise doInBackground(Integer... values) {
+            //return exerciseDao.getExerciseForWorkout(values[0],values[1]);
+            return exerciseDao.getExerciseForWorkout(values[0],values[1]);
+            //return null;
+        }
+
+    }
+
 }

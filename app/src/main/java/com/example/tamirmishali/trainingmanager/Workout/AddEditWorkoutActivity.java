@@ -48,12 +48,15 @@ public class AddEditWorkoutActivity extends AppCompatActivity {
             setTitle("Edit workout");
             editTextWorkoutName.setText(intent.getStringExtra(EXTRA_WORKOUT_NAME));
             mDisplayDate.setText(intent.getStringExtra(EXTRA_WORKOUT_DATE));
+            findViewById(R.id.text_view_workout_date_text).setVisibility(View.GONE);
+
         }else{
             setTitle("Add workout");
-            mDisplayDate.setVisibility(View.GONE);
-            findViewById(R.id.text_view_workout_date_text).setVisibility(View.GONE);
             Calendar calendar = Calendar.getInstance();
             mDisplayDate.setText(new java.sql.Date(calendar.getTime().getTime()).toString());
+            mDisplayDate.setVisibility(View.GONE);
+            findViewById(R.id.text_view_workout_date_text).setVisibility(View.GONE);
+
         }
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);

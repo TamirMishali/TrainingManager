@@ -8,7 +8,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.example.tamirmishali.trainingmanager.Exercise.ExerciseAbstract;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 
 import java.util.List;
 
@@ -28,6 +28,11 @@ public interface ExerciseAbstractDao {
 
     @Query("SELECT * from exerciseabs_table Order by id_exerciseabs DESC")
     LiveData<List<ExerciseAbstract>> getAllExercisesAbstract();
+
+    @Query("select EA.id_exerciseabs, EA.name, EA.description, EA.mussleGroup " +
+            "from exerciseabs_table EA inner join exercise_table E ON EA.id_exerciseabs  = E.id_exerciseabs " +
+            "where E.id_workout IN (:workoutid)")
+    LiveData<List<ExerciseAbstract>> getExerciseAbstractsForWorkout(int workoutid);
 
 /*    @Query("SELECT * FROM exerciseabs_table WHERE id_workout=:id_workout")
     LiveData<List<ExerciseAbstract>> getExercisesForWorkout(final int id_workout);*/

@@ -25,6 +25,8 @@
             android:parentActivityName=".Routine.EditRoutines"></activity>
         <activity android:name=".Workout.AddEditWorkoutActivity"
             android:parentActivityName=".Workout.EditWorkouts"></activity>
+        <activity android:name=".ExerciseAbstract.EditExercisesAbstract"
+            android:parentActivityName=".Workout.EditWorkouts"></activity>
 
         <meta-data
             android:name="preloaded_fonts"

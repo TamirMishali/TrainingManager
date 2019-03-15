@@ -1,4 +1,4 @@
-package com.example.tamirmishali.trainingmanager.Exercise;
+package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;

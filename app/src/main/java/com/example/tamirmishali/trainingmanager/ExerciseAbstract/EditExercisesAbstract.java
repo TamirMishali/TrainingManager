@@ -1,4 +1,4 @@
-package com.example.tamirmishali.trainingmanager.Workout;
+package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 
 import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
@@ -18,12 +18,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.tamirmishali.trainingmanager.ExerciseAbstract.EditExercisesAbstract;
+import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
+import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
 import com.example.tamirmishali.trainingmanager.R;
+import com.example.tamirmishali.trainingmanager.Workout.AddEditWorkoutActivity;
+import com.example.tamirmishali.trainingmanager.Workout.Workout;
+import com.example.tamirmishali.trainingmanager.Workout.WorkoutAdapter;
 
 import java.util.List;
 
-public class EditWorkouts extends AppCompatActivity {
+public class EditExercisesAbstract extends AppCompatActivity {
 
     public static final  String EXTRA_ROUTINE_ID =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
@@ -37,51 +41,62 @@ public class EditWorkouts extends AppCompatActivity {
     public static final int ADD_WORKOUT_REQUEST = 1;
     public static final int EDIT_WORKOUT_REQUEST = 2;
     public static final int ADD_EXERCISEABS_REQUEST = 3;
-    private int sourceRoutineID;
-    private WorkoutViewModel workoutViewModel;
+    private int sourceWorkoutID;
+    //private WorkoutViewModel workoutViewModel;
+    private ExerciseAbstractViewModel exerciseabstractViewModel;
+    private ExerciseViewModel exerciseViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.editworkouts_layout);
-        setTitle("Workouts");
+        setContentView(R.layout.editexerciseabs_layout);
+        setTitle("Exercises");
 
-        //Get routine ID for saving the workout
+        //Get workout ID for saving the exerciseabstract
         Intent intent = getIntent();
-        if (intent.hasExtra(EXTRA_ROUTINE_ID)) {
-            sourceRoutineID = intent.getIntExtra(EXTRA_ROUTINE_ID, -1);
+        if (intent.hasExtra(EXTRA_WORKOUT_ID)) {
+            sourceWorkoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
         }else{
             setResult(RESULT_CANCELED,intent);
             finish();
         }
 
-
         //Floating Plus button decleration
-        FloatingActionButton buttonAddWorkout = findViewById(R.id.button_add_workout);
+        FloatingActionButton buttonAddWorkout = findViewById(R.id.button_add_exerciseabs);
         buttonAddWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditWorkouts.this,AddEditWorkoutActivity.class); //AddEditWorkoutActivity
-                startActivityForResult(intent,ADD_WORKOUT_REQUEST);
+/*                Intent intent = new Intent(EditExercisesAbstract.this, AddExerciseAbstractToWorkoutActivity.class);
+                startActivityForResult(intent,ADD_EXERCISEABS_REQUEST);*/
             }
         });
 
         //Init
-        final RecyclerView recyclerView = findViewById(R.id.recycler_view_workout);
+        final RecyclerView recyclerView = findViewById(R.id.recycler_view_exerciseabs);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //WorkoutAdapter Decleration
-        final WorkoutAdapter adapter = new WorkoutAdapter();
+        final ExerciseAbstractAdapter adapter = new ExerciseAbstractAdapter();
         recyclerView.setAdapter(adapter);
 
-        //WorkoutViewModel Decleration
-        workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
-        workoutViewModel.getWorkoutsForRoutine(sourceRoutineID).observe(this, new Observer<List<Workout>>() {
+        //ExerciseAbstractViewModel Decleration
+        exerciseabstractViewModel = ViewModelProviders.of(this).get(ExerciseAbstractViewModel.class);
+        exerciseabstractViewModel.getExerciseAbstractsForWorkout(sourceWorkoutID).observe(this, new Observer<List<ExerciseAbstract>>() {
             @Override
-            public void onChanged(@Nullable List<Workout> workouts) {
-                adapter.setWorkouts(workouts);
+            public void onChanged(@Nullable List<ExerciseAbstract> exerciseAbstracts) {
+                adapter.setExerciseAbstracts(exerciseAbstracts);
             }
         });
+
+        //ExerciseAbstractViewModel Decleration
+        exerciseViewModel = ViewModelProviders.of(this).get(ExerciseViewModel.class);
+        exerciseViewModel.getAllExercises();
+        /*exerciseViewModel.getExercisesForWorkout(sourceWorkoutID).observe(this, new Observer<List<Exercise>>() {
+            @Override
+            public void onChanged(@Nullable List<Exercise> exercise) {
+                adapter.setExercises(exercise);
+            }
+        });*/
 
         //---------------------------------ACTIONS--------------------------------
         //Delete workout
@@ -94,15 +109,18 @@ public class EditWorkouts extends AppCompatActivity {
 
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(EditWorkouts.this);
+                AlertDialog.Builder alert = new AlertDialog.Builder(EditExercisesAbstract.this);
                 alert.setTitle(R.string.delete_entry_dialog_title);
-                alert.setMessage(R.string.delete_workout_dialog);
+                alert.setMessage(R.string.delete_exerciseabstract_dialog);
                 alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
-                        workoutViewModel.delete(adapter.getWorkoutAt(viewHolder.getAdapterPosition()));
-                        Toast.makeText(EditWorkouts.this , "Workout deleted" , Toast.LENGTH_SHORT).show();
+                        ExerciseAbstract exerciseAbstract = (adapter.getExerciseAbstractAt(viewHolder.getAdapterPosition()));
+                        Exercise exercise = exerciseViewModel.getExerciseForWorkout(exerciseAbstract.getId(),sourceWorkoutID);
+                        exerciseViewModel.delete(exercise);
+
+                        Toast.makeText(EditExercisesAbstract.this , "Exercise deleted" , Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -120,31 +138,36 @@ public class EditWorkouts extends AppCompatActivity {
             }
         }).attachToRecyclerView(recyclerView);
 
+
+
+
         //Edit Workout name and date
-        adapter.setOnItemLongClickListener(new WorkoutAdapter.OnItemLongClickListener() {
+        adapter.setOnItemLongClickListener(new ExerciseAbstractAdapter.OnItemLongClickListener() {
             @Override
-            public void onItemLongClick(Workout workout) {
-                Intent intent = new Intent(EditWorkouts.this, AddEditWorkoutActivity.class);
-                intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_ID,workout.getId());
-                intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME, workout.getWorkoutName());
+            public void onItemLongClick(ExerciseAbstract exerciseabstract) {
+/*                Intent intent = new Intent(EditExercisesAbstract.this, AddEditExerciseAbstractActivity.class);
+                intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_ID,exerciseabstract.getId());
+                intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME, exerciseabstract.getName());
                 if(workout.getWorkoutDate() != null){
-                    intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE, workout.getWorkoutDate().toString());
+                    intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE, exerciseabstract.getWorkoutDate().toString());
                 }
                 else{
                     intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE, "");
                 }
 
-                startActivityForResult(intent, EDIT_WORKOUT_REQUEST);
+                startActivityForResult(intent, EDIT_WORKOUT_REQUEST);*/
             }
         });
 
         //Add Exercises to that workout
-        adapter.setOnItemClickListener(new WorkoutAdapter.OnItemClickListener() {
+        adapter.setOnItemClickListener(new ExerciseAbstractAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(Workout workout) {
-                Intent intent = new Intent(EditWorkouts.this, EditExercisesAbstract.class);
-                intent.putExtra(EditExercisesAbstract.EXTRA_WORKOUT_ID,workout.getId());
-                startActivityForResult(intent, ADD_EXERCISEABS_REQUEST);
+            public void onItemClick(ExerciseAbstract exerciseabstract) {
+/*                Intent intent = new Intent(EditExercisesAbstract.this, AddExerciseAbstractToWorkoutActivity.class); //EditWorkouts
+                intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_ID,exerciseabstract.getId());
+                //intent.putExtra(AddEditWorkoutActivity.EXTRA_ROUTINE_NAME, workout.getWorkoutName());
+                //intent.putExtra(AddEditWorkoutActivity.EXTRA_ROUTINE_DATE, workout.getWorkoutDate().toString());
+                startActivityForResult(intent, ADD_EXERCISEABS_REQUEST);*/
             }
         });
     }
@@ -163,22 +186,22 @@ public class EditWorkouts extends AppCompatActivity {
             Toast.makeText(this,"Workout saved", Toast.LENGTH_SHORT).show();
         }
         else if(requestCode == ADD_WORKOUT_REQUEST && resultCode == RESULT_OK){
-            String workoutName = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME);
+/*            String workoutName = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME);
             String workoutDate = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE);
-            Workout workout = new Workout(sourceRoutineID ,workoutName, Boolean.TRUE);//, workoutDate);
-            //Workout workout = new Workout(sourceRoutineID ,workoutName, workoutDate,Boolean.TRUE);//, workoutDate);
-            workoutViewModel.insert(workout);
-            Toast.makeText(this,"Workout saved", Toast.LENGTH_SHORT).show();
+            Workout workout = new Workout(sourceWorkoutID,workoutName, Boolean.TRUE);//, workoutDate);
+            //Workout workout = new Workout(sourceWorkoutID ,workoutName, workoutDate,Boolean.TRUE);//, workoutDate);
+            exerciseabstractViewModel.insert(workout);
+            Toast.makeText(this,"Workout saved", Toast.LENGTH_SHORT).show();*/
         }
         else if(requestCode == EDIT_WORKOUT_REQUEST && resultCode == RESULT_OK){
-            String workoutName = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME);
+/*            String workoutName = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME);
             String workoutDate = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE);
-            Workout workout = new Workout(sourceRoutineID ,workoutName, workoutDate,Boolean.TRUE);//, workoutDate);
-            workoutViewModel.update(workout);
-            Toast.makeText(this,"Workout saved", Toast.LENGTH_SHORT).show();
+            Workout workout = new Workout(sourceWorkoutID,workoutName, workoutDate,Boolean.TRUE);//, workoutDate);
+            exerciseabstractViewModel.update(workout);
+            Toast.makeText(this,"Workout saved", Toast.LENGTH_SHORT).show();*/
         }
         else {
-            Toast.makeText(this,"Workout NOT saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Exercise NOT saved", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -193,9 +216,9 @@ public class EditWorkouts extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.delete_all_workouts:
-                //workoutViewModel.deleteAllWorkouts();
-                Toast.makeText(this, "All workouts deleted", Toast.LENGTH_SHORT).show();
+            case R.id.delete_all_exerciseabstract:
+                exerciseabstractViewModel.deleteAllExerciseAbstracts();
+                Toast.makeText(this, "All exercises deleted", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
