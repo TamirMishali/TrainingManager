@@ -9,9 +9,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,62 +21,49 @@ import android.widget.Toast;
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
 import com.example.tamirmishali.trainingmanager.R;
-import com.example.tamirmishali.trainingmanager.Workout.AddEditWorkoutActivity;
-import com.example.tamirmishali.trainingmanager.Workout.Workout;
-import com.example.tamirmishali.trainingmanager.Workout.WorkoutAdapter;
 
 import java.util.List;
 
-public class EditExercisesAbstract extends AppCompatActivity {
-
+class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
     public static final  String EXTRA_WORKOUT_ID =
-            "com.example.tamirmishali.trainingmanager.EXTRA_WORKOUT_ID";
-    public static final  String EXTRA_WORKOUT_NAME =
-            "com.example.tamirmishali.trainingmanager.EXTRA_WORKOUT_NAME";
-    public static final  String EXTRA_WORKOUT_DATE =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
 
-    public static final int ADD_WORKOUT_REQUEST = 1;
-    public static final int EDIT_WORKOUT_REQUEST = 2;
     public static final int ADD_EXERCISEABS_REQUEST = 3;
+
     private int sourceWorkoutID;
-    private String sourceWorkoutName;
-    //private WorkoutViewModel workoutViewModel;
     private ExerciseAbstractViewModel exerciseabstractViewModel;
     private ExerciseViewModel exerciseViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.editexerciseabs_layout);
+        setContentView(R.layout.editallexerciseabs_layout);
+        setTitle("All Exercises");
 
         //Get workout ID for saving the exerciseabstract
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_WORKOUT_ID)) {
             sourceWorkoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
-            sourceWorkoutName = intent.getStringExtra(EXTRA_WORKOUT_NAME);
         }else{
             setResult(RESULT_CANCELED,intent);
             finish();
         }
 
-        //Title
-        setTitle(sourceWorkoutName);
-
         //Floating Plus button decleration
-        FloatingActionButton buttonAddWorkout = findViewById(R.id.button_add_exerciseabs);
+        FloatingActionButton buttonAddWorkout = findViewById(R.id.button_add_allexerciseabs);
         buttonAddWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditExercisesAbstract.this, AddExerciseAbstractToWorkoutActivity.class);
-                intent.putExtra(AddExerciseAbstractToWorkoutActivity.EXTRA_WORKOUT_ID,sourceWorkoutID);
-                startActivityForResult(intent,ADD_EXERCISEABS_REQUEST);
+/*                Intent intent = new Intent(EditExercisesAbstract.this, AddExerciseAbstract.class);
+                startActivityForResult(intent,ADD_NEW_EXERCISEABS_REQUEST);*/
             }
         });
 
         //Init
-        final RecyclerView recyclerView = findViewById(R.id.recycler_view_exerciseabs);
+        final RecyclerView recyclerView = findViewById(R.id.recycler_view_allexerciseabs);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        /*recyclerView.addItemDecoration(new DividerItemDecoration(this,
+                DividerItemDecoration.HORIZONTAL));*/
 
         //WorkoutAdapter Decleration
         final ExerciseAbstractAdapter adapter = new ExerciseAbstractAdapter();
@@ -84,20 +71,19 @@ public class EditExercisesAbstract extends AppCompatActivity {
 
         //ExerciseAbstractViewModel Decleration
         exerciseabstractViewModel = ViewModelProviders.of(this).get(ExerciseAbstractViewModel.class);
-        exerciseabstractViewModel.getExerciseAbstractsForWorkout(sourceWorkoutID).observe(this, new Observer<List<ExerciseAbstract>>() {
+        exerciseabstractViewModel.getAllExerciseAbstracts().observe(this, new Observer<List<ExerciseAbstract>>() {
             @Override
             public void onChanged(@Nullable List<ExerciseAbstract> exerciseAbstracts) {
                 adapter.setExerciseAbstracts(exerciseAbstracts);
             }
         });
 
-        //ExerciseAbstractViewModel Decleration
         exerciseViewModel = ViewModelProviders.of(this).get(ExerciseViewModel.class);
         exerciseViewModel.getAllExercises();
 
         //---------------------------------ACTIONS--------------------------------
         //Delete workout
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+        /*new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -114,8 +100,7 @@ public class EditExercisesAbstract extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
                         ExerciseAbstract exerciseAbstract = (adapter.getExerciseAbstractAt(viewHolder.getAdapterPosition()));
-                        Exercise exercise = exerciseViewModel.getExerciseForWorkout(exerciseAbstract.getId(),sourceWorkoutID);
-                        exerciseViewModel.delete(exercise);
+
                         Toast.makeText(EditExercisesAbstract.this , "Exercise deleted" , Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -131,16 +116,15 @@ public class EditExercisesAbstract extends AppCompatActivity {
                 });
                 alert.show();
             }
-        }).attachToRecyclerView(recyclerView);
-
+        }).attachToRecyclerView(recyclerView);*/
 
 
 
         //Edit Workout name and date
-        adapter.setOnItemLongClickListener(new ExerciseAbstractAdapter.OnItemLongClickListener() {
+/*        adapter.setOnItemLongClickListener(new ExerciseAbstractAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(ExerciseAbstract exerciseabstract) {
-/*                Intent intent = new Intent(EditExercisesAbstract.this, AddEditExerciseAbstractActivity.class);
+*//*                Intent intent = new Intent(EditExercisesAbstract.this, AddEditExerciseAbstractActivity.class);
                 intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_ID,exerciseabstract.getId());
                 intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME, exerciseabstract.getName());
                 if(workout.getWorkoutDate() != null){
@@ -150,21 +134,49 @@ public class EditExercisesAbstract extends AppCompatActivity {
                     intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE, "");
                 }
 
-                startActivityForResult(intent, EDIT_WORKOUT_REQUEST);*/
+                startActivityForResult(intent, EDIT_WORKOUT_REQUEST);*//*
             }
-        });
+        });*/
 
         //Add Exercises to that workout
         adapter.setOnItemClickListener(new ExerciseAbstractAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(ExerciseAbstract exerciseabstract) {
+            public void onItemClick(final ExerciseAbstract exerciseabstract) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(AddExerciseAbstractToWorkoutActivity.this);
+                alert.setTitle(R.string.add_entry_dialog_title);
+                alert.setMessage(R.string.add_exercise_dialog);
+                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with add
+                        if (exerciseViewModel.getExerciseForWorkout(exerciseabstract.getId(),sourceWorkoutID) == null){ //doesn't exist in workout
+                            Exercise exercise = new Exercise(exerciseabstract.getId(),sourceWorkoutID,"","");
+                            exerciseViewModel.insert(exercise);
+                            Toast.makeText(AddExerciseAbstractToWorkoutActivity.this , "Exercise Added" , Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Toast.makeText(AddExerciseAbstractToWorkoutActivity.this , "Exercise Exists in this workout" , Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+
+                alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // close dialog
+                        dialog.cancel();
+                    }
+                });
+                alert.show();
+            }
+
+
+
 /*                Intent intent = new Intent(EditExercisesAbstract.this, AddExerciseAbstractToWorkoutActivity.class); //EditWorkouts
                 intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_ID,exerciseabstract.getId());
                 //intent.putExtra(AddEditWorkoutActivity.EXTRA_ROUTINE_NAME, workout.getWorkoutName());
                 //intent.putExtra(AddEditWorkoutActivity.EXTRA_ROUTINE_DATE, workout.getWorkoutDate().toString());
                 startActivityForResult(intent, ADD_EXERCISEABS_REQUEST);*/
-            }
-        });
+            });
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -178,26 +190,11 @@ public class EditExercisesAbstract extends AppCompatActivity {
             workoutViewModel.insert(workout);
 */
 
-            //Toast.makeText(this,"Workout saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Exercise saved", Toast.LENGTH_SHORT).show();
         }
-        else if(requestCode == ADD_WORKOUT_REQUEST && resultCode == RESULT_OK){
-/*            String workoutName = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME);
-            String workoutDate = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE);
-            Workout workout = new Workout(sourceWorkoutID,workoutName, Boolean.TRUE);//, workoutDate);
-            //Workout workout = new Workout(sourceWorkoutID ,workoutName, workoutDate,Boolean.TRUE);//, workoutDate);
-            exerciseabstractViewModel.insert(workout);
-            Toast.makeText(this,"Workout saved", Toast.LENGTH_SHORT).show();*/
-        }
-        else if(requestCode == EDIT_WORKOUT_REQUEST && resultCode == RESULT_OK){
-/*            String workoutName = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME);
-            String workoutDate = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE);
-            Workout workout = new Workout(sourceWorkoutID,workoutName, workoutDate,Boolean.TRUE);//, workoutDate);
-            exerciseabstractViewModel.update(workout);
-            Toast.makeText(this,"Workout saved", Toast.LENGTH_SHORT).show();*/
-        }
-/*        else {
+        else {
             Toast.makeText(this,"Exercise NOT saved", Toast.LENGTH_SHORT).show();
-        }*/
+        }
 
     }
 
@@ -212,7 +209,8 @@ public class EditExercisesAbstract extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_all_exerciseabstract:
-                exerciseabstractViewModel.deleteAllExerciseAbstracts();
+                //exerciseabstractViewModel.deleteAllExerciseAbstracts();
+                exerciseViewModel.deleteAllExercises(sourceWorkoutID);
                 Toast.makeText(this, "All exercises deleted", Toast.LENGTH_SHORT).show();
                 return true;
             default:

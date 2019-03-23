@@ -31,8 +31,8 @@ public class ExerciseViewModel extends AndroidViewModel {
     public void delete(Exercise exercise){
         repository.delete(exercise);
     }
-    public void deleteAllExercises(){
-        repository.deleteAllExercises();
+    public void deleteAllExercises(int id_workout){
+        repository.deleteAllExercises(id_workout);
     }
     public Exercise getExerciseForWorkout(int idExerciseAbstract, int idWorkout) {
         return repository.getExerciseForWorkout(idExerciseAbstract,idWorkout);

@@ -23,14 +23,16 @@ import com.example.tamirmishali.trainingmanager.R;
 
 import java.util.List;
 
+import static com.example.tamirmishali.trainingmanager.Routine.AddEditRoutineActivity.EXTRA_ROUTINE_NAME;
+
 public class EditWorkouts extends AppCompatActivity {
 
     public static final  String EXTRA_ROUTINE_ID =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
     public static final  String EXTRA_WORKOUT_ID =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
-    public static final  String EXTRA_WORKOUT_NAME =
-            "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
+    public static final  String EXTRA_ROUTINE_NAME =
+            "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_NAME";
     public static final  String EXTRA_WORKOUT_DATE =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
 
@@ -38,23 +40,26 @@ public class EditWorkouts extends AppCompatActivity {
     public static final int EDIT_WORKOUT_REQUEST = 2;
     public static final int ADD_EXERCISEABS_REQUEST = 3;
     private int sourceRoutineID;
+    private String sourceRoutineName;
     private WorkoutViewModel workoutViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editworkouts_layout);
-        setTitle("Workouts");
 
         //Get routine ID for saving the workout
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_ROUTINE_ID)) {
             sourceRoutineID = intent.getIntExtra(EXTRA_ROUTINE_ID, -1);
+            sourceRoutineName = intent.getStringExtra(EXTRA_ROUTINE_NAME);
         }else{
             setResult(RESULT_CANCELED,intent);
             finish();
         }
 
+        //Title
+        setTitle(sourceRoutineName);
 
         //Floating Plus button decleration
         FloatingActionButton buttonAddWorkout = findViewById(R.id.button_add_workout);
@@ -144,6 +149,7 @@ public class EditWorkouts extends AppCompatActivity {
             public void onItemClick(Workout workout) {
                 Intent intent = new Intent(EditWorkouts.this, EditExercisesAbstract.class);
                 intent.putExtra(EditExercisesAbstract.EXTRA_WORKOUT_ID,workout.getId());
+                intent.putExtra(EditExercisesAbstract.EXTRA_WORKOUT_NAME,workout.getName());
                 startActivityForResult(intent, ADD_EXERCISEABS_REQUEST);
             }
         });

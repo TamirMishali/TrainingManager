@@ -112,6 +112,7 @@ public class EditRoutines extends AppCompatActivity {
             public void onItemClick(Routine routine) {
                 Intent intent = new Intent(EditRoutines.this, EditWorkouts.class); //EditWorkouts
                 intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID,routine.getUid());
+                intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_NAME,routine.getRoutineName());
                 //startActivityForResult(intent, ADD_WORKOUTS_REQUEST);
                 startActivity(intent);
 

@@ -7,10 +7,13 @@ import android.os.AsyncTask;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.WorkoutDao;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class WorkoutRepository {
-    private WorkoutDao  workoutDao;
+    private WorkoutDao workoutDao;
     private LiveData<List<Workout>> allWorkouts;
 
     public WorkoutRepository(Application application){
@@ -37,6 +40,17 @@ public class WorkoutRepository {
     }
     public LiveData<List<Workout>> getWorkoutsForRoutine(int routineid){
         return workoutDao.getWorkoutsForRoutine(routineid);
+    }
+    public List<String> getMusselsInWorkout(int workout_id){
+        List<String> mussles = new ArrayList<>();
+        try {
+            mussles = new GetMusselsInWorkoutAsyncTask(workoutDao).execute(workout_id).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return mussles;
     }
 
     //Workout - AsyncTasks
@@ -91,5 +105,20 @@ public class WorkoutRepository {
             workoutDao.deleteAllworkouts();
             return null;
         }
+    }
+
+    //https://stackoverflow.com/questions/6053602/what-arguments-are-passed-into-asynctaskarg1-arg2-arg3
+    private static class GetMusselsInWorkoutAsyncTask extends AsyncTask<Integer, Integer, List<String>>{
+        private WorkoutDao workoutDao;
+
+        private GetMusselsInWorkoutAsyncTask(WorkoutDao workoutDao){
+            this.workoutDao = workoutDao;
+        }
+
+        @Override
+        protected List<String> doInBackground(Integer... values) {
+            return workoutDao.getMusselsInWorkout(values[0]);
+        }
+
     }
 }

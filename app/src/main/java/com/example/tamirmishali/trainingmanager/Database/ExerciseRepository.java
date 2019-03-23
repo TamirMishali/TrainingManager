@@ -31,12 +31,10 @@ public class ExerciseRepository {
     public void delete(Exercise exercise){
         new DeleteExerciseAsyncTask(exerciseDao).execute(exercise);
     }
-    public void deleteAllExercises(){
-        new DeleteAllExerciseAsyncTask(exerciseDao).execute();
+    public void deleteAllExercises(int workout_id){
+        new DeleteAllExerciseAsyncTask(exerciseDao).execute(workout_id);
     }
     public Exercise getExerciseForWorkout(int exerciseastractid, int workoutid){
-        //Exercise exercise =
-        //return new GetExerciseForWorkoutAsyncTask(exerciseDao).execute(exerciseastractid,workoutid).get();
         try {
             exercise = new GetExerciseForWorkoutAsyncTask(exerciseDao).execute(exerciseastractid,workoutid).get();
         } catch (InterruptedException e) {
@@ -44,11 +42,6 @@ public class ExerciseRepository {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        //new GetExerciseForWorkoutAsyncTask(exerciseDao).execute();
-        //return exercise;
-
-        //return GetExerciseForWorkoutAsyncTask
-        //return exerciseDao.getExerciseForWorkout(exerciseastractid, workoutid);
         return exercise;
     }
     public LiveData<List<Exercise>> getAllExercises(){
@@ -98,7 +91,7 @@ public class ExerciseRepository {
             return null;
         }
     }
-    private static class DeleteAllExerciseAsyncTask extends AsyncTask<Void, Void, Void> {
+    private static class DeleteAllExerciseAsyncTask extends AsyncTask<Integer, Void, Void> {
         private ExerciseDao exerciseDao;
 
         private DeleteAllExerciseAsyncTask(ExerciseDao exerciseDao) {
@@ -106,12 +99,13 @@ public class ExerciseRepository {
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
-            exerciseDao.deleteAllexercises();
+        protected Void doInBackground(Integer... values) {
+            exerciseDao.deleteAllexercises(values[0]);
             return null;
         }
     }
 
+    //https://stackoverflow.com/questions/6053602/what-arguments-are-passed-into-asynctaskarg1-arg2-arg3
     private static class GetExerciseForWorkoutAsyncTask extends AsyncTask<Integer, Integer, Exercise>{
         private ExerciseDao exerciseDao;
 
@@ -121,9 +115,7 @@ public class ExerciseRepository {
 
         @Override
         protected Exercise doInBackground(Integer... values) {
-            //return exerciseDao.getExerciseForWorkout(values[0],values[1]);
             return exerciseDao.getExerciseForWorkout(values[0],values[1]);
-            //return null;
         }
 
     }

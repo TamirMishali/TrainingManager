@@ -27,10 +27,12 @@
             android:parentActivityName=".Workout.EditWorkouts"></activity>
         <activity android:name=".ExerciseAbstract.EditExercisesAbstract"
             android:parentActivityName=".Workout.EditWorkouts"></activity>
+        <activity android:name=".ExerciseAbstract.AddExerciseAbstractToWorkoutActivity"></activity>
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
     </application>
 
 </manifest>

@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<Routine> routines) {
                 //update RecyclerView
-                Toast.makeText(MainActivity.this, "aasdaasd",Toast.LENGTH_SHORT).show();
             }
         });
 

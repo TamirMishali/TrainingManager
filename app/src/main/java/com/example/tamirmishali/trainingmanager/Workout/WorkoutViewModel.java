@@ -37,5 +37,6 @@ public class WorkoutViewModel extends AndroidViewModel {
         return allWorkouts;
     }
     public LiveData<List<Workout>> getWorkoutsForRoutine(int id){ return repository.getWorkoutsForRoutine(id); }
+    public List<String> getMusselsInWorkout(int id) {return repository.getMusselsInWorkout(id);}
 
 }

@@ -1,5 +1,7 @@
 package com.example.tamirmishali.trainingmanager.Workout;
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,9 +14,12 @@ import com.example.tamirmishali.trainingmanager.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.gson.reflect.TypeToken.get;
+
 public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutHolder> {
 
     private List<Workout> workouts = new ArrayList<>();
+    //private List<String> mussles = new ArrayList<>();
     private OnItemLongClickListener longListener;
     private OnItemClickListener listener;
     //private Context context;
@@ -31,7 +36,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutH
     public void onBindViewHolder(@NonNull WorkoutHolder holder, final int position) {
         Workout curretWorkout = workouts.get(position);
         holder.textViewWorkout.setText(curretWorkout.getWorkoutName());
-        holder.textViewWorkoutExercises.setText("empty exercise for now");
+        holder.textViewWorkoutExercises.setText("");
         holder.itemView.setTag(holder);
     }
 
@@ -44,6 +49,11 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutH
         this.workouts = workouts;
         notifyDataSetChanged(); //use itemchanged later
     }
+
+/*    public void setMussles(List<String> mussles){
+        this.mussles = mussles;
+        notifyDataSetChanged();
+    }*/
 
     public Workout getWorkoutAt(int position) {
         return workouts.get(position);
