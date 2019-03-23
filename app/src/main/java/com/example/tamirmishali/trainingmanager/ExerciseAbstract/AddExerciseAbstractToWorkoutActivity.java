@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -93,7 +94,7 @@ class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
 
         //---------------------------------ACTIONS--------------------------------
         //Delete workout
-        /*new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -102,7 +103,7 @@ class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(EditExercisesAbstract.this);
+                AlertDialog.Builder alert = new AlertDialog.Builder(AddExerciseAbstractToWorkoutActivity.this);
                 alert.setTitle(R.string.delete_entry_dialog_title);
                 alert.setMessage(R.string.delete_exerciseabstract_dialog);
                 alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -110,8 +111,9 @@ class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
                         ExerciseAbstract exerciseAbstract = (adapter.getExerciseAbstractAt(viewHolder.getAdapterPosition()));
+                        exerciseabstractViewModel.delete(exerciseAbstract);
 
-                        Toast.makeText(EditExercisesAbstract.this , "Exercise deleted" , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddExerciseAbstractToWorkoutActivity.this , "Exercise deleted" , Toast.LENGTH_SHORT).show();
                     }
                 });
                 alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -126,7 +128,7 @@ class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
                 });
                 alert.show();
             }
-        }).attachToRecyclerView(recyclerView);*/
+        }).attachToRecyclerView(recyclerView);
 
 
 
