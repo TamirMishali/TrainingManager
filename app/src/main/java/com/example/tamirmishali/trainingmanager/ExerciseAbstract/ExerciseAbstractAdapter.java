@@ -32,7 +32,7 @@ public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstra
         ExerciseAbstract curretExerciseAbstract = exerciseAbstracts.get(position);
         holder.textViewExerciseAbstract.setText(curretExerciseAbstract.getName());
         holder.textViewExerciseAbstractDescription.setText(curretExerciseAbstract.getDescription());
-        holder.textViewExerciseAbstractMussleGroup.setText(curretExerciseAbstract.getMussleGroup());
+        holder.textViewExerciseAbstractMussleGroup.setText(curretExerciseAbstract.getMuscleGroup());
         holder.itemView.setTag(holder);
     }
 
@@ -61,7 +61,7 @@ public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstra
             super(itemView);
             textViewExerciseAbstract = itemView.findViewById(R.id.text_view_exerciseabs_text);
             textViewExerciseAbstractDescription = itemView.findViewById(R.id.text_view_exerciseabs_description);
-            textViewExerciseAbstractMussleGroup = itemView.findViewById(R.id.text_view_exerciseabs_musslegroup);
+            textViewExerciseAbstractMussleGroup = itemView.findViewById(R.id.text_view_exerciseabs_musclegroup);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -177,11 +177,12 @@ public class EditWorkouts extends AppCompatActivity {
             Toast.makeText(this,"Workout saved", Toast.LENGTH_SHORT).show();
         }
         else if(requestCode == EDIT_WORKOUT_REQUEST && resultCode == RESULT_OK){
+            String workoutId = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_ID);
             String workoutName = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME);
             String workoutDate = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE);
-            Workout workout = new Workout(sourceRoutineID ,workoutName, workoutDate,Boolean.TRUE);//, workoutDate);
+            Workout workout = new Workout(Integer.parseInt(workoutId) ,sourceRoutineID ,workoutName, workoutDate,Boolean.TRUE);//, workoutDate);
             workoutViewModel.update(workout);
-            Toast.makeText(this,"Workout saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Workout Edited", Toast.LENGTH_SHORT).show();
         }
         else {
             Toast.makeText(this,"Workout NOT saved", Toast.LENGTH_SHORT).show();

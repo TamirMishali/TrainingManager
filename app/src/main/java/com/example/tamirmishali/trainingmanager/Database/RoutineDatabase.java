@@ -19,7 +19,7 @@ import com.example.tamirmishali.trainingmanager.Routine.Routine;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 import static java.lang.Math.toIntExact;
 
-@Database(version = 6,entities = {Routine.class, Workout.class, Exercise.class, ExerciseAbstract.class})
+@Database(version = 7,entities = {Routine.class, Workout.class, Exercise.class, ExerciseAbstract.class})
 @TypeConverters({Converters.class})
 
 public abstract class RoutineDatabase extends RoomDatabase {

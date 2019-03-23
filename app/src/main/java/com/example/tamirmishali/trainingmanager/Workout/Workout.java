@@ -40,6 +40,31 @@ public class Workout {
     }
 
     /*When Abstract workout, Date=null. if real workout Date=currentDate */
+    public Workout(int id, int id_routine, String name, String date, boolean abstractWorkout) {
+        this.id = id;
+        this.id_routine = id_routine;
+        this.name = name;
+        if (abstractWorkout){
+            this.date = null; }
+        else {
+            java.sql.Date d = java.sql.Date.valueOf(date);
+            this.date  = d;
+        }
+    }
+
+    public Workout(int id, int id_routine, String name, boolean abstractWorkout) {
+        this.id = id;
+        this.id_routine = id_routine;
+        this.name = name;
+        if (abstractWorkout){
+            this.date = null; }
+        else {
+            Calendar calendar = Calendar.getInstance();
+            this.date  = new java.sql.Date(calendar.getTime().getTime());
+        }
+    }
+
+    /*When Abstract workout, Date=null. if real workout Date=currentDate */
     public Workout(int id_routine, String name, String date, boolean abstractWorkout) {
         this.id = 0;
         this.id_routine = id_routine;
@@ -50,9 +75,9 @@ public class Workout {
             java.sql.Date d = java.sql.Date.valueOf(date);
             this.date  = d;
         }
-
-
     }
+
+
     public Workout(int id_routine, String name, boolean abstractWorkout) {
         this.id = 0;
         this.id_routine = id_routine;

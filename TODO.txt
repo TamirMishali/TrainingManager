@@ -1,0 +1,12 @@
+TODO:
+- fix the X in workout and it return to routines
+- add exercise
+-remove aasds..... at the open of the app
+-change editWorkout title to routine name
+-change editExercise title to workout name
+-add workout names in routine descriptions
+
+
+Complete:
+-take care of the workout abstract date manufaturing
+-add dialog to delete routine

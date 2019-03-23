@@ -29,7 +29,7 @@ public interface ExerciseAbstractDao {
     @Query("SELECT * from exerciseabs_table Order by id_exerciseabs DESC")
     LiveData<List<ExerciseAbstract>> getAllExercisesAbstract();
 
-    @Query("select EA.id_exerciseabs, EA.name, EA.description, EA.mussleGroup " +
+    @Query("select EA.id_exerciseabs, EA.name, EA.description, EA.muscleGroup " +
             "from exerciseabs_table EA inner join exercise_table E ON EA.id_exerciseabs  = E.id_exerciseabs " +
             "where E.id_workout IN (:workoutid)")
     LiveData<List<ExerciseAbstract>> getExerciseAbstractsForWorkout(int workoutid);

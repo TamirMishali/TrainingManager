@@ -1,0 +1,200 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 7,
+    "identityHash": "39cc0af14af88e26aa6ffcb7389897c7",
+    "entities": [
+      {
+        "tableName": "routine_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` INTEGER, `name` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "routineDate",
+            "columnName": "date",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "routineName",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "workout_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_workout` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_routine` INTEGER NOT NULL, `name` TEXT, `date` INTEGER, FOREIGN KEY(`id_routine`) REFERENCES `routine_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_workout",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_routine",
+            "columnName": "id_routine",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_workout"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "routine_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_routine"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "exercise_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_exercise` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_exerciseabs` INTEGER NOT NULL, `id_workout` INTEGER NOT NULL, `comment` TEXT, `data` TEXT, FOREIGN KEY(`id_exerciseabs`) REFERENCES `exerciseabs_table`(`id_exerciseabs`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_workout`) REFERENCES `workout_table`(`id_workout`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_exercise",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_exerciseabs",
+            "columnName": "id_exerciseabs",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_workout",
+            "columnName": "id_workout",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "comment",
+            "columnName": "comment",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "data",
+            "columnName": "data",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_exercise"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "exerciseabs_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_exerciseabs"
+            ],
+            "referencedColumns": [
+              "id_exerciseabs"
+            ]
+          },
+          {
+            "table": "workout_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_workout"
+            ],
+            "referencedColumns": [
+              "id_workout"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "exerciseabs_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_exerciseabs` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `description` TEXT, `muscleGroup` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_exerciseabs",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "muscleGroup",
+            "columnName": "muscleGroup",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_exerciseabs"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"39cc0af14af88e26aa6ffcb7389897c7\")"
+    ]
+  }
+}

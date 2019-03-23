@@ -31,7 +31,7 @@ public interface WorkoutDao {
     @Query("SELECT * FROM workout_table WHERE id_routine=:id_routine")
     LiveData<List<Workout>> getWorkoutsForRoutine(final int id_routine);
 
-    @Query("select EA.mussleGroup " +
+    @Query("select EA.muscleGroup " +
             "from exerciseabs_table EA inner join exercise_table E ON EA.id_exerciseabs  = E.id_exerciseabs " +
             "where E.id_workout IN (:workoutid)")
     List<String> getMusselsInWorkout(final int workoutid);

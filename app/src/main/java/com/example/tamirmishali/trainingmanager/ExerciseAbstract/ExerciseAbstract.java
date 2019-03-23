@@ -17,16 +17,25 @@ public class ExerciseAbstract {
     @ColumnInfo(name = "description")
     private String description;
 
-    @ColumnInfo(name = "mussleGroup")
-    private String mussleGroup;
+    @ColumnInfo(name = "muscleGroup")
+    private String muscleGroup;
 
 
     // ------------Constructors ---------------
+    //For new ExerciseAbs
     public ExerciseAbstract(String name, String description, String mussleGroup) {
         this.id = 0;
         this.name = name;
         this.description = description;
-        this.mussleGroup = mussleGroup;
+        this.muscleGroup = mussleGroup;
+    }
+
+    //For existing ExerciseAbs
+    public ExerciseAbstract(int id, String name, String description, String mussleGroup) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.muscleGroup = mussleGroup;
     }
 
     public ExerciseAbstract(){
@@ -58,12 +67,12 @@ public class ExerciseAbstract {
         this.description = description;
     }
 
-    public String getMussleGroup() {
-        return mussleGroup;
+    public String getMuscleGroup() {
+        return muscleGroup;
     }
 
-    public void setMussleGroup(String mussleGroup) {
-        this.mussleGroup = mussleGroup;
+    public void setMuscleGroup(String muscleGroup) {
+        this.muscleGroup = muscleGroup;
     }
 /*    @ColumnInfo(name = "reps")
     int[] reps = new int[5]; //maximum 5 sets

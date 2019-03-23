@@ -27,8 +27,18 @@ import java.util.List;
 class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
     public static final  String EXTRA_WORKOUT_ID =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
+/*    public static final  String EXTRA_EXERCISEABS_ID =
+            "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
+    public static final String EXTRA_EXERCISEABS_NAME =
+            "com.example.tamirmishali.trainingmanager.EXTRA_EXERCISEABS_NAME";
+    public static final String EXTRA_EXERCISEABS_DESCRIPTION =
+            "com.example.tamirmishali.trainingmanager.EXTRA_EXERCISEABS_DESCRIPTION";
+    public static final String EXTRA_EXERCISEABS_MUSCLE =
+            "com.example.tamirmishali.trainingmanager.EXTRA_EXERCISEABS_MUSCLE";*/
 
-    public static final int ADD_EXERCISEABS_REQUEST = 3;
+    public static final int ADD_NEW_EXERCISEABS_REQUEST = 1;
+    public static final int EDIT_NEW_EXERCISEABS_REQUEST = 3;
+
 
     private int sourceWorkoutID;
     private ExerciseAbstractViewModel exerciseabstractViewModel;
@@ -54,8 +64,8 @@ class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
         buttonAddWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/*                Intent intent = new Intent(EditExercisesAbstract.this, AddExerciseAbstract.class);
-                startActivityForResult(intent,ADD_NEW_EXERCISEABS_REQUEST);*/
+                Intent intent = new Intent(AddExerciseAbstractToWorkoutActivity.this, AddEditExerciseAbsActivity.class);
+                startActivityForResult(intent,ADD_NEW_EXERCISEABS_REQUEST);
             }
         });
 
@@ -121,22 +131,17 @@ class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
 
 
         //Edit Workout name and date
-/*        adapter.setOnItemLongClickListener(new ExerciseAbstractAdapter.OnItemLongClickListener() {
+        adapter.setOnItemLongClickListener(new ExerciseAbstractAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(ExerciseAbstract exerciseabstract) {
-*//*                Intent intent = new Intent(EditExercisesAbstract.this, AddEditExerciseAbstractActivity.class);
-                intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_ID,exerciseabstract.getId());
-                intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME, exerciseabstract.getName());
-                if(workout.getWorkoutDate() != null){
-                    intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE, exerciseabstract.getWorkoutDate().toString());
-                }
-                else{
-                    intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE, "");
-                }
-
-                startActivityForResult(intent, EDIT_WORKOUT_REQUEST);*//*
+                Intent intent = new Intent(AddExerciseAbstractToWorkoutActivity.this, AddEditExerciseAbsActivity.class);
+                intent.putExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_ID, exerciseabstract.getId());
+                intent.putExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_NAME, exerciseabstract.getName());
+                intent.putExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_DESCRIPTION, exerciseabstract.getDescription());
+                intent.putExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_MUSCLE, exerciseabstract.getMuscleGroup());
+                startActivityForResult(intent, EDIT_NEW_EXERCISEABS_REQUEST);
             }
-        });*/
+        });
 
         //Add Exercises to that workout
         adapter.setOnItemClickListener(new ExerciseAbstractAdapter.OnItemClickListener() {
@@ -181,16 +186,35 @@ class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-        if(requestCode == ADD_EXERCISEABS_REQUEST && resultCode == RESULT_OK){
-/*
-            String workoutName = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME);
-            String workoutDate = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE);
+        if(requestCode == ADD_NEW_EXERCISEABS_REQUEST && resultCode == RESULT_OK){
+            String exerciseAbsName = data.getStringExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_NAME);
+            String exerciseAbsDescription = data.getStringExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_DESCRIPTION);
+            String exerciseAbsMuscle = data.getStringExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_MUSCLE);
+            ExerciseAbstract exerciseAbstract = new ExerciseAbstract(exerciseAbsName, exerciseAbsDescription,exerciseAbsMuscle);
+            try{
+                exerciseabstractViewModel.insert(exerciseAbstract);
+                Toast.makeText(this,"Exercise saved", Toast.LENGTH_SHORT).show();
+            }
+            catch (Exception e){
+                Toast.makeText(this,"Error Saving Exercise", Toast.LENGTH_SHORT).show();
+            }
 
-            Workout workout = new Workout(workoutName, workoutDate);//, workoutDate);
-            workoutViewModel.insert(workout);
-*/
-
-            Toast.makeText(this,"Exercise saved", Toast.LENGTH_SHORT).show();
+        }
+        else if (requestCode == EDIT_NEW_EXERCISEABS_REQUEST && resultCode == RESULT_OK) {
+            int exerciseAbsId = data.getIntExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_ID,-1);
+            String exerciseAbsName = data.getStringExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_NAME);
+            String exerciseAbsDescription = data.getStringExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_DESCRIPTION);
+            String exerciseAbsMuscle = data.getStringExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_MUSCLE);
+            ExerciseAbstract exerciseAbstract = new ExerciseAbstract(exerciseAbsId,exerciseAbsName, exerciseAbsDescription,exerciseAbsMuscle);
+            if (exerciseAbsId != -1){
+                try{
+                    exerciseabstractViewModel.update(exerciseAbstract);
+                    Toast.makeText(this,"Exercise Edited", Toast.LENGTH_SHORT).show();
+                }
+                catch (Exception e){
+                    Toast.makeText(this,"Error Editing Exercise", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
         else {
             Toast.makeText(this,"Exercise NOT saved", Toast.LENGTH_SHORT).show();
