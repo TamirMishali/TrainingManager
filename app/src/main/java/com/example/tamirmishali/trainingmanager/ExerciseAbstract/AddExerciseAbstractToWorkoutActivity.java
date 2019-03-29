@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
@@ -28,22 +31,14 @@ import java.util.List;
 class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
     public static final  String EXTRA_WORKOUT_ID =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
-/*    public static final  String EXTRA_EXERCISEABS_ID =
-            "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
-    public static final String EXTRA_EXERCISEABS_NAME =
-            "com.example.tamirmishali.trainingmanager.EXTRA_EXERCISEABS_NAME";
-    public static final String EXTRA_EXERCISEABS_DESCRIPTION =
-            "com.example.tamirmishali.trainingmanager.EXTRA_EXERCISEABS_DESCRIPTION";
-    public static final String EXTRA_EXERCISEABS_MUSCLE =
-            "com.example.tamirmishali.trainingmanager.EXTRA_EXERCISEABS_MUSCLE";*/
 
     public static final int ADD_NEW_EXERCISEABS_REQUEST = 1;
     public static final int EDIT_NEW_EXERCISEABS_REQUEST = 3;
 
-
     private int sourceWorkoutID;
     private ExerciseAbstractViewModel exerciseabstractViewModel;
     private ExerciseViewModel exerciseViewModel;
+    final ExerciseAbstractAdapter adapter = new ExerciseAbstractAdapter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +72,7 @@ class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
                 DividerItemDecoration.HORIZONTAL));*/
 
         //WorkoutAdapter Decleration
-        final ExerciseAbstractAdapter adapter = new ExerciseAbstractAdapter();
+        //final ExerciseAbstractAdapter adapter = new ExerciseAbstractAdapter();
         recyclerView.setAdapter(adapter);
 
         //ExerciseAbstractViewModel Decleration
@@ -219,7 +214,7 @@ class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
             }
         }
         else {
-            Toast.makeText(this,"Exercise NOT saved", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this,"Exercise NOT saved", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -227,11 +222,28 @@ class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.editworkout_menu,menu);
+        menuInflater.inflate(R.menu.exerciseabstract_all_search,menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView) searchItem.getActionView();
+
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
         return true;
     }
 
-    @Override
+/*    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_all_exerciseabstract:
@@ -242,6 +254,6 @@ class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
+    }*/
 
 }

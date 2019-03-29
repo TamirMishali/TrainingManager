@@ -1,4 +1,7 @@
 package com.example.tamirmishali.trainingmanager;
 
-class History {
+public class WorkoutNow {
+
+    
+
 }

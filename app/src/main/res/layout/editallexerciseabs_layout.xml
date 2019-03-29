@@ -9,7 +9,10 @@
         android:id="@+id/recycler_view_allexerciseabs"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/exerciseabs_item">
+        tools:listitem="@layout/exerciseabs_item"
+        android:layout_below="@id/searchview_all_exercise_abs"
+        >
+
 
     </android.support.v7.widget.RecyclerView>
 

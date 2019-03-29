@@ -1,20 +1,25 @@
 package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 
+import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
+import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstractAdapter.ExerciseAbstractHolder> {
+public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstractAdapter.ExerciseAbstractHolder> implements Filterable {
 
     private List<ExerciseAbstract> exerciseAbstracts = new ArrayList<>();
+    private List<ExerciseAbstract> exerciseAbstractsFull;// = new ArrayList<>();
     private OnItemLongClickListener longListener;
     private OnItemClickListener listener;
     //private Context context;
@@ -43,6 +48,7 @@ public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstra
 
     public void setExerciseAbstracts(List<ExerciseAbstract> exerciseAbstracts) {
         this.exerciseAbstracts = exerciseAbstracts;
+        exerciseAbstractsFull = new ArrayList<>(exerciseAbstracts);
         notifyDataSetChanged(); //use itemchanged later
     }
 
@@ -50,7 +56,47 @@ public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstra
         return exerciseAbstracts.get(position);
     }
 
+    //-------------------------Filter-------------------------
+    @Override
+    public Filter getFilter() {
+        return ExerciseAbstractFilter;
+    }
 
+    private Filter ExerciseAbstractFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<ExerciseAbstract> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(exerciseAbstractsFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (ExerciseAbstract item : exerciseAbstractsFull) {
+                    if (item.getName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            exerciseAbstracts.clear();
+            exerciseAbstracts.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
+
+
+
+    //--------------------------------------------------------
     class ExerciseAbstractHolder extends RecyclerView.ViewHolder {
         private TextView textViewExerciseAbstract;
         private TextView textViewExerciseAbstractDescription;

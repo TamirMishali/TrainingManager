@@ -7,8 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.Toast;
-
 import com.example.tamirmishali.trainingmanager.Routine.EditRoutines;
 import com.example.tamirmishali.trainingmanager.Routine.Routine;
 import com.example.tamirmishali.trainingmanager.Routine.RoutineViewModel;
@@ -48,18 +46,18 @@ public class MainActivity extends AppCompatActivity {
         button_Workout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), Workout.class);
+                Intent intent = new Intent(v.getContext(), WorkoutNow.class);
                 startActivity(intent);
                 }
         });
 
-        button_History.setOnClickListener(new View.OnClickListener(){
+/*        button_History.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), History.class);
                 startActivity(intent);
             }
-        });
+        });*/
 
         button_EditWorkout.setOnClickListener(new View.OnClickListener(){
             @Override
