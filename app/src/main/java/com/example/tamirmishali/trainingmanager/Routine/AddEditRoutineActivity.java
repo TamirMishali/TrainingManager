@@ -98,7 +98,7 @@ public class AddEditRoutineActivity extends AppCompatActivity {
 
         int id = getIntent().getIntExtra(EXTRA_ROUTINE_ID, -1);
         if (id != -1) {
-            data.putExtra(EXTRA_ROUTINE_ID, id);
+            data.putExtra(EXTRA_ROUTINE_ID,Integer.toString(id));
         }
         setResult(RESULT_OK,data);
         finish();

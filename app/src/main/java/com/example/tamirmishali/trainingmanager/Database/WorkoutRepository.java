@@ -52,6 +52,17 @@ public class WorkoutRepository {
         }
         return mussles;
     }
+    public Workout getCurrentWorkout(){
+        Workout workout = new Workout();
+        try {
+            workout = new GetCurrentWorkoutAsyncTask(workoutDao).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return workout;
+    }
 
     //Workout - AsyncTasks
     private static class InsertWorkoutAsyncTask extends AsyncTask<Workout, Void, Void>{
@@ -119,6 +130,19 @@ public class WorkoutRepository {
         protected List<String> doInBackground(Integer... values) {
             return workoutDao.getMusselsInWorkout(values[0]);
         }
+    }
 
+    //https://stackoverflow.com/questions/6053602/what-arguments-are-passed-into-asynctaskarg1-arg2-arg3
+    private static class GetCurrentWorkoutAsyncTask extends AsyncTask<Void, Void, Workout>{
+        private WorkoutDao workoutDao;
+
+        private GetCurrentWorkoutAsyncTask(WorkoutDao workoutDao){
+            this.workoutDao = workoutDao;
+        }
+
+        @Override
+        protected Workout doInBackground(Void... voids) {
+            return workoutDao.getCurrentWorkout();
+        }
     }
 }

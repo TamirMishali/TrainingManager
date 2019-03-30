@@ -30,6 +30,8 @@
         <activity android:name=".ExerciseAbstract.AddExerciseAbstractToWorkoutActivity"></activity>
         <activity android:name=".ExerciseAbstract.AddEditExerciseAbsActivity"
             android:parentActivityName=".ExerciseAbstract.AddExerciseAbstractToWorkoutActivity"></activity>
+        <activity android:name=".WorkoutNow"
+            android:parentActivityName=".MainActivity"></activity>
 
         <meta-data
             android:name="preloaded_fonts"

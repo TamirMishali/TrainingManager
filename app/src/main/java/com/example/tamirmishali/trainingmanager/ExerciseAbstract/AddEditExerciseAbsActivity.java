@@ -1,23 +1,15 @@
 package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 
-import android.app.DatePickerDialog;
+
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.tamirmishali.trainingmanager.R;
-
-import java.util.Calendar;
 
 public class AddEditExerciseAbsActivity extends AppCompatActivity {
     public static final String EXTRA_EXERCISEABS_ID =
