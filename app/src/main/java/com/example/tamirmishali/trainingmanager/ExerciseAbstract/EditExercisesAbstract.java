@@ -78,7 +78,7 @@ public class EditExercisesAbstract extends AppCompatActivity {
         final RecyclerView recyclerView = findViewById(R.id.recycler_view_exerciseabs);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //WorkoutAdapter Decleration
+        //ExerciseAbstract Adapter Decleration
         final ExerciseAbstractAdapter adapter = new ExerciseAbstractAdapter();
         recyclerView.setAdapter(adapter);
 
@@ -91,7 +91,7 @@ public class EditExercisesAbstract extends AppCompatActivity {
             }
         });
 
-        //ExerciseAbstractViewModel Decleration
+        //ExerciseViewModel Decleration
         exerciseViewModel = ViewModelProviders.of(this).get(ExerciseViewModel.class);
         exerciseViewModel.getAllExercises();
 

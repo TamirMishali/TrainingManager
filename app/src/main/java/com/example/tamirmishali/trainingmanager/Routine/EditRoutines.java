@@ -113,9 +113,7 @@ public class EditRoutines extends AppCompatActivity {
                 Intent intent = new Intent(EditRoutines.this, EditWorkouts.class); //EditWorkouts
                 intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID,routine.getUid());
                 intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_NAME,routine.getRoutineName());
-                //startActivityForResult(intent, ADD_WORKOUTS_REQUEST);
-                startActivity(intent);
-
+                startActivityForResult(intent, ADD_WORKOUTS_REQUEST);
             }
         });
     }
@@ -149,13 +147,9 @@ public class EditRoutines extends AppCompatActivity {
             routineViewModel.update(routine);
             Toast.makeText(this,"Routine updated", Toast.LENGTH_SHORT).show();
         }
-/*        else if (requestCode == ADD_WORKOUTS_REQUEST && resultCode == RESULT_OK){
+        else if (requestCode == ADD_WORKOUTS_REQUEST && resultCode == RESULT_OK){
             Toast.makeText(this,"Workouts added", Toast.LENGTH_SHORT).show();
-        }*/
-        else {
-            Toast.makeText(this,"Routine NOT saved", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override

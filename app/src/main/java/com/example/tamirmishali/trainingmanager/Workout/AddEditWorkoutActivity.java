@@ -109,7 +109,7 @@ public class AddEditWorkoutActivity extends AppCompatActivity {
 
         int id = getIntent().getIntExtra(EXTRA_WORKOUT_ID, -1);
         if (id != -1) {
-            data.putExtra(EXTRA_WORKOUT_ID, id);
+            data.putExtra(EXTRA_WORKOUT_ID, Integer.toString(id));
         }
         setResult(RESULT_OK,data);
         finish();

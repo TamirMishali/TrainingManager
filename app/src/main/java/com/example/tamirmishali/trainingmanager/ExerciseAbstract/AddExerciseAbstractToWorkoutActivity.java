@@ -28,7 +28,7 @@ import com.example.tamirmishali.trainingmanager.R;
 
 import java.util.List;
 
-class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
+public class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
     public static final  String EXTRA_WORKOUT_ID =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
 

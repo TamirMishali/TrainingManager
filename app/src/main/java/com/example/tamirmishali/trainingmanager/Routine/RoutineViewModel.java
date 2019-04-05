@@ -37,6 +37,7 @@ public class RoutineViewModel extends AndroidViewModel {
     public LiveData<List<Routine>> getAllRoutines(){
         return allRoutines;
     }
+    /*public Routine getCurrentRoutine() {repository.getCurrentRoutine();}*/
 
 /*
 

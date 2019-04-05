@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     static {
         System.loadLibrary("native-lib");
     }
-    private RoutineViewModel routineViewModel;
+    /*private RoutineViewModel routineViewModel;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,16 +29,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Init
-        routineViewModel = ViewModelProviders.of(this).get(RoutineViewModel.class);
+/*        routineViewModel = ViewModelProviders.of(this).get(RoutineViewModel.class);
         routineViewModel.getAllRoutines().observe(this, new Observer<List<Routine>>() {
             @Override
             public void onChanged(@Nullable List<Routine> routines) {
                 //update RecyclerView
             }
-        });
+        });*/
 
         ImageButton button_Workout = findViewById(R.id.imageButton_WorkoutActivity);
-        ImageButton button_History = findViewById(R.id.imageButton_HistoryActivity);
         ImageButton button_EditWorkout = findViewById(R.id.imageButton_EditActivity);
 
 
@@ -50,14 +49,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 }
         });
-
-/*        button_History.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), History.class);
-                startActivity(intent);
-            }
-        });*/
 
         button_EditWorkout.setOnClickListener(new View.OnClickListener(){
             @Override

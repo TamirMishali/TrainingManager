@@ -36,5 +36,15 @@ public interface WorkoutDao {
             "where E.id_workout IN (:workoutid)")
     List<String> getMusselsInWorkout(final int workoutid);
 
+    @Query("select W.* " +
+            "from workout_table W inner join routine_table R ON W.id_routine = R.id " +
+            "where R.id IN (select id " +
+            "               from routine_table " +
+            "               Order BY date desc " +
+            "               limit 1) " +
+            "limit 1")
+    Workout getCurrentWorkout();
+
+
 
 }

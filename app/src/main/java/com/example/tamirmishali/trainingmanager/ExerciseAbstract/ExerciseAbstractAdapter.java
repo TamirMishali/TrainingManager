@@ -34,10 +34,10 @@ public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstra
 
     @Override
     public void onBindViewHolder(@NonNull ExerciseAbstractHolder holder, final int position) {
-        ExerciseAbstract curretExerciseAbstract = exerciseAbstracts.get(position);
-        holder.textViewExerciseAbstract.setText(curretExerciseAbstract.getName());
-        holder.textViewExerciseAbstractDescription.setText(curretExerciseAbstract.getDescription());
-        holder.textViewExerciseAbstractMussleGroup.setText(curretExerciseAbstract.getMuscleGroup());
+        ExerciseAbstract currentExerciseAbstract = exerciseAbstracts.get(position);
+        holder.textViewExerciseAbstract.setText(currentExerciseAbstract.getName());
+        holder.textViewExerciseAbstractDescription.setText(currentExerciseAbstract.getDescription());
+        holder.textViewExerciseAbstractMuscleGroup.setText(currentExerciseAbstract.getMuscleGroup());
         holder.itemView.setTag(holder);
     }
 
@@ -100,14 +100,14 @@ public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstra
     class ExerciseAbstractHolder extends RecyclerView.ViewHolder {
         private TextView textViewExerciseAbstract;
         private TextView textViewExerciseAbstractDescription;
-        private TextView textViewExerciseAbstractMussleGroup;
+        private TextView textViewExerciseAbstractMuscleGroup;
 
 
         public ExerciseAbstractHolder(View itemView) {
             super(itemView);
             textViewExerciseAbstract = itemView.findViewById(R.id.text_view_exerciseabs_text);
             textViewExerciseAbstractDescription = itemView.findViewById(R.id.text_view_exerciseabs_description);
-            textViewExerciseAbstractMussleGroup = itemView.findViewById(R.id.text_view_exerciseabs_musclegroup);
+            textViewExerciseAbstractMuscleGroup = itemView.findViewById(R.id.text_view_exerciseabs_musclegroup);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

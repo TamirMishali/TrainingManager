@@ -77,6 +77,13 @@ public class Workout {
         }
     }
 
+    public Workout(Workout workout){
+        this.id = workout.getId();
+        this.id_routine = workout.getId_routine();
+        this.name = workout.getName();
+        this.date = workout.getDate();
+    }
+
 
     public Workout(int id_routine, String name, boolean abstractWorkout) {
         this.id = 0;

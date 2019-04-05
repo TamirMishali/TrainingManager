@@ -184,10 +184,6 @@ public class EditWorkouts extends AppCompatActivity {
             workoutViewModel.update(workout);
             Toast.makeText(this,"Workout Edited", Toast.LENGTH_SHORT).show();
         }
-        else {
-            Toast.makeText(this,"Workout NOT saved", Toast.LENGTH_SHORT).show();
-        }
-
     }
 
     @Override

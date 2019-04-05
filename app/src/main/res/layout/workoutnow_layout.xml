@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/workoutnow_current_routine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Current Routine"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:background="#90ee02"
+        />
+
+    <TextView
+        android:id="@+id/workoutnow_current_workout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Current Workout"
+        android:textAlignment="center"
+        android:textSize="15dp"
+        android:background="#c6f68d"
+        android:layout_below="@id/workoutnow_current_routine"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_workoutNow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/cardview_workoutnow"
+        android:layout_below="@id/workoutnow_current_workout"
+        >
+
+    </android.support.v7.widget.RecyclerView>
+
+
+</LinearLayout>
