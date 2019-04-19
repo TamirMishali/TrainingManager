@@ -28,7 +28,7 @@ public interface WorkoutDao {
     @Query("SELECT * from workout_table Order by date DESC")
     LiveData<List<Workout>> getAllWorkouts();
 
-    @Query("SELECT * FROM workout_table WHERE id_routine=:id_routine")
+    @Query("SELECT * FROM workout_table WHERE (id_routine=:id_routine and date is NULL)")
     LiveData<List<Workout>> getWorkoutsForRoutine(final int id_routine);
 
     @Query("select EA.muscleGroup " +
@@ -36,14 +36,30 @@ public interface WorkoutDao {
             "where E.id_workout IN (:workoutid)")
     List<String> getMusselsInWorkout(final int workoutid);
 
-    @Query("select W.* " +
-            "from workout_table W inner join routine_table R ON W.id_routine = R.id " +
-            "where R.id IN (select id " +
-            "               from routine_table " +
-            "               Order BY date desc " +
-            "               limit 1) " +
-            "limit 1")
+/*    @Query("select W.* " +
+           "from workout_table W inner join routine_table R ON W.id_routine = R.id " +
+           "where R.id IN (select id " +
+           "               from routine_table " +
+           "               Order BY date desc " +
+           "               limit 1) and (not W.date is NULL)" +
+           "Order By W.date DESC " +
+           "limit 1")*/
+    @Query("select * from( " +
+            "   select * from workout_table " +
+            "   where id_routine IN " +
+            "       (select id " +
+            "       from routine_table " +
+            "       Order BY date desc " +
+            "       limit 1) " +
+            "   and not (date is NULL) " +
+            "   ORDER by date desc " +
+            "   limit (SELECT count (name) FROM workout_table where (date is null) and (id_routine IN (select id from routine_table Order BY date desc limit 1)))) " +
+            "ORDER by date ASC " +
+            "LIMIT 1 ")
     Workout getCurrentWorkout();
+
+    @Query("select * from workout_table where (name = :workoutName) and (date < :workoutDate) limit 1")
+    Workout getPrevWorkout(String workoutName, int workoutDate);
 
 
 

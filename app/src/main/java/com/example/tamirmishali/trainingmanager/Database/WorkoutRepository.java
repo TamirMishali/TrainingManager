@@ -38,8 +38,8 @@ public class WorkoutRepository {
     public LiveData<List<Workout>> getAllWorkouts(){
         return allWorkouts;
     }
-    public LiveData<List<Workout>> getWorkoutsForRoutine(int routineid){
-        return workoutDao.getWorkoutsForRoutine(routineid);
+    public LiveData<List<Workout>> getWorkoutsForRoutine(int routineId){
+        return workoutDao.getWorkoutsForRoutine(routineId);
     }
     public List<String> getMusselsInWorkout(int workout_id){
         List<String> mussles = new ArrayList<>();
@@ -56,6 +56,18 @@ public class WorkoutRepository {
         Workout workout = new Workout();
         try {
             workout = new GetCurrentWorkoutAsyncTask(workoutDao).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return workout;
+    }
+    public Workout getPrevWorkout(String workoutName, int workoutDate){
+        MyTaskParams params = new MyTaskParams(workoutName, workoutDate);
+        Workout workout = new Workout();
+        try {
+            workout = new GetPrevWorkoutAsyncTask(workoutDao).execute(params).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -143,6 +155,31 @@ public class WorkoutRepository {
         @Override
         protected Workout doInBackground(Void... voids) {
             return workoutDao.getCurrentWorkout();
+        }
+    }
+
+
+    //https://stackoverflow.com/questions/12069669/how-can-you-pass-multiple-primitive-parameters-to-asynctask
+    private static class MyTaskParams {
+        String workoutName;
+        int workoutDate;
+
+        MyTaskParams(String workoutName, int workoutDate) {
+            this.workoutName = workoutName;
+            this.workoutDate = workoutDate;
+        }
+    }
+    //https://stackoverflow.com/questions/6053602/what-arguments-are-passed-into-asynctaskarg1-arg2-arg3
+    private static class GetPrevWorkoutAsyncTask extends AsyncTask<MyTaskParams, Void, Workout>{
+        private WorkoutDao workoutDao;
+
+        private GetPrevWorkoutAsyncTask(WorkoutDao workoutDao){
+            this.workoutDao = workoutDao;
+        }
+
+        @Override
+        protected Workout doInBackground(MyTaskParams... params) {
+            return workoutDao.getPrevWorkout(params[0].workoutName, params[0].workoutDate);
         }
     }
 }

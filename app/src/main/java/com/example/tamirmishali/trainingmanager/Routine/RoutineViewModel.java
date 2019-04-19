@@ -22,6 +22,10 @@ public class RoutineViewModel extends AndroidViewModel {
  //       allWorkouts = repository.getAllWorkouts();
     }
 
+    public LiveData<List<Routine>> getObservableProduct() {
+        return allRoutines;
+    }
+
     public void insert(Routine routine){
         repository.insert(routine);
     }

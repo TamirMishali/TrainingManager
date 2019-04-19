@@ -1,7 +1,5 @@
 package com.example.tamirmishali.trainingmanager.Workout;
 
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,8 +32,8 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutH
 
     @Override
     public void onBindViewHolder(@NonNull WorkoutHolder holder, final int position) {
-        Workout curretWorkout = workouts.get(position);
-        holder.textViewWorkout.setText(curretWorkout.getWorkoutName());
+        Workout currentWorkout = workouts.get(position);
+        holder.textViewWorkout.setText(currentWorkout.getWorkoutName());
         holder.textViewWorkoutExercises.setText("");
         holder.itemView.setTag(holder);
     }

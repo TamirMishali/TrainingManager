@@ -21,6 +21,7 @@ public class WorkoutViewModel extends AndroidViewModel {
         allWorkouts = repository.getAllWorkouts();
     }
 
+
     public void insert(Workout workout){
         repository.insert(workout);
     }
@@ -39,5 +40,6 @@ public class WorkoutViewModel extends AndroidViewModel {
     public LiveData<List<Workout>> getWorkoutsForRoutine(int id){ return repository.getWorkoutsForRoutine(id); }
     public List<String> getMusselsInWorkout(int id) {return repository.getMusselsInWorkout(id);}
     public Workout getCurrentWorkout() { return repository.getCurrentWorkout();}
+    public Workout getPrevWorkout(String workoutName, int workoutDate){return repository.getPrevWorkout(workoutName,workoutDate);}
 
 }
