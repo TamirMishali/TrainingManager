@@ -34,9 +34,9 @@ public class ExerciseRepository {
     public void deleteAllExercises(int workout_id){
         new DeleteAllExerciseAsyncTask(exerciseDao).execute(workout_id);
     }
-    public Exercise getExerciseForWorkout(int exerciseastractid, int workoutid){
+    public Exercise getExerciseForWorkout(int exerciseAbstractId, int workoutId){
         try {
-            exercise = new GetExerciseForWorkoutAsyncTask(exerciseDao).execute(exerciseastractid,workoutid).get();
+            exercise = new GetExerciseForWorkoutAsyncTask(exerciseDao).execute(exerciseAbstractId,workoutId).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -47,8 +47,8 @@ public class ExerciseRepository {
     public LiveData<List<Exercise>> getAllExercises(){
         return allExercises;
     }
-    public LiveData<List<Exercise>> getExercisesForWorkout(int workoutid){
-        return exerciseDao.getExercisesForWorkout(workoutid);
+    public LiveData<List<Exercise>> getExercisesForWorkout(int workoutId){
+        return exerciseDao.getExercisesForWorkout(workoutId);
     }
 
     //Exercise - AsyncTasks

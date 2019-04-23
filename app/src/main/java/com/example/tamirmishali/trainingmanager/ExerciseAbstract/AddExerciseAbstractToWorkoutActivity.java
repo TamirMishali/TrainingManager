@@ -151,7 +151,7 @@ public class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with add
                         if (exerciseViewModel.getExerciseForWorkout(exerciseabstract.getId(),sourceWorkoutID) == null){ //doesn't exist in workout
-                            Exercise exercise = new Exercise(exerciseabstract.getId(),sourceWorkoutID,"","");
+                            Exercise exercise = new Exercise(exerciseabstract.getId(),sourceWorkoutID,"");
                             exerciseViewModel.insert(exercise);
                             Toast.makeText(AddExerciseAbstractToWorkoutActivity.this , "Exercise Added" , Toast.LENGTH_SHORT).show();
                         }

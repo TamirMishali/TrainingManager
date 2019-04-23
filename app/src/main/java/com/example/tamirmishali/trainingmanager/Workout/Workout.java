@@ -33,7 +33,7 @@ public class Workout {
     private String name; //=routineDate_Char(A/B/C)
 
     @ColumnInfo(name = "date")
-    private Date date;
+    private java.sql.Date date;
 
     public Workout(){//-----------------------------------complete later
 

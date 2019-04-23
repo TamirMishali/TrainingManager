@@ -39,19 +39,19 @@ public class Exercise {
     @ColumnInfo(name = "comment")
     private String comment;
 
-    @ColumnInfo(name = "data")
-    private String data;
+/*    @ColumnInfo(name = "data")
+    private String data;*/
 
     // ------------Constructors ---------------
     public Exercise(){
 
     }
-    public Exercise(int idExerciseAbs, int idWorkout, String comment, String data){
+    public Exercise(int idExerciseAbs, int idWorkout, String comment/*, String data*/){
         this.id = 0;
         this.id_exerciseabs = idExerciseAbs;
         this.id_workout = idWorkout;
         this.comment = comment;
-        this.data = data;
+/*        this.data = data;*/
     }
 
     //---------------Getters & Setters---------------
@@ -87,13 +87,13 @@ public class Exercise {
         this.comment = comment;
     }
 
-    public String getData() {
+/*    public String getData() {
         return data;
     }
 
     public void setData(String data) {
         this.data = data;
-    }
+    }*/
 /*    @ColumnInfo(name = "reps")
     int[] reps = new int[5]; //maximum 5 sets
 

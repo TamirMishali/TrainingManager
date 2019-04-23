@@ -4,44 +4,24 @@
     android:layout_height="55dip"
     android:orientation="horizontal" >
 
-    <TextView
-        android:id="@+id/lblListItemPrev"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingTop="5dp"
-        android:textColor="#000000"
-        android:textSize="17dip"
-        android:text="Prev"/>
 
-    <EditText
+
+    <TextView
         android:id="@+id/lblListItemEditextPrevWeight"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ems="4" >
-    </EditText>
-    <EditText
+    </TextView>
+
+    <TextView
         android:id="@+id/lblListItemEditextPrevReps"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ems="4" >
-    </EditText>
+    </TextView>
 
-    <TextView
-        android:id="@+id/lblListItemNow"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingTop="5dp"
-        android:textColor="#000000"
-        android:textSize="17dip"
-        android:text="Now"/>
 
     <EditText
         android:id="@+id/lblListItemEditextNowWeight"

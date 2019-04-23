@@ -59,7 +59,7 @@ public interface WorkoutDao {
     Workout getCurrentWorkout();
 
     @Query("select * from workout_table where (name = :workoutName) and (date < :workoutDate) limit 1")
-    Workout getPrevWorkout(String workoutName, int workoutDate);
+    Workout getPrevWorkout(String workoutName, java.sql.Date workoutDate);
 
 
 

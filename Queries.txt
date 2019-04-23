@@ -1,0 +1,44 @@
+select W.* from workout_table W inner join routine_table R ON W.id_routine = R.id where R.id IN (select id from routine_table Order BY date desc limit 1) 
+limit 1
+
+1551045600000
+
+select distinct W.name from workout_table W inner join routine_table R ON W.id_routine = R.id where R.id IN (select id from routine_table Order BY date desc limit 1) and (not W.date is NULL)
+
+select W.* from workout_table W inner join routine_table R ON W.id_routine = R.id where R.id IN (select id from routine_table Order BY date desc limit 1) and not (W.date is NULL)
+
+select workout_table.* from workout_table Where workout_table.name(select disctinct W.name from workout_table W inner join routine_table R ON W.id_routine = R.id where R.id IN (select id from routine_table Order BY date desc limit 1) and not (W.date is NULL))
+
+select distinct name as discname, * from workout_table where id_routine IN (select id from routine_table Order BY date desc limit 1) and not (date is NULL)
+
+select * from workout_table where id_routine IN (select id from routine_table Order BY date desc limit 1) and not (date is NULL) limit 1
+
+SELECT distinct employeeid FROM Orders where customerid=69 order by orderDate Desc;
+select distinct employeeid from (SELECT * FROM Orders where customerid=69 order by orderDate Desc)
+
+
+get number of workouts in 
+this is better:
+SELECT count (name) FROM workout_table where (date is null) and (id_routine = 2)
+not this:
+SELECT count (distinct name) FROM workout_table where (date is null)
+
+
+
+from the most updated workouts
+get the least updated one :
+select * from(
+	select * from workout_table 
+	where id_routine IN 
+		(select id 
+		from routine_table 
+		Order BY date desc 
+		limit 1) 
+	and not (date is NULL) 
+	ORDER by date desc
+	limit (SELECT count (name) FROM workout_table where (date is null) and (id_routine IN (select id from routine_table Order BY date desc limit 1) )))
+	ORDER by date ASC
+	LIMIT 1
+
+get the prev workout of the one on top:
+select * from workout_table where (name = 'WORKOUTNAME') and (date < WORKOUTDATE) limit 1

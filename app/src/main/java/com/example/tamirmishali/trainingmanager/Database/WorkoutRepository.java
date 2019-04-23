@@ -63,7 +63,7 @@ public class WorkoutRepository {
         }
         return workout;
     }
-    public Workout getPrevWorkout(String workoutName, int workoutDate){
+    public Workout getPrevWorkout(String workoutName, java.sql.Date workoutDate){
         MyTaskParams params = new MyTaskParams(workoutName, workoutDate);
         Workout workout = new Workout();
         try {
@@ -162,9 +162,9 @@ public class WorkoutRepository {
     //https://stackoverflow.com/questions/12069669/how-can-you-pass-multiple-primitive-parameters-to-asynctask
     private static class MyTaskParams {
         String workoutName;
-        int workoutDate;
+        java.sql.Date workoutDate;
 
-        MyTaskParams(String workoutName, int workoutDate) {
+        MyTaskParams(String workoutName, java.sql.Date workoutDate) {
             this.workoutName = workoutName;
             this.workoutDate = workoutDate;
         }

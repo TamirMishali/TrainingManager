@@ -57,13 +57,15 @@ public class WorkoutNow extends AppCompatActivity {
         setContentView(R.layout./*activity_workoutnow*/workoutnow_layout);
         parentLinearLayout = /*(LinearLayout)*/ findViewById(R.id.parent_linear_layout);
 
+
+
         TextView textViewWorkoutName = findViewById(R.id.workoutnow_current_workout);
         workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
         exerciseAbstractViewModel = ViewModelProviders.of(this).get(ExerciseAbstractViewModel.class);
         routineViewModel = ViewModelProviders.of(this).get(RoutineViewModel.class);
 
 
-        //routineViewModel.getAllRoutines().observe(this, new Observer<List<Routine>>() {
+/*        //routineViewModel.getAllRoutines().observe(this, new Observer<List<Routine>>() {
         routineViewModel.getAllRoutines().observe(this, new Observer<List<Routine>>() {
             @Override
             public void onChanged(@Nullable List<Routine> routiness) {
@@ -76,14 +78,14 @@ public class WorkoutNow extends AppCompatActivity {
                     // One or more items retrieved, no need to call your api for data.
                 }
             }
-        });
+        });*/
 
         try {
             currentWorkout = workoutViewModel.getCurrentWorkout();
-            //prevWorkout = workoutViewModel.getPrevWorkout(currentWorkout.getWorkoutName(),1551045600000/*java.sql.Date.valueOf(currentWorkout.getWorkoutDate())*/);
+            prevWorkout = workoutViewModel.getPrevWorkout(currentWorkout.getWorkoutName(),currentWorkout.getWorkoutDate());
             textViewWorkoutName.setText("Workout: " +currentWorkout.getWorkoutName());
-            routines = routineViewModel.getAllRoutines().getValue();
-            workouts = workoutViewModel.getWorkoutsForRoutine(routines.get(0).getUid()).getValue();
+            /*routines = routineViewModel.getAllRoutines().getValue();
+            workouts = workoutViewModel.getWorkoutsForRoutine(routines.get(0).getUid()).getValue();*/
 
         } catch (Exception e) {
             Toast.makeText(this, "couldn't load last workout", Toast.LENGTH_SHORT).show();
@@ -106,6 +108,8 @@ public class WorkoutNow extends AppCompatActivity {
         });*/
 
 
+
+
         //---------------------------New
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
@@ -117,6 +121,9 @@ public class WorkoutNow extends AppCompatActivity {
 
         // setting list adapter
         expListView.setAdapter(listAdapter);
+
+
+
 
         // Listview Group click listener
         expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
@@ -139,6 +146,11 @@ public class WorkoutNow extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),
                         listDataHeader.get(groupPosition) + " Expanded",
                         Toast.LENGTH_SHORT).show();
+/*                final TextView textViewPrev = findViewById(R.id.ListHeaderPrev);
+                final TextView textViewNow = findViewById(R.id.ListHeaderNow);
+                textViewNow.setVisibility(View.VISIBLE);
+                textViewPrev.setVisibility(View.VISIBLE);*/
+
             }
         });
 
@@ -150,6 +162,10 @@ public class WorkoutNow extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),
                         listDataHeader.get(groupPosition) + " Collapsed",
                         Toast.LENGTH_SHORT).show();
+/*                final TextView textViewPrev = findViewById(R.id.ListHeaderPrev);
+                final TextView textViewNow = findViewById(R.id.ListHeaderNow);
+                textViewNow.setVisibility(View.GONE);
+                textViewPrev.setVisibility(View.GONE);*/
 
             }
         });
@@ -172,7 +188,18 @@ public class WorkoutNow extends AppCompatActivity {
                 return false;
             }
         });
+    }
 
+    private void vissibilityOfAllGroups(){
+
+    }
+    private void observeExercises() {
+        exerciseViewModel.getExercisesForWorkout(currentWorkout.getId()).observe(this, new Observer<List<Exercise>>() {
+            @Override
+            public void onChanged(@Nullable List<Exercise> exercises) {
+                Toast.makeText(WorkoutNow.this, "something", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 //--------------------New too

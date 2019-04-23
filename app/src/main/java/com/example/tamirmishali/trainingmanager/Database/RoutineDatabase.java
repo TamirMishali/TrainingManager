@@ -12,14 +12,16 @@ import com.example.tamirmishali.trainingmanager.Converters;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.RoutineDao;
+import com.example.tamirmishali.trainingmanager.Database.DAOs.SetDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.WorkoutDao;
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 import com.example.tamirmishali.trainingmanager.Routine.Routine;
+import com.example.tamirmishali.trainingmanager.Set.Set;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 import static java.lang.Math.toIntExact;
 
-@Database(version = 7,entities = {Routine.class, Workout.class, Exercise.class, ExerciseAbstract.class})
+@Database(version = 11,entities = {Routine.class, Workout.class, Exercise.class, ExerciseAbstract.class, Set.class})
 @TypeConverters({Converters.class})
 
 public abstract class RoutineDatabase extends RoomDatabase {
@@ -29,6 +31,7 @@ public abstract class RoutineDatabase extends RoomDatabase {
     public abstract WorkoutDao workoutDao();
     public abstract ExerciseDao exerciseDao();
     public abstract ExerciseAbstractDao exerciseAbstractDao();
+    public abstract SetDao setDao();
 
     // Prevention of opening the same database to RAM twice.
     private static final String DATABASE_NAME = "routines_database";
@@ -61,38 +64,181 @@ public abstract class RoutineDatabase extends RoomDatabase {
         private WorkoutDao workoutDao;
         private ExerciseDao exerciseDao;
         private ExerciseAbstractDao exerciseAbstractDao;
+        private SetDao setDao;
 
         private PopulateDbAsyncTask(RoutineDatabase db) {
             routineDao = db.routineDao();
             workoutDao = db.workoutDao();
             exerciseDao = db.exerciseDao();
             exerciseAbstractDao = db.exerciseAbstractDao();
+            setDao = db.setDao();
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Routine routine = new Routine("Back Biceps","2019-02-25");//, "20-02-2019");
-            //routineDao.insert(routine);
+            Routine routine = new Routine("Mass","2019-02-25");//, "20-02-2019");
 
-            //routine = new Routine(0, "Chest Triceps");
             long longId = routineDao.insert(routine);
             int routineId = toIntExact(longId);
 
-            Workout workout = new Workout(routineId,"A", Boolean.TRUE);
+            //Abstract workouts
+            Workout workout = new Workout(routineId,"Chest", Boolean.TRUE);
             longId = workoutDao.insert(workout);
-            int workoutId = toIntExact(longId);
+            int workoutAbsOneId = toIntExact(longId);
+
+            workout = new Workout(routineId, "Back", Boolean.TRUE);
+            longId = workoutDao.insert(workout);
+            int workoutAbsTwoId = toIntExact(longId);
+
+
+            //Practical workouts
+            workout = new Workout(routineId,"Chest","2019-04-01",Boolean.FALSE);
+            longId = workoutDao.insert(workout);
+            int workoutOneId = toIntExact(longId);
+
+            workout = new Workout(routineId, "Back","2019-04-02",Boolean.FALSE);
+            longId = workoutDao.insert(workout);
+            int workoutTwoId = toIntExact(longId);
+
+            workout = new Workout(routineId,"Chest","2019-04-03",Boolean.FALSE);
+            longId = workoutDao.insert(workout);
+            int workoutThreeId = toIntExact(longId);
+
+            workout = new Workout(routineId, "Back","2019-04-04",Boolean.FALSE);
+            longId = workoutDao.insert(workout);
+            int workoutFourId = toIntExact(longId);
 
             populateExerciseAbstractDatabase(exerciseAbstractDao);
-            /*ExerciseAbstract exerciseAbstract = new ExerciseAbstract("Olympic bench chest press", "press of chest on bench and shit", "Chest");
-            longId = exerciseAbstractDao.insert(exerciseAbstract);
-            int exerciseAbsId = toIntExact(longId);
+            //---------------------------------------Exercises and Sets-----------------------------
+            //first abs workout
+            Set set;
+            Exercise exercise = new Exercise(1,workoutAbsOneId,"");
+            longId =  exerciseDao.insert(exercise);
+            exercise = new Exercise(2,1,"");
+            longId =  exerciseDao.insert(exercise);
+            exercise = new Exercise(3,1,"");
+            longId =  exerciseDao.insert(exercise);
 
-            Exercise exercise = new Exercise(exerciseAbsId, workoutId, "", "7.5,8|7.5,8|7.5,10");
-            exerciseDao.insert(exercise);*/
-            //workoutDao.insert(new Workout(routine.getUid(),"B", Boolean.TRUE));
-            //workoutDao.insert(new Workout(routine.getUid(),"C", Boolean.TRUE));
-            //routineDao.insert(new Routine("12.12.15","Chest Triceps"));
-            //routineDao.insert(new Routine("13.12.15","Legs Shoulders"));
+            //second abs workout
+            exercise = new Exercise(14,workoutAbsTwoId,"");
+            longId =  exerciseDao.insert(exercise);
+            exercise = new Exercise(15,workoutAbsTwoId,"");
+            longId =  exerciseDao.insert(exercise);
+            exercise = new Exercise(16,workoutAbsTwoId,"");
+            longId =  exerciseDao.insert(exercise);
+
+
+
+
+
+            //Practical Workouts
+            //workout One
+            exercise = new Exercise(1,workoutOneId,"Workout One Ex 1");
+            longId = exerciseDao.insert(exercise);
+            int exerciseOneId = toIntExact(longId);
+            set = new Set(exerciseOneId,7.5,10);
+            setDao.insert(set);
+            setDao.insert(set);
+
+            exercise = new Exercise(2,workoutOneId,"Workout One Ex 2");
+            longId =  exerciseDao.insert(exercise);
+            exerciseOneId = toIntExact(longId);
+            set = new Set(exerciseOneId,3.75,8);
+            setDao.insert(set);
+            setDao.insert(set);
+            setDao.insert(set);
+            setDao.insert(set);
+
+            exercise = new Exercise(3,workoutOneId,"Workout One Ex 3");
+            longId =  exerciseDao.insert(exercise);
+            exerciseOneId = toIntExact(longId);
+            set = new Set(exerciseOneId,3.75,8);
+            setDao.insert(set);
+            setDao.insert(set);
+            setDao.insert(set);
+            setDao.insert(set);
+
+
+            //workout Three like One
+            exercise = new Exercise(1,workoutThreeId,"Workout Three Ex 1");
+            longId = exerciseDao.insert(exercise);
+            exerciseOneId = toIntExact(longId);
+            set = new Set(exerciseOneId,7.5,10);
+            setDao.insert(set);
+            setDao.insert(set);
+
+            exercise = new Exercise(2,workoutThreeId,"Workout Three Ex 2");
+            longId =  exerciseDao.insert(exercise);
+            exerciseOneId = toIntExact(longId);
+            set = new Set(exerciseOneId,3.75,8);
+            setDao.insert(set);
+            setDao.insert(set);
+            setDao.insert(set);
+            setDao.insert(set);
+
+            exercise = new Exercise(3,workoutThreeId,"Workout Three Ex 3");
+            longId =  exerciseDao.insert(exercise);
+            exerciseOneId = toIntExact(longId);
+            set = new Set(exerciseOneId,3.75,8);
+            setDao.insert(set);
+            setDao.insert(set);
+            setDao.insert(set);
+            setDao.insert(set);
+
+
+
+
+
+            //Workout Two
+            exercise = new Exercise(14,workoutTwoId,"Workout Two Ex 1");
+            longId =  exerciseDao.insert(exercise);
+            exerciseOneId = toIntExact(longId);
+            set = new Set(exerciseOneId,10,8);
+            setDao.insert(set);
+            setDao.insert(set);
+            setDao.insert(set);
+
+            exercise = new Exercise(15,workoutTwoId,"Workout Two Ex 2");
+            longId =  exerciseDao.insert(exercise);
+            exerciseOneId = toIntExact(longId);
+            set = new Set(exerciseOneId,5,10);
+            setDao.insert(set);
+            setDao.insert(set);
+
+            exercise = new Exercise(16,workoutTwoId,"Workout Two Ex 3");
+            longId =  exerciseDao.insert(exercise);
+            exerciseOneId = toIntExact(longId);
+            set = new Set(exerciseOneId,2.5,6);
+            setDao.insert(set);
+            setDao.insert(set);
+            setDao.insert(set);
+            setDao.insert(set);
+
+            //Workout Four like Two
+            exercise = new Exercise(14,workoutFourId,"Workout Four Ex 1");
+            longId =  exerciseDao.insert(exercise);
+            exerciseOneId = toIntExact(longId);
+            set = new Set(exerciseOneId,10,8);
+            setDao.insert(set);
+            setDao.insert(set);
+            setDao.insert(set);
+
+            exercise = new Exercise(15,workoutFourId,"Workout Four Ex 2");
+            longId =  exerciseDao.insert(exercise);
+            exerciseOneId = toIntExact(longId);
+            set = new Set(exerciseOneId,5,10);
+            setDao.insert(set);
+            setDao.insert(set);
+
+            exercise = new Exercise(16,workoutFourId,"Workout Four Ex 3");
+            longId =  exerciseDao.insert(exercise);
+            exerciseOneId = toIntExact(longId);
+            set = new Set(exerciseOneId,2.5,6);
+            setDao.insert(set);
+            setDao.insert(set);
+            setDao.insert(set);
+            setDao.insert(set);
+
             return null;
         }
     }
