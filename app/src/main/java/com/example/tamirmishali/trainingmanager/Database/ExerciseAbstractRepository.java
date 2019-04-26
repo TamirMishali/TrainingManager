@@ -8,6 +8,7 @@ import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractDa
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ExerciseAbstractRepository {
     private ExerciseAbstractDao  exerciseAbstractDao;
@@ -35,8 +36,19 @@ public class ExerciseAbstractRepository {
     public LiveData<List<ExerciseAbstract>> getAllExerciseAbstracts(){
         return allExerciseAbstracts;
     }
-    public LiveData<List<ExerciseAbstract>> getExerciseAbstractsForWorkout(int workoutid){
-        return exerciseAbstractDao.getExerciseAbstractsForWorkout(workoutid);
+    public LiveData<List<ExerciseAbstract>> getExerciseAbstractsForWorkout(int workoutId){
+        return exerciseAbstractDao.getExerciseAbstractsForWorkout(workoutId);
+    }
+    public ExerciseAbstract getExerciseAbsFromId(int exerciseAbsId){
+        ExerciseAbstract exerciseAbstract = new ExerciseAbstract();
+        try {
+            exerciseAbstract = new GetExerciseAbsFromIdAsyncTask(exerciseAbstractDao).execute(exerciseAbsId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return exerciseAbstract;
     }
 
     //ExerciseAbstract - AsyncTasks
@@ -92,4 +104,19 @@ public class ExerciseAbstractRepository {
             return null;
         }
     }
+
+    private static class GetExerciseAbsFromIdAsyncTask extends AsyncTask<Integer, Integer, ExerciseAbstract>{
+        private ExerciseAbstractDao exerciseAbstractDao;
+
+        private GetExerciseAbsFromIdAsyncTask(ExerciseAbstractDao exerciseAbstractDao){
+            this.exerciseAbstractDao = exerciseAbstractDao;
+        }
+
+        @Override
+        protected ExerciseAbstract doInBackground(Integer... values) {
+            return exerciseAbstractDao.getExerciseAbsFromId(values[0]);
+        }
+
+    }
+
 }

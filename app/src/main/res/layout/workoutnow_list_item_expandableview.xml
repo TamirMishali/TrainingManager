@@ -4,14 +4,22 @@
     android:layout_height="55dip"
     android:orientation="horizontal" >
 
-
+    <ImageButton
+        android:id="@+id/delete_button_list_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_delete"
+        android:background="@color/colorDefault"
+        android:layout_gravity="center"
+        android:paddingStart="8dp"/>
 
     <TextView
         android:id="@+id/lblListItemEditextPrevWeight"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:ems="4" >
+        android:ems="4"
+        android:textAlignment="center">
     </TextView>
 
     <TextView
@@ -19,7 +27,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:ems="4" >
+        android:ems="4"
+        android:textAlignment="center">
     </TextView>
 
 

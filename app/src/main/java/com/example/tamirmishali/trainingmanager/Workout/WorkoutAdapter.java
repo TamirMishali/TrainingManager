@@ -17,10 +17,8 @@ import static com.google.gson.reflect.TypeToken.get;
 public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutHolder> {
 
     private List<Workout> workouts = new ArrayList<>();
-    //private List<String> mussles = new ArrayList<>();
     private OnItemLongClickListener longListener;
     private OnItemClickListener listener;
-    //private Context context;
 
     @NonNull
     @Override
@@ -34,7 +32,14 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutH
     public void onBindViewHolder(@NonNull WorkoutHolder holder, final int position) {
         Workout currentWorkout = workouts.get(position);
         holder.textViewWorkout.setText(currentWorkout.getWorkoutName());
-        holder.textViewWorkoutExercises.setText("");
+
+        if(currentWorkout.getDate() != null){
+            holder.textViewWorkoutExercises.setText(currentWorkout.getDate().toString());
+        }
+        else {
+            holder.textViewWorkoutExercises.setText("");
+
+        }
         holder.itemView.setTag(holder);
     }
 

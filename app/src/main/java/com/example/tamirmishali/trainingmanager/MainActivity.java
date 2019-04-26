@@ -1,18 +1,14 @@
 package com.example.tamirmishali.trainingmanager;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import com.example.tamirmishali.trainingmanager.Routine.EditRoutines;
-import com.example.tamirmishali.trainingmanager.Routine.Routine;
-import com.example.tamirmishali.trainingmanager.Routine.RoutineViewModel;
-import com.example.tamirmishali.trainingmanager.Workout.Workout;
 
-import java.util.List;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.EditExercisesAbstract;
+import com.example.tamirmishali.trainingmanager.History.History;
+import com.example.tamirmishali.trainingmanager.Routine.EditRoutines;
+import com.example.tamirmishali.trainingmanager.Workout.EditWorkouts;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,17 +33,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
-        ImageButton button_Workout = findViewById(R.id.imageButton_WorkoutActivity);
+        ImageButton button_WorkoutNow = findViewById(R.id.imageButton_WorkoutNowActivity);
+        ImageButton button_History = findViewById(R.id.imageButton_History);
         ImageButton button_EditWorkout = findViewById(R.id.imageButton_EditActivity);
 
 
         //Main
-        button_Workout.setOnClickListener(new View.OnClickListener(){
+        button_WorkoutNow.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), WorkoutNow.class);
                 startActivity(intent);
                 }
+        });
+
+        button_History.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), History.class);
+                startActivity(intent);
+            }
         });
 
         button_EditWorkout.setOnClickListener(new View.OnClickListener(){

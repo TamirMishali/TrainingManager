@@ -5,8 +5,10 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseDao;
+import com.example.tamirmishali.trainingmanager.Database.DAOs.WorkoutDao;
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -47,8 +49,19 @@ public class ExerciseRepository {
     public LiveData<List<Exercise>> getAllExercises(){
         return allExercises;
     }
-    public LiveData<List<Exercise>> getExercisesForWorkout(int workoutId){
-        return exerciseDao.getExercisesForWorkout(workoutId);
+    public LiveData<List<Exercise>> getExercisesForWorkout_O(int workoutId){
+        return exerciseDao.getExercisesForWorkout_O(workoutId);
+    }
+    public List<Exercise> getExercisesForWorkout(int workoutId){
+        List<Exercise> exercises = new ArrayList<>();
+        try {
+            exercises = new GetExercisesForWorkoutAsyncTask(exerciseDao).execute(workoutId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return exercises;
     }
 
     //Exercise - AsyncTasks
@@ -119,5 +132,17 @@ public class ExerciseRepository {
         }
 
     }
+    private static class GetExercisesForWorkoutAsyncTask extends AsyncTask<Integer, Integer, List<Exercise>>{
+        private ExerciseDao exerciseDao;
+
+        private GetExercisesForWorkoutAsyncTask(ExerciseDao exerciseDao){
+            this.exerciseDao = exerciseDao;
+        }
+        protected List<Exercise> doInBackground(Integer... values) {
+            return exerciseDao.getExercisesForWorkout(values[0]);
+        }
+
+    }
+
 
 }

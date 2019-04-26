@@ -61,6 +61,9 @@ public interface WorkoutDao {
     @Query("select * from workout_table where (name = :workoutName) and (date < :workoutDate) limit 1")
     Workout getPrevWorkout(String workoutName, java.sql.Date workoutDate);
 
+    @Query("SELECT * FROM workout_table WHERE id_routine=:routineId and date is NOT NULL ORDER BY date DESC")
+    LiveData<List<Workout>> getPracticalWorkoutsForRoutine(int routineId);
+
 
 
 }

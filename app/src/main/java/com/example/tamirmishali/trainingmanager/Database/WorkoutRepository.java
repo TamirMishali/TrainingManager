@@ -75,6 +75,9 @@ public class WorkoutRepository {
         }
         return workout;
     }
+    public LiveData<List<Workout>> getPracticalWorkoutsForRoutine(int routineId){
+        return workoutDao.getPracticalWorkoutsForRoutine(routineId);
+    }
 
     //Workout - AsyncTasks
     private static class InsertWorkoutAsyncTask extends AsyncTask<Workout, Void, Void>{

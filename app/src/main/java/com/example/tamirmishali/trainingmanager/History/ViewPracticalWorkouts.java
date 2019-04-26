@@ -1,4 +1,4 @@
-package com.example.tamirmishali.trainingmanager.Workout;
+package com.example.tamirmishali.trainingmanager.History;
 
 import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
@@ -7,25 +7,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
-
-import com.example.tamirmishali.trainingmanager.ExerciseAbstract.EditExercisesAbstract;
 import com.example.tamirmishali.trainingmanager.R;
+import com.example.tamirmishali.trainingmanager.Workout.Workout;
+import com.example.tamirmishali.trainingmanager.Workout.WorkoutAdapter;
+import com.example.tamirmishali.trainingmanager.Workout.WorkoutViewModel;
 
 import java.util.List;
 
-import static com.example.tamirmishali.trainingmanager.Routine.AddEditRoutineActivity.EXTRA_ROUTINE_NAME;
-
-public class EditWorkouts extends AppCompatActivity {
+public class ViewPracticalWorkouts extends AppCompatActivity {
 
     public static final  String EXTRA_ROUTINE_ID =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
@@ -50,7 +44,7 @@ public class EditWorkouts extends AppCompatActivity {
 
         //Get routine ID for saving the workout
         Intent intent = getIntent();
-        if (intent.hasExtra(EXTRA_ROUTINE_ID) /*|| this.getCallingActivity().getClassName().equals()*/) {
+        if (intent.hasExtra(EXTRA_ROUTINE_ID)) {
             sourceRoutineID = intent.getIntExtra(EXTRA_ROUTINE_ID, -1);
             sourceRoutineName = intent.getStringExtra(EXTRA_ROUTINE_NAME);
         }else{
@@ -61,7 +55,7 @@ public class EditWorkouts extends AppCompatActivity {
         //Title
         setTitle(sourceRoutineName);
 
-        //Floating Plus button decleration
+/*        //Floating Plus button decleration
         FloatingActionButton buttonAddWorkout = findViewById(R.id.button_add_workout);
         buttonAddWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +63,7 @@ public class EditWorkouts extends AppCompatActivity {
                 Intent intent = new Intent(EditWorkouts.this,AddEditWorkoutActivity.class); //AddEditWorkoutActivity
                 startActivityForResult(intent,ADD_WORKOUT_REQUEST);
             }
-        });
+        });*/
 
         //Init
         final RecyclerView recyclerView = findViewById(R.id.recycler_view_workout);
@@ -81,7 +75,7 @@ public class EditWorkouts extends AppCompatActivity {
 
         //WorkoutViewModel Decleration
         workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
-        workoutViewModel.getWorkoutsForRoutine(sourceRoutineID).observe(this, new Observer<List<Workout>>() {
+        workoutViewModel.getPracticalWorkoutsForRoutine(sourceRoutineID).observe(this, new Observer<List<Workout>>() {
             @Override
             public void onChanged(@Nullable List<Workout> workouts) {
                 adapter.setWorkouts(workouts);
@@ -99,7 +93,7 @@ public class EditWorkouts extends AppCompatActivity {
 
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(EditWorkouts.this);
+                AlertDialog.Builder alert = new AlertDialog.Builder(ViewPracticalWorkouts.this);
                 alert.setTitle(R.string.delete_entry_dialog_title);
                 alert.setMessage(R.string.delete_workout_dialog);
                 alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -107,7 +101,7 @@ public class EditWorkouts extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
                         workoutViewModel.delete(adapter.getWorkoutAt(viewHolder.getAdapterPosition()));
-                        Toast.makeText(EditWorkouts.this , "Workout deleted" , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ViewPracticalWorkouts.this , "Workout deleted" , Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -125,7 +119,7 @@ public class EditWorkouts extends AppCompatActivity {
             }
         }).attachToRecyclerView(recyclerView);
 
-        //Edit Workout name and date
+/*        //Edit Workout name and date
         adapter.setOnItemLongClickListener(new WorkoutAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(Workout workout) {
@@ -141,30 +135,30 @@ public class EditWorkouts extends AppCompatActivity {
 
                 startActivityForResult(intent, EDIT_WORKOUT_REQUEST);
             }
-        });
+        });*/
 
         //Add Exercises to that workout
         adapter.setOnItemClickListener(new WorkoutAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Workout workout) {
-                Intent intent = new Intent(EditWorkouts.this, EditExercisesAbstract.class);
+/*                Intent intent = new Intent(ViewPracticalWorkouts.this, EditExercisesAbstract.class);
                 intent.putExtra(EditExercisesAbstract.EXTRA_WORKOUT_ID,workout.getId());
                 intent.putExtra(EditExercisesAbstract.EXTRA_WORKOUT_NAME,workout.getName());
-                startActivityForResult(intent, ADD_EXERCISEABS_REQUEST);
+                startActivityForResult(intent, ADD_EXERCISEABS_REQUEST);*/
             }
         });
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-        if(requestCode == ADD_EXERCISEABS_REQUEST && resultCode == RESULT_OK){
-/*
+/*        if(requestCode == ADD_EXERCISEABS_REQUEST && resultCode == RESULT_OK){
+*//*
             String workoutName = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME);
             String workoutDate = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE);
 
             Workout workout = new Workout(workoutName, workoutDate);//, workoutDate);
             workoutViewModel.insert(workout);
-*/
+*//*
 
             Toast.makeText(this,"Workout saved", Toast.LENGTH_SHORT).show();
         }
@@ -183,8 +177,9 @@ public class EditWorkouts extends AppCompatActivity {
             Workout workout = new Workout(Integer.parseInt(workoutId) ,sourceRoutineID ,workoutName, workoutDate,Boolean.TRUE);//, workoutDate);
             workoutViewModel.update(workout);
             Toast.makeText(this,"Workout Edited", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
+/*
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -204,5 +199,7 @@ public class EditWorkouts extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+*/
+
 
 }

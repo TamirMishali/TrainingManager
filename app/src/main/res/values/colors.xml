@@ -6,4 +6,6 @@
     <color name="prevColor">#d7d7d7</color>
     <color name="nowColor">#36e236</color>
     <color name="groupColor">#63e963</color>
+    <color name="colorDefault">#fafafa</color>
+
 </resources>

@@ -67,8 +67,8 @@ public class Exercise {
         return id_exerciseabs;
     }
 
-    public void setId_exerciseabs(int id_exerciseabs) {
-        this.id_exerciseabs = id_exerciseabs;
+    public void setId_exerciseabs(int id_exerciseAbs) {
+        this.id_exerciseabs = id_exerciseAbs;
     }
 
     public int getId_workout() {
@@ -86,18 +86,5 @@ public class Exercise {
     public void setComment(String comment) {
         this.comment = comment;
     }
-
-/*    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }*/
-/*    @ColumnInfo(name = "reps")
-    int[] reps = new int[5]; //maximum 5 sets
-
-    @ColumnInfo(name = "isoriginal")
-    Boolean isOriginal;*/
 
 }

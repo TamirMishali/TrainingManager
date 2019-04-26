@@ -32,8 +32,14 @@ public interface SetDao {
     @Query("SELECT * from set_table Order by id_set DESC")
     LiveData<List<Set>> getAllSets();
 
+/*    @Query("SELECT * FROM set_table WHERE id_exercise=:id_exercise")
+    LiveData<List<Set>> getSetsForExercise(final int id_exercise);*/
+
+    @Query("SELECT * FROM set_table WHERE id_exercise IN (select id_exercise from exercise_table where id_workout=:workoutId)")
+    List<Set> getSetsForWorkout(int workoutId);
+
     @Query("SELECT * FROM set_table WHERE id_exercise=:id_exercise")
-    LiveData<List<Set>> getSetsForExercise(final int id_exercise);
+    List<Set> getSetsForExercise(final int id_exercise);
 
 
 

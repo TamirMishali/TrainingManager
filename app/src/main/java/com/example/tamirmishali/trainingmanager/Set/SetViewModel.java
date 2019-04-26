@@ -33,6 +33,8 @@ public class SetViewModel extends AndroidViewModel {
         return repository.getSetForWorkout(idSetAbstract,workoutId);
     }*/
     public LiveData<List<Set>> getAllSets(){return allSets; }
-    public LiveData<List<Set>> getSetsForWorkout(int exercise_id){ return repository.getSetsForExercise(exercise_id); }
+    //public LiveData<List<Set>> getSetsForExercise(int exercise_id){ return repository.getSetsForExercise(exercise_id); }
+    public List<Set> getSetsForWorkout(int workoutId){ return repository.getSetsForWorkout(workoutId);}
+    public List<Set> getSetsForExercise(int exerciseId){return repository.getSetsForExercise(exerciseId);}
 
 }

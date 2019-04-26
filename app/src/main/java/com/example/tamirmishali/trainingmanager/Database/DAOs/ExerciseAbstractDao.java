@@ -31,8 +31,11 @@ public interface ExerciseAbstractDao {
 
     @Query("select EA.id_exerciseabs, EA.name, EA.description, EA.muscleGroup " +
             "from exerciseabs_table EA inner join exercise_table E ON EA.id_exerciseabs  = E.id_exerciseabs " +
-            "where E.id_workout IN (:workoutid)")
-    LiveData<List<ExerciseAbstract>> getExerciseAbstractsForWorkout(int workoutid);
+            "where E.id_workout IN (:workoutId)")
+    LiveData<List<ExerciseAbstract>> getExerciseAbstractsForWorkout(int workoutId);
+
+    @Query("select * from exerciseabs_table where id_exerciseabs=:exerciseAbsId")
+    ExerciseAbstract getExerciseAbsFromId(int exerciseAbsId);
 
 /*    @Query("SELECT * FROM exerciseabs_table WHERE id_workout=:id_workout")
     LiveData<List<ExerciseAbstract>> getExercisesForWorkout(final int id_workout);*/

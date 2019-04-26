@@ -17,28 +17,37 @@
         app:layout_constraintTop_toBottomOf="parent">
 
         <ImageButton
-            android:id="@+id/imageButton_WorkoutActivity"
+            android:id="@+id/imageButton_WorkoutNowActivity"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:adjustViewBounds="true"
             android:clickable="true"
-            android:contentDescription="@android:string/ok"
             android:focusable="true"
-            android:padding="20dp"
+            android:padding="5dp"
             android:src="@drawable/main_workoutstring" />
+
+        <ImageButton
+            android:id="@+id/imageButton_History"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="5dp"
+            android:src="@drawable/main_historystring"/>
 
 
         <ImageButton
             android:id="@+id/imageButton_EditActivity"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:baselineAlignBottom="true"
             android:clickable="true"
-            android:contentDescription="@android:string/ok"
             android:focusable="true"
-            android:foregroundGravity="bottom|fill_vertical"
-            android:padding="20dp"
+            android:padding="5dp"
             android:src="@drawable/main_editworkoutsstring" />
     </LinearLayout>
 

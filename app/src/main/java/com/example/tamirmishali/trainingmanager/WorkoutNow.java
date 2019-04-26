@@ -1,15 +1,11 @@
 package com.example.tamirmishali.trainingmanager;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
@@ -18,15 +14,16 @@ import android.widget.Toast;
 
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
-import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractViewModel;
-import com.example.tamirmishali.trainingmanager.Routine.Routine;
 import com.example.tamirmishali.trainingmanager.Routine.RoutineViewModel;
+import com.example.tamirmishali.trainingmanager.Set.Set;
+import com.example.tamirmishali.trainingmanager.Set.SetViewModel;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 import com.example.tamirmishali.trainingmanager.Workout.WorkoutViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class WorkoutNow extends AppCompatActivity {
@@ -36,19 +33,22 @@ public class WorkoutNow extends AppCompatActivity {
     private WorkoutViewModel workoutViewModel;
     private ExerciseViewModel exerciseViewModel;
     private ExerciseAbstractViewModel exerciseAbstractViewModel;
+    private SetViewModel setViewModel;
     private LinearLayout parentLinearLayout;
     private Workout currentWorkout;
     private Workout prevWorkout;
-    private List<Exercise> exercises;
+    private List<Exercise> currentExercises;
+    private List<Exercise> prevExercises;
+    private ArrayList<Set> currentSets;
+    private List<Set> prevSets;
     private static final String TAG = WorkoutNow.class.getName();
 
     //-------------------------New
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
-    HashMap<String, List<String>> listDataChild;
-    private List<Workout> workouts;
-    private List<Routine> routines;
+    HashMap<String, List<Set>> listDataChild;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,58 +56,30 @@ public class WorkoutNow extends AppCompatActivity {
 
         setContentView(R.layout./*activity_workoutnow*/workoutnow_layout);
         parentLinearLayout = /*(LinearLayout)*/ findViewById(R.id.parent_linear_layout);
-
-
-
         TextView textViewWorkoutName = findViewById(R.id.workoutnow_current_workout);
+
         workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
         exerciseAbstractViewModel = ViewModelProviders.of(this).get(ExerciseAbstractViewModel.class);
         routineViewModel = ViewModelProviders.of(this).get(RoutineViewModel.class);
+        exerciseViewModel = ViewModelProviders.of(this).get(ExerciseViewModel.class);
+        setViewModel = ViewModelProviders.of(this).get(SetViewModel.class);
 
-
-/*        //routineViewModel.getAllRoutines().observe(this, new Observer<List<Routine>>() {
-        routineViewModel.getAllRoutines().observe(this, new Observer<List<Routine>>() {
-            @Override
-            public void onChanged(@Nullable List<Routine> routiness) {
-                if(routiness == null || routiness.size() == 0) {
-                    // No data in your database, call your api for data
-                } else {
-                    routines = routiness;
-                    Routine r = routines.get(0);
-                    workouts = workoutViewModel.getWorkoutsForRoutine(r.getUid()).getValue();
-                    // One or more items retrieved, no need to call your api for data.
-                }
-            }
-        });*/
 
         try {
             currentWorkout = workoutViewModel.getCurrentWorkout();
-            prevWorkout = workoutViewModel.getPrevWorkout(currentWorkout.getWorkoutName(),currentWorkout.getWorkoutDate());
-            textViewWorkoutName.setText("Workout: " +currentWorkout.getWorkoutName());
-            /*routines = routineViewModel.getAllRoutines().getValue();
-            workouts = workoutViewModel.getWorkoutsForRoutine(routines.get(0).getUid()).getValue();*/
+            prevWorkout = workoutViewModel.getPrevWorkout(currentWorkout.getWorkoutName(), currentWorkout.getWorkoutDate());
+            currentExercises = exerciseViewModel.getExercisesForWorkout(currentWorkout.getId());
+            prevExercises = exerciseViewModel.getExercisesForWorkout(prevWorkout.getId());
+            if (currentExercises != null && prevExercises != null) {
+                Log.i(TAG, currentExercises.get(0).getComment());
+                Log.i(TAG, prevExercises.get(0).getComment());
+            }
+            prevSets = setViewModel.getSetsForWorkout(prevWorkout.getId());
+            textViewWorkoutName.setText("Workout: " + currentWorkout.getWorkoutName());
 
         } catch (Exception e) {
             Toast.makeText(this, "couldn't load last workout", Toast.LENGTH_SHORT).show();
         }
-
-/*        recyclerView = (RecyclerView)findViewById(R.id.recycler_view_workoutNow);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
-        final ExpandableRecyclerAdapter adapter = new ExpandableRecyclerAdapter();
-        recyclerView.setAdapter(adapter);
-
-
-        exerciseViewModel = ViewModelProviders.of(this).get(ExerciseViewModel.class);
-        exerciseViewModel.getExercisesForWorkout(workout.getId()).observe(this, new Observer<List<Exercise>>() {
-            @Override
-            public void onChanged(@Nullable List<Exercise> exercises) {
-                adapter.setExercises(exercises);
-            }
-        });*/
-
-
 
 
         //---------------------------New
@@ -115,14 +87,13 @@ public class WorkoutNow extends AppCompatActivity {
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
 
         // preparing list data
-        prepareListData();
+        //prepareListData2();
+        prepareListDataPrev();
 
-        listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
+        listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild, setViewModel);
 
         // setting list adapter
         expListView.setAdapter(listAdapter);
-
-
 
 
         // Listview Group click listener
@@ -146,10 +117,6 @@ public class WorkoutNow extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),
                         listDataHeader.get(groupPosition) + " Expanded",
                         Toast.LENGTH_SHORT).show();
-/*                final TextView textViewPrev = findViewById(R.id.ListHeaderPrev);
-                final TextView textViewNow = findViewById(R.id.ListHeaderNow);
-                textViewNow.setVisibility(View.VISIBLE);
-                textViewPrev.setVisibility(View.VISIBLE);*/
 
             }
         });
@@ -162,10 +129,6 @@ public class WorkoutNow extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),
                         listDataHeader.get(groupPosition) + " Collapsed",
                         Toast.LENGTH_SHORT).show();
-/*                final TextView textViewPrev = findViewById(R.id.ListHeaderPrev);
-                final TextView textViewNow = findViewById(R.id.ListHeaderNow);
-                textViewNow.setVisibility(View.GONE);
-                textViewPrev.setVisibility(View.GONE);*/
 
             }
         });
@@ -188,22 +151,57 @@ public class WorkoutNow extends AppCompatActivity {
                 return false;
             }
         });
-    }
 
-    private void vissibilityOfAllGroups(){
 
     }
-    private void observeExercises() {
-        exerciseViewModel.getExercisesForWorkout(currentWorkout.getId()).observe(this, new Observer<List<Exercise>>() {
-            @Override
-            public void onChanged(@Nullable List<Exercise> exercises) {
-                Toast.makeText(WorkoutNow.this, "something", Toast.LENGTH_SHORT).show();
+
+
+
+
+
+    private void prepareListDataPrev() {
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
+        Iterator<Exercise> iterator = currentExercises.iterator();
+        String exerciseName = new String();
+        List<Set> childList;
+        Exercise exercise;
+
+        while (iterator.hasNext()) {
+            //System.out.println(iterator.next());
+            exercise = iterator.next();
+            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs()).getName();
+            listDataHeader.add(exerciseName);
+            childList = setViewModel.getSetsForExercise(exercise.getId());
+
+            listDataChild.put(exerciseName, childList);
+        }
+    }
+}
+
+
+
+
+/*    private void prepareListData2() {
+        listDataHeader = new ArrayList<String>();
+        listDataChild = new HashMap<String, List<String>>();
+        Iterator<Exercise> iterator = currentExercises.iterator();
+        String exerciseName;
+        List<String> childList = new ArrayList<String>();
+        while(iterator.hasNext()) {
+            //System.out.println(iterator.next());
+            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(iterator.next().getId_exerciseabs()).getName();
+            listDataHeader.add(exerciseName);
+            childList = new ArrayList<String>();
+            for(int i = 0; i < 3; i++){
+                childList.add("Hello");
             }
-        });
-    }
+            listDataChild.put(exerciseName,childList);
+        }
+    }*/
 
 //--------------------New too
-private void prepareListData() {
+/*private void prepareListData() {
     listDataHeader = new ArrayList<String>();
     listDataChild = new HashMap<String, List<String>>();
 
@@ -240,7 +238,7 @@ private void prepareListData() {
     listDataChild.put(listDataHeader.get(0), top250); // Header, Child data
     listDataChild.put(listDataHeader.get(1), nowShowing);
     listDataChild.put(listDataHeader.get(2), comingSoon);
-}
+}*/
 
 /*
 
@@ -258,4 +256,4 @@ private void prepareListData() {
     //https://www.journaldev.com/9942/android-expandablelistview-example-tutorial
 */
 
-}
+

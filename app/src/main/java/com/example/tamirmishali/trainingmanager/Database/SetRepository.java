@@ -5,7 +5,10 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.SetDao;
 import com.example.tamirmishali.trainingmanager.Set.Set;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class SetRepository {
     private SetDao setDao;
@@ -46,8 +49,42 @@ public class SetRepository {
     public LiveData<List<Set>> getAllSets(){
         return allSets;
     }
-    public LiveData<List<Set>> getSetsForExercise(int exerciseId){
+/*    public LiveData<List<Set>> getSetsForExercise(int exerciseId){
         return setDao.getSetsForExercise(exerciseId);
+    }*/
+/*    public List<Set> getSetsForExercises(int workoutId){
+        List<Set> sets = new ArrayList<>();
+        try {
+            sets = new GetSetsForWorkoutAsyncTask(setDao).execute(workoutId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return sets;
+    }*/
+    public List<Set> getSetsForWorkout(int workoutId){
+        List<Set> sets = new ArrayList<>();
+        try {
+            sets = new GetSetsForWorkoutAsyncTask(setDao).execute(workoutId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return sets;
+    }
+
+    public List<Set> getSetsForExercise(int exerciseId){
+        List<Set> sets = new ArrayList<>();
+        try {
+            sets = new GetSetsForExerciseAsyncTask(setDao).execute(exerciseId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return sets;
     }
 
     //Set - AsyncTasks
@@ -90,6 +127,33 @@ public class SetRepository {
             return null;
         }
     }
+    private static class GetSetsForWorkoutAsyncTask extends AsyncTask<Integer, Integer, List<Set>>{
+        private SetDao setDao;
+
+        private GetSetsForWorkoutAsyncTask(SetDao setDao){
+            this.setDao = setDao;
+        }
+
+        @Override
+        protected List<Set> doInBackground(Integer... values) {
+            return setDao.getSetsForWorkout(values[0]);
+        }
+
+    }
+    private static class GetSetsForExerciseAsyncTask extends AsyncTask<Integer, Integer, List<Set>>{
+        private SetDao setDao;
+
+        private GetSetsForExerciseAsyncTask(SetDao setDao){
+            this.setDao = setDao;
+        }
+
+        @Override
+        protected List<Set> doInBackground(Integer... values) {
+            return setDao.getSetsForExercise(values[0]);
+        }
+
+    }
+
 /*    private static class DeleteAllSetAsyncTask extends AsyncTask<Integer, Void, Void> {
         private SetDao setDao;
 
