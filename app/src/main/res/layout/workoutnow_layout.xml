@@ -28,6 +28,16 @@
         android:background="#c6f68d"
         android:layout_below="@id/workoutnow_current_routine"
         />
+    <TextView
+        android:id="@+id/workoutnow_workout_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Workout Date"
+        android:textAlignment="center"
+        android:textSize="15dp"
+        android:background="#e1f9c5"
+        android:layout_below="@id/workoutnow_current_workout"
+        />
 
 
     <ExpandableListView

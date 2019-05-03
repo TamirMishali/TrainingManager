@@ -35,6 +35,7 @@ public class SetViewModel extends AndroidViewModel {
     public LiveData<List<Set>> getAllSets(){return allSets; }
     //public LiveData<List<Set>> getSetsForExercise(int exercise_id){ return repository.getSetsForExercise(exercise_id); }
     public List<Set> getSetsForWorkout(int workoutId){ return repository.getSetsForWorkout(workoutId);}
+    public List<Set> getUnfilledSetsForWorkout(int workoutId){return repository.getUnfilledSetsFromWorkout(workoutId);}
     public List<Set> getSetsForExercise(int exerciseId){return repository.getSetsForExercise(exerciseId);}
 
 }

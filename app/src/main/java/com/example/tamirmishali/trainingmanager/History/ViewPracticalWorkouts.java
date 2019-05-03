@@ -16,6 +16,7 @@ import com.example.tamirmishali.trainingmanager.R;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 import com.example.tamirmishali.trainingmanager.Workout.WorkoutAdapter;
 import com.example.tamirmishali.trainingmanager.Workout.WorkoutViewModel;
+import com.example.tamirmishali.trainingmanager.WorkoutNow;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class ViewPracticalWorkouts extends AppCompatActivity {
     public static final  String EXTRA_WORKOUT_DATE =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
 
-    public static final int ADD_WORKOUT_REQUEST = 1;
+    public static final int VIEW_WORKOUT_HISTORY = 1;
     public static final int EDIT_WORKOUT_REQUEST = 2;
     public static final int ADD_EXERCISEABS_REQUEST = 3;
     private int sourceRoutineID;
@@ -75,7 +76,7 @@ public class ViewPracticalWorkouts extends AppCompatActivity {
 
         //WorkoutViewModel Decleration
         workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
-        workoutViewModel.getPracticalWorkoutsForRoutine(sourceRoutineID).observe(this, new Observer<List<Workout>>() {
+        workoutViewModel.getPracticalWorkoutsForRoutineLiveData(sourceRoutineID).observe(this, new Observer<List<Workout>>() {
             @Override
             public void onChanged(@Nullable List<Workout> workouts) {
                 adapter.setWorkouts(workouts);
@@ -141,28 +142,27 @@ public class ViewPracticalWorkouts extends AppCompatActivity {
         adapter.setOnItemClickListener(new WorkoutAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Workout workout) {
-/*                Intent intent = new Intent(ViewPracticalWorkouts.this, EditExercisesAbstract.class);
-                intent.putExtra(EditExercisesAbstract.EXTRA_WORKOUT_ID,workout.getId());
-                intent.putExtra(EditExercisesAbstract.EXTRA_WORKOUT_NAME,workout.getName());
-                startActivityForResult(intent, ADD_EXERCISEABS_REQUEST);*/
+                Intent intent = new Intent(ViewPracticalWorkouts.this, WorkoutNow.class);
+                intent.putExtra(WorkoutNow.EXTRA_WORKOUT_ID,workout.getId());
+                startActivityForResult(intent, VIEW_WORKOUT_HISTORY);
             }
         });
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-/*        if(requestCode == ADD_EXERCISEABS_REQUEST && resultCode == RESULT_OK){
-*//*
-            String workoutName = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME);
+        if(requestCode == VIEW_WORKOUT_HISTORY && resultCode == RESULT_OK){
+
+/*            String workoutName = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME);
             String workoutDate = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE);
 
             Workout workout = new Workout(workoutName, workoutDate);//, workoutDate);
-            workoutViewModel.insert(workout);
-*//*
+            workoutViewModel.insert(workout);*/
 
-            Toast.makeText(this,"Workout saved", Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(this,"Workout Viewed", Toast.LENGTH_SHORT).show();
         }
-        else if(requestCode == ADD_WORKOUT_REQUEST && resultCode == RESULT_OK){
+/*        else if(requestCode == ADD_WORKOUT_REQUEST && resultCode == RESULT_OK){
             String workoutName = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME);
             String workoutDate = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE);
             Workout workout = new Workout(sourceRoutineID ,workoutName, Boolean.TRUE);//, workoutDate);
@@ -177,6 +177,9 @@ public class ViewPracticalWorkouts extends AppCompatActivity {
             Workout workout = new Workout(Integer.parseInt(workoutId) ,sourceRoutineID ,workoutName, workoutDate,Boolean.TRUE);//, workoutDate);
             workoutViewModel.update(workout);
             Toast.makeText(this,"Workout Edited", Toast.LENGTH_SHORT).show();
+        }*/
+/*        else{
+            Toast.makeText(this,"Nothing from ViewPracticalWorkouts", Toast.LENGTH_SHORT).show();
         }*/
     }
 /*

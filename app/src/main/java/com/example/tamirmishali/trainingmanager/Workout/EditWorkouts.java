@@ -1,5 +1,6 @@
 package com.example.tamirmishali.trainingmanager.Workout;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -60,6 +61,12 @@ public class EditWorkouts extends AppCompatActivity {
 
         //Title
         setTitle(sourceRoutineName);
+
+
+
+        //getActionBar().setDisplayHomeAsUpEnabled(false);
+
+
 
         //Floating Plus button decleration
         FloatingActionButton buttonAddWorkout = findViewById(R.id.button_add_workout);
@@ -187,9 +194,15 @@ public class EditWorkouts extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.editworkout_menu,menu);
+        menuInflater.inflate(R.menu.editworkout_menu, menu);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            //actionBar.setHomeButtonEnabled(false); // disable the button
+            actionBar.setDisplayHomeAsUpEnabled(false); // remove the left caret
+            actionBar.setDisplayShowHomeEnabled(false); // remove the icon
+        }
         return true;
     }
 

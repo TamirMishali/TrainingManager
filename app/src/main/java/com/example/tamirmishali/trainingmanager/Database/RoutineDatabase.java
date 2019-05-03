@@ -91,7 +91,7 @@ public abstract class RoutineDatabase extends RoomDatabase {
             int workoutAbsTwoId = toIntExact(longId);
 
 
-            //Practical workouts
+/*            //Practical workouts
             workout = new Workout(routineId,"Chest","2019-04-01",Boolean.FALSE);
             longId = workoutDao.insert(workout);
             int workoutOneId = toIntExact(longId);
@@ -106,20 +106,20 @@ public abstract class RoutineDatabase extends RoomDatabase {
 
             workout = new Workout(routineId, "Back","2019-04-04",Boolean.FALSE);
             longId = workoutDao.insert(workout);
-            int workoutFourId = toIntExact(longId);
+            int workoutFourId = toIntExact(longId);*/
 
             populateExerciseAbstractDatabase(exerciseAbstractDao);
             //---------------------------------------Exercises and Sets-----------------------------
-            //first abs workout
+            //first abstract workout
             Set set;
             Exercise exercise = new Exercise(1,workoutAbsOneId,"");
             longId =  exerciseDao.insert(exercise);
-            exercise = new Exercise(2,1,"");
+            exercise = new Exercise(2,workoutAbsOneId,"");
             longId =  exerciseDao.insert(exercise);
-            exercise = new Exercise(3,1,"");
+            exercise = new Exercise(3,workoutAbsOneId,"");
             longId =  exerciseDao.insert(exercise);
 
-            //second abs workout
+            //second abstract workout
             exercise = new Exercise(14,workoutAbsTwoId,"");
             longId =  exerciseDao.insert(exercise);
             exercise = new Exercise(15,workoutAbsTwoId,"");
@@ -131,7 +131,7 @@ public abstract class RoutineDatabase extends RoomDatabase {
 
 
 
-            //Practical Workouts
+            /*//Practical Workouts
             //workout One
             exercise = new Exercise(1,workoutOneId,"Workout One Ex 1");
             longId = exerciseDao.insert(exercise);
@@ -237,7 +237,7 @@ public abstract class RoutineDatabase extends RoomDatabase {
             setDao.insert(set);
             setDao.insert(set);
             setDao.insert(set);
-            setDao.insert(set);
+            setDao.insert(set);*/
 
             return null;
         }

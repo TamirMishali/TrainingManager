@@ -1,7 +1,6 @@
-package com.example.tamirmishali.trainingmanager;
+package com.example.tamirmishali.trainingmanager.History;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,26 +11,26 @@ import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractViewModel;
+import com.example.tamirmishali.trainingmanager.ExpandableListAdapter;
+import com.example.tamirmishali.trainingmanager.R;
 import com.example.tamirmishali.trainingmanager.Routine.RoutineViewModel;
 import com.example.tamirmishali.trainingmanager.Set.Set;
 import com.example.tamirmishali.trainingmanager.Set.SetViewModel;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 import com.example.tamirmishali.trainingmanager.Workout.WorkoutViewModel;
+import com.example.tamirmishali.trainingmanager.WorkoutNow;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class WorkoutNow extends AppCompatActivity {
+public class ViewOldWorkout extends AppCompatActivity {
 
-    public static final  String EXTRA_WORKOUT_ID =
-            "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
-
+    private RecyclerView recyclerView;
     private RoutineViewModel routineViewModel;
     private WorkoutViewModel workoutViewModel;
     private ExerciseViewModel exerciseViewModel;
@@ -40,7 +39,6 @@ public class WorkoutNow extends AppCompatActivity {
     private LinearLayout parentLinearLayout;
     private Workout currentWorkout;
     private Workout prevWorkout;
-    private int sourceWorkoutID;
     private List<Exercise> currentExercises;
     private List<Exercise> prevExercises;
     private ArrayList<Set> currentSets;
@@ -57,12 +55,10 @@ public class WorkoutNow extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.workoutnow_layout);
 
+        setContentView(R.layout.workoutnow_layout);
         parentLinearLayout = findViewById(R.id.parent_linear_layout);
         TextView textViewWorkoutName = findViewById(R.id.workoutnow_current_workout);
-        TextView textViewWorkoutDate = findViewById(R.id.workoutnow_workout_date);
-        //getActionBar().setDisplayHomeAsUpEnabled(false);
 
         workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
         exerciseAbstractViewModel = ViewModelProviders.of(this).get(ExerciseAbstractViewModel.class);
@@ -71,21 +67,8 @@ public class WorkoutNow extends AppCompatActivity {
         setViewModel = ViewModelProviders.of(this).get(SetViewModel.class);
 
 
-        //Get workout ID for viewing the relevant workout
-        Intent intent = getIntent();
-        if (intent.hasExtra(EXTRA_WORKOUT_ID)){
-            sourceWorkoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
-            currentWorkout = workoutViewModel.getWorkout(sourceWorkoutID);
-        }
-        //im on WorkoutNow Activity
-        else{
-            /*setResult(RESULT_CANCELED,intent);
-            finish();*/
-            currentWorkout = workoutViewModel.getCurrentWorkout();
-        }
-
         try {
-            //currentWorkout = workoutViewModel.getCurrentWorkout();
+            currentWorkout = workoutViewModel.getCurrentWorkout();
             prevWorkout = workoutViewModel.getPrevWorkout(currentWorkout.getWorkoutName(), currentWorkout.getWorkoutDate());
             currentExercises = exerciseViewModel.getExercisesForWorkout(currentWorkout.getId());
             prevExercises = exerciseViewModel.getExercisesForWorkout(prevWorkout.getId());
@@ -95,7 +78,6 @@ public class WorkoutNow extends AppCompatActivity {
             }
             prevSets = setViewModel.getSetsForWorkout(prevWorkout.getId());
             textViewWorkoutName.setText("Workout: " + currentWorkout.getWorkoutName());
-            textViewWorkoutDate.setText(currentWorkout.getDate().toString());
 
         } catch (Exception e) {
             Toast.makeText(this, "couldn't load last workout", Toast.LENGTH_SHORT).show();
@@ -199,81 +181,5 @@ public class WorkoutNow extends AppCompatActivity {
     }
 }
 
-
-
-
-/*    private void prepareListData2() {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
-        Iterator<Exercise> iterator = currentExercises.iterator();
-        String exerciseName;
-        List<String> childList = new ArrayList<String>();
-        while(iterator.hasNext()) {
-            //System.out.println(iterator.next());
-            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(iterator.next().getId_exerciseabs()).getName();
-            listDataHeader.add(exerciseName);
-            childList = new ArrayList<String>();
-            for(int i = 0; i < 3; i++){
-                childList.add("Hello");
-            }
-            listDataChild.put(exerciseName,childList);
-        }
-    }*/
-
-//--------------------New too
-/*private void prepareListData() {
-    listDataHeader = new ArrayList<String>();
-    listDataChild = new HashMap<String, List<String>>();
-
-    // Adding child data
-    listDataHeader.add("Top 250");
-    listDataHeader.add("Now Showing");
-    listDataHeader.add("Coming Soon..");
-
-    // Adding child data
-    List<String> top250 = new ArrayList<String>();
-    top250.add("The Shawshank Redemption");
-    top250.add("The Godfather");
-    top250.add("The Godfather: Part II");
-    top250.add("Pulp Fiction");
-    top250.add("The Good, the Bad and the Ugly");
-    top250.add("The Dark Knight");
-    top250.add("12 Angry Men");
-
-    List<String> nowShowing = new ArrayList<String>();
-    nowShowing.add("The Conjuring");
-    nowShowing.add("Despicable Me 2");
-    nowShowing.add("Turbo");
-    nowShowing.add("Grown Ups 2");
-    nowShowing.add("Red 2");
-    nowShowing.add("The Wolverine");
-
-    List<String> comingSoon = new ArrayList<String>();
-    comingSoon.add("2 Guns");
-    comingSoon.add("The Smurfs 2");
-    comingSoon.add("The Spectacular Now");
-    comingSoon.add("The Canyons");
-    comingSoon.add("Europa Report");
-
-    listDataChild.put(listDataHeader.get(0), top250); // Header, Child data
-    listDataChild.put(listDataHeader.get(1), nowShowing);
-    listDataChild.put(listDataHeader.get(2), comingSoon);
-}*/
-
-/*
-
-    public void onAddField(View v) {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View rowView = inflater.inflate(R.layout.field, null);
-        // Add the new row before the add field button.
-        parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
-    }
-
-    public void onDelete(View v) {
-        parentLinearLayout.removeView((View) v.getParent());
-    }
-    //expandable ListView
-    //https://www.journaldev.com/9942/android-expandablelistview-example-tutorial
-*/
 
 

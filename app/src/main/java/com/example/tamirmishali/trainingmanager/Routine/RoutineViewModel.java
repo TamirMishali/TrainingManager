@@ -55,7 +55,7 @@ public class RoutineViewModel extends AndroidViewModel {
         repository.delete(workout);
     }
     public void deleteAllWorkouts(){
-        repository.deleteAllworkouts();
+        repository.deleteAllWorkouts();
     }
     public LiveData<List<Workout>> getAllWorkouts(){
         return allWorkouts;

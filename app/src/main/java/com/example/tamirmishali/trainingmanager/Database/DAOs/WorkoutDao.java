@@ -23,7 +23,7 @@ public interface WorkoutDao {
     void delete(Workout workout);
 
     @Query("DELETE FROM workout_table")
-    void deleteAllworkouts();
+    void deleteAllWorkouts();
 
     @Query("SELECT * from workout_table Order by date DESC")
     LiveData<List<Workout>> getAllWorkouts();
@@ -33,17 +33,9 @@ public interface WorkoutDao {
 
     @Query("select EA.muscleGroup " +
             "from exerciseabs_table EA inner join exercise_table E ON EA.id_exerciseabs  = E.id_exerciseabs " +
-            "where E.id_workout IN (:workoutid)")
-    List<String> getMusselsInWorkout(final int workoutid);
+            "where E.id_workout IN (:workoutId)")
+    List<String> getMusselsInWorkout(final int workoutId);
 
-/*    @Query("select W.* " +
-           "from workout_table W inner join routine_table R ON W.id_routine = R.id " +
-           "where R.id IN (select id " +
-           "               from routine_table " +
-           "               Order BY date desc " +
-           "               limit 1) and (not W.date is NULL)" +
-           "Order By W.date DESC " +
-           "limit 1")*/
     @Query("select * from( " +
             "   select * from workout_table " +
             "   where id_routine IN " +
@@ -61,9 +53,28 @@ public interface WorkoutDao {
     @Query("select * from workout_table where (name = :workoutName) and (date < :workoutDate) limit 1")
     Workout getPrevWorkout(String workoutName, java.sql.Date workoutDate);
 
+    @Query("select * from workout_table where id_workout=:workoutId")
+    Workout getWorkout(int workoutId);
+
+    @Query("SELECT * FROM workout_table WHERE id_routine in (SELECT id FROM routine_table ORDER BY date DESC LIMIT 1) AND date not NULL ORDER By date DESC LIMIT 1")
+    Workout getLastWorkout();
+
+    @Query("SELECT * from workout_table where not(date is null) order by date DESC " +
+            "limit (SELECT count (name) FROM workout_table where (date is null) and (id_routine IN (select id from routine_table Order BY date asc limit 1)))")
+    List<Workout> getLastPracticalWorkouts();
+
     @Query("SELECT * FROM workout_table WHERE id_routine=:routineId and date is NOT NULL ORDER BY date DESC")
-    LiveData<List<Workout>> getPracticalWorkoutsForRoutine(int routineId);
+    LiveData<List<Workout>> getPracticalWorkoutsForRoutineLiveData(int routineId);
 
+    @Query("SELECT * from workout_table WHERE (id_routine=:routineId) and (date is null)")
+    List<Workout> getAbstractWorkoutsForRoutine(int routineId);
 
+    @Query("select * from workout_table where (id_routine=:routineId) and not(date is null)")
+    List<Workout> getPracticalWorkoutsForRoutine(int routineId);
 
+    @Query("select * from workout_table where (id_routine=:routineId) and (name=:workoutName) and not(date is null) order By date DESC limit 1")
+    Workout getPracticalWorkoutFromAbstract(int routineId, String workoutName);
+
+    @Query("Select id from routine_table Order By date desc limit 1")
+    int getNewestRoutineId();
 }
