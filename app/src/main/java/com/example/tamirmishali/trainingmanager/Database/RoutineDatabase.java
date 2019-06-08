@@ -91,12 +91,12 @@ public abstract class RoutineDatabase extends RoomDatabase {
             int workoutAbsTwoId = toIntExact(longId);
 
 
-/*            //Practical workouts
-            workout = new Workout(routineId,"Chest","2019-04-01",Boolean.FALSE);
+            //Practical workouts
+/*            workout = new Workout(routineId,"Chest","2019-04-01",Boolean.FALSE);
             longId = workoutDao.insert(workout);
-            int workoutOneId = toIntExact(longId);
+            int workoutOneId = toIntExact(longId);*/
 
-            workout = new Workout(routineId, "Back","2019-04-02",Boolean.FALSE);
+/*            workout = new Workout(routineId, "Back","2019-04-02",Boolean.FALSE);
             longId = workoutDao.insert(workout);
             int workoutTwoId = toIntExact(longId);
 

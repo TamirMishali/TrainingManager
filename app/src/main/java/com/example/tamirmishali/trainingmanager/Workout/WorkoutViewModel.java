@@ -46,7 +46,11 @@ public class WorkoutViewModel extends AndroidViewModel {
     public Workout getPrevWorkout(String workoutName, java.sql.Date workoutDate){return repository.getPrevWorkout(workoutName,workoutDate);}
     public Workout getWorkout(int workoutId){return repository.getWorkout(workoutId);}
     public Workout getLastWorkout(){return repository.getLastWorkout();}
-    public Workout getPracticalWorkoutFromAbstract(int routineId, String workoutName){return repository.getPracticalWorkoutFromAbstract(routineId,workoutName);}
+    public Workout getPracticalWorkoutFromAbstract(int routineId, String workoutName) {
+        return repository.getPracticalWorkoutFromAbstract(routineId,workoutName);}
+    public Workout getAbstractWorkoutFromPractical(int routineId, String workoutName) {
+        return repository.getAbstractWorkoutFromPractical(routineId,workoutName);}
+    public Workout getNewestWorkout(int routineId, String workoutName){return repository.getNewestWorkout(routineId,workoutName);}
 
     public int getNewestRoutineId(){return repository.getNewestRoutineId();}
 
@@ -55,8 +59,6 @@ public class WorkoutViewModel extends AndroidViewModel {
 
     public LiveData<List<Workout>> getPracticalWorkoutsForRoutineLiveData(int routineId){return repository.getPracticalWorkoutsForRoutineLiveData(routineId);}
     public List<Workout> getPracticalWorkoutsForRoutine(int routineId){return repository.getPracticalWorkoutsForRoutine(routineId);}
-
-
     public List<Workout> getWorkoutsForDialog(int routineId){
         List<Workout> result = new ArrayList<>();
         List<Workout> abstractWorkouts= getAbstractWorkoutsForRoutine(routineId);
@@ -76,7 +78,6 @@ public class WorkoutViewModel extends AndroidViewModel {
 
         return result;
     }
-
 
     class SortByDate implements Comparator<Workout>
     {

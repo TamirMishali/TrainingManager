@@ -112,6 +112,30 @@ public class WorkoutRepository {
         }
         return workout;
     }
+    public Workout getAbstractWorkoutFromPractical(int routineId, String workoutName){
+        MyTaskParams2 params = new MyTaskParams2(routineId, workoutName);
+        Workout workout = new Workout();
+        try {
+            workout = new GetAbstractWorkoutFromPracticalAsyncTask(workoutDao).execute(params).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return workout;
+    }
+    public Workout getNewestWorkout(int routineId, String workoutName){
+        MyTaskParams2 params = new MyTaskParams2(routineId, workoutName);
+        Workout workout = new Workout();
+        try {
+            workout = new GetNewestWorkoutAsyncTask(workoutDao).execute(params).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return workout;
+    }
 
     public List<Workout> getLastPracticalWorkouts(){
         List<Workout> workoutList = new ArrayList<>();
@@ -160,13 +184,11 @@ public class WorkoutRepository {
     }
 
 
-
-
     //Workout - AsyncTasks
     private static class InsertWorkoutAsyncTask extends AsyncTask<Workout, Void, Void>{
         private WorkoutDao workoutDao;
 
-        private InsertWorkoutAsyncTask(WorkoutDao workoutDao){
+        private InsertWorkoutAsyncTask(WorkoutDao workoutDao ){
             this.workoutDao = workoutDao;
         }
 
@@ -299,6 +321,30 @@ public class WorkoutRepository {
         @Override
         protected Workout doInBackground(MyTaskParams2... params) {
             return workoutDao.getPracticalWorkoutFromAbstract(params[0].routineId, params[0].workoutName);
+        }
+    }
+    private static class GetAbstractWorkoutFromPracticalAsyncTask extends AsyncTask<MyTaskParams2, Void, Workout>{
+        private WorkoutDao workoutDao;
+
+        private GetAbstractWorkoutFromPracticalAsyncTask(WorkoutDao workoutDao){
+            this.workoutDao = workoutDao;
+        }
+
+        @Override
+        protected Workout doInBackground(MyTaskParams2... params) {
+            return workoutDao.getAbstractWorkoutFromPractical(params[0].routineId, params[0].workoutName);
+        }
+    }
+    private static class GetNewestWorkoutAsyncTask extends AsyncTask<MyTaskParams2, Void, Workout>{
+        private WorkoutDao workoutDao;
+
+        private GetNewestWorkoutAsyncTask(WorkoutDao workoutDao){
+            this.workoutDao = workoutDao;
+        }
+
+        @Override
+        protected Workout doInBackground(MyTaskParams2... params) {
+            return workoutDao.getNewestWorkout(params[0].routineId, params[0].workoutName);
         }
     }
 

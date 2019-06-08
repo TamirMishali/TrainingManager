@@ -52,7 +52,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     // for DatabaseDebug
-    debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
     // ViewModel and LiveData - LifeCycle
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
     annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version" // use kapt for Kotlin

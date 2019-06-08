@@ -5,7 +5,6 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseDao;
-import com.example.tamirmishali.trainingmanager.Database.DAOs.WorkoutDao;
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 
 import java.util.ArrayList;
@@ -113,7 +112,7 @@ public class ExerciseRepository {
 
         @Override
         protected Void doInBackground(Integer... values) {
-            exerciseDao.deleteAllexercises(values[0]);
+            exerciseDao.deleteAllExercises(values[0]);
             return null;
         }
     }

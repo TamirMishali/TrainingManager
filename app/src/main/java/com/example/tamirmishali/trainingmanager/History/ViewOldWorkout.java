@@ -92,7 +92,7 @@ public class ViewOldWorkout extends AppCompatActivity {
         //prepareListData2();
         prepareListDataPrev();
 
-        listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild, setViewModel);
+        listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild, listDataChild,setViewModel); //FIX HERE THE SECOND listDataChild
 
         // setting list adapter
         expListView.setAdapter(listAdapter);

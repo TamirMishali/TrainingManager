@@ -39,6 +39,9 @@ public class RoutineViewModel extends AndroidViewModel {
         repository.deleteAll();
     }
     public LiveData<List<Routine>> getAllRoutines(){
+        if (allRoutines == null){
+            allRoutines = repository.getAllRoutines();
+        }
         return allRoutines;
     }
     /*public Routine getCurrentRoutine() {repository.getCurrentRoutine();}*/

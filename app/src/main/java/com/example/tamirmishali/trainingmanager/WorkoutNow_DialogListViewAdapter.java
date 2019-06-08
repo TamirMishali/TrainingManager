@@ -14,7 +14,7 @@ import java.util.List;
 public class WorkoutNow_DialogListViewAdapter extends BaseAdapter {
 
     Context context;
-    List<Workout> workouts = new ArrayList<>();
+    List<Workout> workouts;
 
     WorkoutNow_DialogListViewAdapter(Context context, List<Workout> workouts){
         this.context = context;
@@ -54,8 +54,4 @@ public class WorkoutNow_DialogListViewAdapter extends BaseAdapter {
         return row;
     }
 
-
-/*    public interface CustomDialogListener {
-        int onClickPick();
-    }*/
 }

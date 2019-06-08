@@ -1,7 +1,9 @@
 package com.example.tamirmishali.trainingmanager;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,8 +14,12 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
+import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
 import com.example.tamirmishali.trainingmanager.History.History;
 import com.example.tamirmishali.trainingmanager.Routine.EditRoutines;
+import com.example.tamirmishali.trainingmanager.Routine.Routine;
+import com.example.tamirmishali.trainingmanager.Routine.RoutineViewModel;
 import com.example.tamirmishali.trainingmanager.Set.Set;
 import com.example.tamirmishali.trainingmanager.Set.SetViewModel;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
@@ -21,6 +27,7 @@ import com.example.tamirmishali.trainingmanager.Workout.WorkoutViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observer;
 
 import static android.widget.Toast.*;
 
@@ -54,8 +61,11 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
         System.loadLibrary("native-lib");
     }
 
+    LiveData<List<Routine>> routines;
 
+    private RoutineViewModel routineViewModel;
     private WorkoutViewModel workoutViewModel;
+    private ExerciseViewModel exerciseViewModel;
     private SetViewModel setViewModel;
     //private int startWorkoutWithId;
 
@@ -64,7 +74,9 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        routineViewModel = ViewModelProviders.of(this).get(RoutineViewModel.class);
         workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
+        exerciseViewModel = ViewModelProviders.of(this).get(ExerciseViewModel.class);
         setViewModel = ViewModelProviders.of(this).get(SetViewModel.class);
 
         ImageButton button_WorkoutNow = findViewById(R.id.imageButton_WorkoutNowActivity);
@@ -132,6 +144,22 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
         }
     }
 
+    private Boolean dataValidation() {
+        //check for existing routines
+        routines = routineViewModel.getAllRoutines();
+        if (routines.getValue().isEmpty()) {
+            Toast.makeText(this,"No routines",Toast.LENGTH_SHORT).show();
+            return Boolean.FALSE;
+        }
+
+        //check for existing workouts
+
+
+        //check for at least one exercise exists in workout
+        //check for full sets fields
+
+        return Boolean.TRUE;
+    }
 
     public void open_dialog(View v){
         List<Workout> lastPracticalWorkouts = new ArrayList<>();

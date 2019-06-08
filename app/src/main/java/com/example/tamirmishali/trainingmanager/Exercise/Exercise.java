@@ -46,12 +46,19 @@ public class Exercise {
     public Exercise(){
 
     }
+
+    public Exercise(Exercise exercise){
+        this.id = 0;
+        this.id_exerciseabs = exercise.id_exerciseabs;
+        this.id_workout = exercise.id_workout;
+        this.comment = exercise.comment;
+    }
+
     public Exercise(int idExerciseAbs, int idWorkout, String comment/*, String data*/){
         this.id = 0;
         this.id_exerciseabs = idExerciseAbs;
         this.id_workout = idWorkout;
         this.comment = comment;
-/*        this.data = data;*/
     }
 
     //---------------Getters & Setters---------------

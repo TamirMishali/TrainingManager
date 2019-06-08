@@ -6,6 +6,7 @@
     <string name="delete_routine_dialog">Are you sure you want to delete routine?</string>
     <string name="add_exercise_dialog">Are you sure you want to add exercise to workout?</string>
     <string name="delete_exerciseabstract_dialog">Are you sure you want to delete exercise?</string>
+    <string name="delete_set_dialog">Are you sure you want to delete current set?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
 </resources>

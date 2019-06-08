@@ -42,7 +42,7 @@ public class RoutineRepository {
     public LiveData<List<Routine>> getAllRoutines(){
         return allRoutines;
     }
-
+    //public List<Routine> getAllRoutinesNLD(){return allRoutines.getValue().}
 
     //Routine - AsyncTasks
     private static class InsertRoutineAsyncTask extends AsyncTask<Routine, Void, Void>{

@@ -75,6 +75,12 @@ public interface WorkoutDao {
     @Query("select * from workout_table where (id_routine=:routineId) and (name=:workoutName) and not(date is null) order By date DESC limit 1")
     Workout getPracticalWorkoutFromAbstract(int routineId, String workoutName);
 
+    @Query("select * from workout_table where (id_routine=:routineId) and (name=:workoutName) and (date is null) limit 1")
+    Workout getAbstractWorkoutFromPractical(int routineId, String workoutName);
+
     @Query("Select id from routine_table Order By date desc limit 1")
     int getNewestRoutineId();
+
+    @Query("select * from workout_table where (id_routine=:routineId) and (name=:workoutName) and not(date is null) order by date desc limit 1")
+    Workout getNewestWorkout(int routineId, String workoutName);
 }

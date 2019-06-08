@@ -25,7 +25,7 @@ public interface ExerciseDao {
     void delete(Exercise exercise);
 
     @Query("DELETE FROM exercise_table where id_workout=:id_workout")
-    void deleteAllexercises(int id_workout);
+    void deleteAllExercises(int id_workout);
 
     @Query("SELECT * from exercise_table where (id_exerciseabs =:id_exerciseabs) and (id_workout =:id_workout)")
     Exercise getExerciseForWorkout(final int id_exerciseabs,final int id_workout);
