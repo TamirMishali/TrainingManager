@@ -25,6 +25,7 @@ import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstrac
 import com.example.tamirmishali.trainingmanager.Routine.RoutineViewModel;
 import com.example.tamirmishali.trainingmanager.Set.Set;
 import com.example.tamirmishali.trainingmanager.Set.SetViewModel;
+import com.example.tamirmishali.trainingmanager.Workout.Workout;
 
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter{
@@ -200,6 +201,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
             @Override
             public void onClick(View view) {
                 //create new set and insert it to DB and then array
+
 /*                Set newSet = new Set()
                 _listDataChildPrev.get(headerTitle).add();*/
             }
@@ -216,6 +218,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
+    }
+
+    private void updateChangedWorkoutInDB(Workout workout){
+
     }
 
 

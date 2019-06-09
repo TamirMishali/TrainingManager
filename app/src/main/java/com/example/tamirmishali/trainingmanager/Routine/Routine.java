@@ -2,8 +2,12 @@ package com.example.tamirmishali.trainingmanager.Routine;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.example.tamirmishali.trainingmanager.Workout.Workout;
+
+import java.util.ArrayList;
 
 
 @Entity(tableName = "routine_table")
@@ -19,6 +23,9 @@ public class Routine {
     //private ArrayList<workout> m_workoutsArrayList;
     @ColumnInfo(name = "name") //change to name next time changing the DB
     private String routineName;
+
+    @Ignore
+    ArrayList<Workout> workouts;
 
 
 

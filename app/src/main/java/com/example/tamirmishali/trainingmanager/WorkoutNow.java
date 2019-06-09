@@ -104,12 +104,20 @@ public class WorkoutNow extends AppCompatActivity {
             }
 
             //Existing Workout
-            else if(callingClassName.equals(".ViewPracticalWorkouts")){
+            else if(callingClassName.equals(".History.ViewPracticalWorkouts")){
                 currentWorkout = workoutViewModel.getWorkout(sourceWorkoutID);
                 currentExercises = exerciseViewModel.getExercisesForWorkout(currentWorkout.getId());
 
                 prevWorkout = workoutViewModel.getPrevWorkout(
                         currentWorkout.getWorkoutName(), currentWorkout.getWorkoutDate());
+                if (prevWorkout != null){
+                    prevWorkout = workoutViewModel.getWorkout(prevWorkout.getId());
+                }
+
+                else{//because its first WO after Abstract WO
+                    prevWorkout = workoutViewModel.getAbstractWorkoutFromPractical(
+                            currentWorkout.getId_routine(),currentWorkout.getWorkoutName());
+                }
                 prevExercises = exerciseViewModel.getExercisesForWorkout(prevWorkout.getId());
             }
         }

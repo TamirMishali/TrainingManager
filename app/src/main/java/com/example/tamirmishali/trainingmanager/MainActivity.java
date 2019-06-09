@@ -37,6 +37,7 @@ import static android.widget.Toast.*;
 *  Use listView with the next workout highlighted
 *  View Dates of workouts
 *  Create an onActivityResult relevant to this case
+*  -close dialog after pick
 *
 * Create new workout on WorkoutNow activity
 *  fill that workout with the data on the EditText of weights and reps
@@ -51,6 +52,11 @@ import static android.widget.Toast.*;
 * Make sure the lastPracticalWorkout are legit.
 * if first practical workout in routine then take Abstract workout.
 * else: prevWorkout = workoutViewModel.getCurrentWorkout() but with abstract
+*
+* 08/06/19 after changing logic
+*  search all the functions in workoutViewModel that in use in code.
+*  after changing "getWorkout" to the right way i need to be sure that there is no
+*  other function in use that is not fixed (with full ex,set lists and exAbs)
 * */
 
 public class MainActivity extends AppCompatActivity /*implements WorkoutNow_DialogListViewAdapter.CustomDialogListener*/{

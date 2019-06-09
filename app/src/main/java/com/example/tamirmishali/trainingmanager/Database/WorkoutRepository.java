@@ -4,20 +4,34 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
+import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractDao;
+import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseDao;
+import com.example.tamirmishali.trainingmanager.Database.DAOs.SetDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.WorkoutDao;
+import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+
+
 public class WorkoutRepository {
     private WorkoutDao workoutDao;
+    private ExerciseDao exerciseDao;
+    private ExerciseAbstractDao exerciseAbstractDao;
+    private SetDao setDao;
     private LiveData<List<Workout>> allWorkouts;
 
     public WorkoutRepository(Application application){
         RoutineDatabase database = RoutineDatabase.getInstance(application);
         workoutDao = database.workoutDao();
+        exerciseDao = database.exerciseDao();
+        exerciseAbstractDao = database.exerciseAbstractDao();
+        setDao = database.setDao();
         allWorkouts = workoutDao.getAllWorkouts();
     }
 
@@ -81,7 +95,7 @@ public class WorkoutRepository {
     public Workout getWorkout(int workoutId){
         Workout workout = new Workout();
         try {
-            workout = new GetWorkoutAsyncTask(workoutDao).execute(workoutId).get();
+            workout = new GetWorkoutAsyncTask(workoutDao,exerciseDao,exerciseAbstractDao,setDao).execute(workoutId).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -308,6 +322,8 @@ public class WorkoutRepository {
 
         @Override
         protected Workout doInBackground(MyTaskParams... params) {
+            //Workout workout = workoutDao.getPrevWorkout(params[0].workoutName, params[0].workoutDate);
+            //fillWorkout(workoutDao.getPrevWorkout(params[0].workoutName, params[0].workoutDate).getId(),workoutDao, exerciseDao,exerciseAbstractDao,setDao);
             return workoutDao.getPrevWorkout(params[0].workoutName, params[0].workoutDate);
         }
     }
@@ -350,14 +366,35 @@ public class WorkoutRepository {
 
     private static class GetWorkoutAsyncTask extends AsyncTask<Integer, Void, Workout>{
         private WorkoutDao workoutDao;
+        private ExerciseDao exerciseDao;
+        private ExerciseAbstractDao exerciseAbstractDao;
+        private SetDao setDao;
 
-        private GetWorkoutAsyncTask(WorkoutDao workoutDao){
+        private GetWorkoutAsyncTask(WorkoutDao workoutDao, ExerciseDao exerciseDao,
+                                    ExerciseAbstractDao exerciseAbstractDao,
+                                    SetDao setDao){
             this.workoutDao = workoutDao;
+            this.exerciseDao = exerciseDao;
+            this.exerciseAbstractDao = exerciseAbstractDao;
+            this.setDao = setDao;
         }
 
         @Override
         protected Workout doInBackground(Integer... params) {
-            return workoutDao.getWorkout(params[0]);
+/*            Workout workout = workoutDao.getWorkout(params[0]);
+            List<Exercise> exercises = exerciseDao.getExercisesForWorkout(workout.getId());
+            Iterator<Exercise> exerciseIterator = exercises.iterator();
+
+            Exercise exercise;
+            ExerciseAbstract exerciseAbstract;
+            while (exerciseIterator.hasNext()) {
+                exercise = exerciseIterator.next();
+                exercise.setExerciseAbstract(exerciseAbstractDao.getExerciseAbsFromId(exercise.getId_exerciseabs()));
+                exercise.setSets(setDao.getSetsForExercise(exercise.getId()));
+            }
+            workout.setExercises(exercises);*/
+
+            return fillWorkout(params[0],workoutDao, exerciseDao,exerciseAbstractDao,setDao);
         }
     }
     private static class GetPracticalWorkoutsForRoutineAsyncTask extends AsyncTask<Integer, Void, List<Workout>>{
@@ -410,6 +447,24 @@ public class WorkoutRepository {
         }
     }
 
+
+    private static Workout fillWorkout(int id,WorkoutDao workoutDao, ExerciseDao exerciseDao,
+                             ExerciseAbstractDao exerciseAbstractDao,
+                             SetDao setDao){
+        Workout workout = workoutDao.getWorkout(id);
+        List<Exercise> exercises = exerciseDao.getExercisesForWorkout(workout.getId());
+        Iterator<Exercise> exerciseIterator = exercises.iterator();
+
+        Exercise exercise;
+        while (exerciseIterator.hasNext()) {
+            exercise = exerciseIterator.next();
+            exercise.setExerciseAbstract(exerciseAbstractDao.getExerciseAbsFromId(exercise.getId_exerciseabs()));
+            exercise.setSets(setDao.getSetsForExercise(exercise.getId()));
+        }
+        workout.setExercises(exercises);
+
+        return workout;
+    }
 
 
 }

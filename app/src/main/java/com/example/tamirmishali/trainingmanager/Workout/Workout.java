@@ -3,13 +3,18 @@ package com.example.tamirmishali.trainingmanager.Workout;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Routine.Routine;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 
@@ -34,6 +39,9 @@ public class Workout {
 
     @ColumnInfo(name = "date")
     private java.sql.Date date;
+
+    @Ignore
+    List<Exercise> exercises;
 
     public Workout(){//-----------------------------------complete later
 
@@ -128,6 +136,10 @@ public class Workout {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    public List<Exercise> getExercises(){return exercises;}
+
+    public void setExercises(List<Exercise> exercises) {this.exercises = exercises;}
 
     //ArrayList<Exercise> exercises; //-------------for now, late we will try the adapterJson thing
 }

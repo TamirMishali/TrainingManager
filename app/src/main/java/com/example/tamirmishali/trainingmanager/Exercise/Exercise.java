@@ -3,10 +3,15 @@ package com.example.tamirmishali.trainingmanager.Exercise;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
+import com.example.tamirmishali.trainingmanager.Set.Set;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
@@ -38,6 +43,13 @@ public class Exercise {
 
     @ColumnInfo(name = "comment")
     private String comment;
+
+    @Ignore
+    ExerciseAbstract exerciseAbstract;
+
+    @Ignore
+    List<Set> sets;
+
 
 /*    @ColumnInfo(name = "data")
     private String data;*/
@@ -92,6 +104,22 @@ public class Exercise {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public ExerciseAbstract getExerciseAbstract() {
+        return exerciseAbstract;
+    }
+
+    public void setExerciseAbstract(ExerciseAbstract exerciseAbstract) {
+        this.exerciseAbstract = exerciseAbstract;
+    }
+
+    public List<Set> getSets() {
+        return sets;
+    }
+
+    public void setSets(List<Set> sets) {
+        this.sets = sets;
     }
 
 }
