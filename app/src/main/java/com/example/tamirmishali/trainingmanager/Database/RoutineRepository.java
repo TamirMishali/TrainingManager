@@ -42,7 +42,31 @@ public class RoutineRepository {
     public LiveData<List<Routine>> getAllRoutines(){
         return allRoutines;
     }
-    //public List<Routine> getAllRoutinesNLD(){return allRoutines.getValue().}
+
+    public Routine getRoutine(int routineId){
+        Routine routine = new Routine();
+        try {
+            routine = new GetRoutineAsyncTask(routineDao).execute(routineId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return routine;
+    }
+    public Routine getFirstRoutine(){
+        Routine routine = new Routine();
+        try {
+            routine = new GetFirstRoutineAsyncTask(routineDao).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return routine;
+    }
+
+
 
     //Routine - AsyncTasks
     private static class InsertRoutineAsyncTask extends AsyncTask<Routine, Void, Void>{
@@ -98,6 +122,32 @@ public class RoutineRepository {
         }
     }
 
+    private static class GetRoutineAsyncTask extends AsyncTask<Integer, Void, Routine>{
+        private RoutineDao routineDao;
+
+
+        private GetRoutineAsyncTask(RoutineDao routineDao){
+            this.routineDao = routineDao;
+        }
+
+        @Override
+        protected Routine doInBackground(Integer... params) {
+            return routineDao.getRoutine(params[0]);
+        }
+    }
+    private static class GetFirstRoutineAsyncTask extends AsyncTask<Void, Void, Routine>{
+        private RoutineDao routineDao;
+
+
+        private GetFirstRoutineAsyncTask(RoutineDao routineDao){
+            this.routineDao = routineDao;
+        }
+
+        @Override
+        protected Routine doInBackground(Void... voids) {
+            return routineDao.getFirstRoutine();
+        }
+    }
 
 }
 

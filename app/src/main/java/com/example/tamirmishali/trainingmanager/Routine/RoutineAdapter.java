@@ -11,7 +11,9 @@ import android.widget.TextView;
 import com.example.tamirmishali.trainingmanager.R;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineHolder> {
@@ -34,13 +36,14 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineH
     @Override
     public void onBindViewHolder(@NonNull RoutineHolder holder, final int position) {
 
-        Routine curretRoutine = routines.get(position);
-        //workouts.getWorkoutsForRoutine(curretRoutine.getUid());
-        holder.textViewRoutine.setText(curretRoutine.getRoutineName());
-        holder.textViewroutinedate.setText(curretRoutine.getRoutineDate().toString());
+        Routine currentRoutine = routines.get(position);
+        holder.textViewRoutine.setText(currentRoutine.getRoutineName());
+
+        SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyyy");
+        Date d = new Date(currentRoutine.getRoutineDate().getTime());
+        holder.textViewroutinedate.setText(formatter.format(d));
+
         holder.textViewDescription.setText("empty for now");
-        //holder.textViewDescription.setText(String.valueof(currentRoutine.getpriority())));
-        //holder.itemView.setOnClickListener(mClickListener);
         holder.itemView.setTag(holder);
     }
 

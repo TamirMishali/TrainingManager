@@ -7,7 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //Reference: https://www.youtube.com/watch?v=Z7oekIFb7fA
@@ -15,6 +18,8 @@ public class WorkoutNow_DialogListViewAdapter extends BaseAdapter {
 
     Context context;
     List<Workout> workouts;
+    SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyyy 'at' HH:mm");
+    Date d;
 
     WorkoutNow_DialogListViewAdapter(Context context, List<Workout> workouts){
         this.context = context;
@@ -46,8 +51,10 @@ public class WorkoutNow_DialogListViewAdapter extends BaseAdapter {
         Workout workout = workouts.get(i);
 
         textViewWorkoutName.setText(workout.getName());
-        if(workout.getDate() != null)
-            textViewWorkoutDate.setText(workout.getDate().toString());
+        if(workout.getDate() != null){
+            d = new Date(workout.getDate().getTime());
+            textViewWorkoutDate.setText(formatter.format(d));
+        }
         else
             textViewWorkoutDate.setText("First time - No date");
 

@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amitshekhar.DebugDB;
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractViewModel;
@@ -23,15 +22,22 @@ import com.example.tamirmishali.trainingmanager.Set.SetViewModel;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 import com.example.tamirmishali.trainingmanager.Workout.WorkoutViewModel;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import static com.example.tamirmishali.trainingmanager.MainActivity.ACTION_FINISH_WORKOUT;
 
 public class WorkoutNow extends AppCompatActivity {
 
     public static final  String EXTRA_WORKOUT_ID =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
+
 
     private RoutineViewModel routineViewModel;
     private WorkoutViewModel workoutViewModel;
@@ -42,18 +48,12 @@ public class WorkoutNow extends AppCompatActivity {
     private Workout currentWorkout;
     private Workout prevWorkout;
     private int sourceWorkoutID;
-    private List<Exercise> currentExercises;
-    private List<Exercise> prevExercises;
-    private ArrayList<Set> currentSets;
-    private List<Set> prevSets;
+
     private static final String TAG = WorkoutNow.class.getName();
 
-    //-------------------------New
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
-    List<String> exerciseListHeader;
-    HashMap<String, List<Set>> prevSetsListDataChild;
-    HashMap<String, List<Set>> currentSetsListDataChild;
+
 
 
     @Override
@@ -62,9 +62,9 @@ public class WorkoutNow extends AppCompatActivity {
         setContentView(R.layout.workoutnow_layout);
 
         parentLinearLayout = findViewById(R.id.parent_linear_layout);
+        TextView textViewRoutineName = findViewById(R.id.workoutnow_current_routine);
         TextView textViewWorkoutName = findViewById(R.id.workoutnow_current_workout);
         TextView textViewWorkoutDate = findViewById(R.id.workoutnow_workout_date);
-        //getActionBar().setDisplayHomeAsUpEnabled(false);
 
         workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
         exerciseAbstractViewModel = ViewModelProviders.of(this).get(ExerciseAbstractViewModel.class);
@@ -81,65 +81,42 @@ public class WorkoutNow extends AppCompatActivity {
             sourceWorkoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
 
             //New Workout
-            if(callingClassName.equals(".MainActivity")){
+            if(callingClassName.equals(".MainActivity") && intent.getAction()==null){
                 prevWorkout = workoutViewModel.getWorkout(sourceWorkoutID);
-                prevExercises = exerciseViewModel.getExercisesForWorkout(prevWorkout.getId());
-                exerciseListHeader = prepareListHeader(prevExercises);
+                prevWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(prevWorkout.getId())));
+                currentWorkout = constructNewWorkout(prevWorkout); // create workout
 
-                //if this is not an abstract workout
-                if(prevWorkout.getDate() != null /*|| prevWorkout.getDate().toString() != ""*/){
-                    //take sets from it
-                    prevSetsListDataChild = getPrevSetsListDataChild(prevExercises,exerciseListHeader);
-                }
-                //else - this is an Abstract workout, prevSets = NONE: cuz there's only abstract workout
-                else{
-                    prevSetsListDataChild = getPrevSetsListDataChild(prevExercises,exerciseListHeader);/*new HashMap<String>()*/
-                }
-
-
-                currentSetsListDataChild = new HashMap<>();
-                constructNewWorkout(); // create workout
-
-                //---------------------prevSets???----------------
             }
 
             //Existing Workout
-            else if(callingClassName.equals(".History.ViewPracticalWorkouts")){
+            else if(callingClassName.equals(".History.ViewPracticalWorkouts") || intent.getAction()==ACTION_FINISH_WORKOUT){
                 currentWorkout = workoutViewModel.getWorkout(sourceWorkoutID);
-                currentExercises = exerciseViewModel.getExercisesForWorkout(currentWorkout.getId());
+                currentWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(currentWorkout.getId())));
 
-                prevWorkout = workoutViewModel.getPrevWorkout(
-                        currentWorkout.getWorkoutName(), currentWorkout.getWorkoutDate());
-                if (prevWorkout != null){
-                    prevWorkout = workoutViewModel.getWorkout(prevWorkout.getId());
-                }
-
-                else{//because its first WO after Abstract WO
+                prevWorkout = workoutViewModel.getPrevWorkout(currentWorkout.getWorkoutName(), currentWorkout.getWorkoutDate());
+                if (prevWorkout == null){
                     prevWorkout = workoutViewModel.getAbstractWorkoutFromPractical(
                             currentWorkout.getId_routine(),currentWorkout.getWorkoutName());
                 }
-                prevExercises = exerciseViewModel.getExercisesForWorkout(prevWorkout.getId());
+
+                prevWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(prevWorkout.getId())));
             }
         }
         //im on WorkoutNow Activity
         else{
             setResult(RESULT_CANCELED,intent);
             finish();
-            //currentWorkout = workoutViewModel.getCurrentWorkout();
         }
 
         try {
-            //currentWorkout = workoutViewModel.getCurrentWorkout();
-            //prevWorkout = workoutViewModel.getPrevWorkout(currentWorkout.getWorkoutName(), currentWorkout.getWorkoutDate());
-            //currentExercises = exerciseViewModel.getExercisesForWorkout(currentWorkout.getId());
-            //prevExercises = exerciseViewModel.getExercisesForWorkout(prevWorkout.getId());
-            /*if (currentExercises != null && prevExercises != null) {
-                Log.d(TAG, currentExercises.get(0).getComment());
-                Log.d(TAG, prevExercises.get(0).getComment());
-            }*/
-            //prevSets = setViewModel.getSetsForWorkout(prevWorkout.getId());
+            textViewRoutineName.setText("Routine: " +
+                    routineViewModel.getRoutine(currentWorkout.getId_routine()).getRoutineName());
             textViewWorkoutName.setText("Workout: " + currentWorkout.getWorkoutName());
-            textViewWorkoutDate.setText(currentWorkout.getDate().toString());
+
+            //https://stackabuse.com/how-to-get-current-date-and-time-in-java/
+            SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyyy 'at' HH:mm");
+            Date d = new Date(currentWorkout.getDate().getTime());
+            textViewWorkoutDate.setText(formatter.format(d));
 
         } catch (Exception e) {
             Toast.makeText(this, "couldn't load last workout", Toast.LENGTH_SHORT).show();
@@ -150,14 +127,8 @@ public class WorkoutNow extends AppCompatActivity {
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
 
-        // preparing list data
-        //prepareListData2();
-        /*if ()*/
-        prepareListDataPrev();
-
-        listAdapter = new ExpandableListAdapter(this, exerciseListHeader, prevSetsListDataChild, currentSetsListDataChild,
+        listAdapter = new ExpandableListAdapter(this, currentWorkout, prevWorkout,
                 setViewModel,exerciseViewModel,exerciseAbstractViewModel);
-
         // setting list adapter
         expListView.setAdapter(listAdapter);
 
@@ -181,7 +152,7 @@ public class WorkoutNow extends AppCompatActivity {
             @Override
             public void onGroupExpand(int groupPosition) {
                 Toast.makeText(getApplicationContext(),
-                        exerciseListHeader.get(groupPosition) + " Expanded",
+                        /*exerciseListHeader.get(groupPosition) +*/ " Expanded",
                         Toast.LENGTH_SHORT).show();
 
             }
@@ -192,33 +163,48 @@ public class WorkoutNow extends AppCompatActivity {
 
             @Override
             public void onGroupCollapse(int groupPosition) {
-                Toast.makeText(getApplicationContext(),
+/*                Toast.makeText(getApplicationContext(),
                         exerciseListHeader.get(groupPosition) + " Collapsed",
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT).show();*/
+                //listAdapter.notifyDataSetChanged();
 
             }
         });
 
-        // ListView on child click listener
+/*        // ListView on child click listener
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
                 // TODO Auto-generated method stub
-                Toast.makeText(
+                *//*Toast.makeText(
                         getApplicationContext(),
                         exerciseListHeader.get(groupPosition)
                                 + " : "
                                 + prevSetsListDataChild.get(
                                 exerciseListHeader.get(groupPosition)).get(
                                 childPosition), Toast.LENGTH_SHORT)
-                        .show();
+                        .show();*//*
                 return false;
             }
-        });
+        });*/
     }
 
+    private List<Exercise> fillExerciseData(List<Exercise> exerciseList){
+        for(int i=0; i<exerciseList.size(); i++){
+            Exercise exercise = exerciseList.get(i);
+            exercise.setExerciseAbstract(exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs()));
+            exercise.setSets(setViewModel.getSetsForExercise(exercise.getId()));
+
+            if (exercise.getSets() == null){
+                List<Set> sets = new ArrayList<>();
+                exercise.setSets(sets);
+            }
+        }
+        return exerciseList;
+
+    }
 
     //if exercise from last Workout exists in the next workout, then add it
     private HashMap<String, List<Set>> getPrevSetsListDataChild(List<Exercise> exerciseList, List<String> exerciseTitles){
@@ -267,53 +253,56 @@ public class WorkoutNow extends AppCompatActivity {
         return listHeader;
     }
 
-    private void constructNewWorkout() {
+    private Workout constructNewWorkout(Workout prevWorkout) {
+        Workout newWorkout;
         //insert workout
         Workout workout = new Workout(prevWorkout.getId_routine(), prevWorkout.getName(), false);
         workoutViewModel.insert(workout);
-        currentWorkout = workoutViewModel.getNewestWorkout(workout.getId_routine(), workout.getName());
+        newWorkout = workoutViewModel.getNewestWorkout(workout.getId_routine(), workout.getName());
 
 
         //insert exercises as like in abstract
         List<Exercise> exercisesList;
         exercisesList = exerciseViewModel.getExercisesForWorkout(
-                workoutViewModel.getAbstractWorkoutFromPractical(currentWorkout.getId_routine(), currentWorkout.getName()).getId());
+                workoutViewModel.getAbstractWorkoutFromPractical(newWorkout.getId_routine(), newWorkout.getName()).getId());
 
         Iterator<Exercise> iteratorCurrentExercise = exercisesList.iterator();
         //Exercise exercise;
         while (iteratorCurrentExercise.hasNext()) {
             Exercise exercise = new Exercise(iteratorCurrentExercise.next());
             //exercise.setId(0); not necessary  cuz in constructor already
-            exercise.setId_workout(currentWorkout.getId());
+            exercise.setId_workout(newWorkout.getId());
             exerciseViewModel.insert(exercise);
         }
-        currentExercises = exerciseViewModel.getExercisesForWorkout(currentWorkout.getId());
-
+        newWorkout.setExercises(exerciseViewModel.getExercisesForWorkout(newWorkout.getId()));
+        for(int i=0; i<newWorkout.getExercises().size(); i++){
+            newWorkout.getExercises().get(i).setExerciseAbstract(
+                    exerciseAbstractViewModel.getExerciseAbsFromId(newWorkout.getExercises().get(i).getId_exerciseabs())
+            );
+        }
 
         //sets
         //find each exercise in prev workout and if there are sets there,
         //take the amount and create that number of sets in current exercise
         //if not exist, don't create. let the adapter do it
-        iteratorCurrentExercise = currentExercises.iterator();
+        iteratorCurrentExercise = newWorkout.getExercises().iterator();
         Iterator<Exercise> prevIterator;
-        /*List<Set> prevSetsForCount*/
         int setsNo;
-        //Set set;
         Exercise prevExercise;
         //find same ExerciseAbs in both currentWorkout and prevWorkout
-        //don't forget that currentExercise contains the ex from absWorkout
+        //don't forget that currentExercise contains the exercise from absWorkout
         while(iteratorCurrentExercise.hasNext()) {
             Exercise currentExercise = iteratorCurrentExercise.next();
             Boolean foundFlag = Boolean.FALSE;
             //iterate over all exercises in prevWorkout and search for currentExercise
-            prevIterator = prevExercises.iterator();
+            prevIterator = prevWorkout.getExercises().iterator();
 
             while(prevIterator.hasNext()) {
                 prevExercise = prevIterator.next();
 
                 //if exists, create the same number of sets like prevExercise
                 if(currentExercise.getId_exerciseabs() == prevExercise.getId_exerciseabs()){
-                    setsNo = setViewModel.getSetsForExercise(prevExercise.getId()).size();
+                    setsNo = prevExercise.getSets().size();//setViewModel.getSetsForExercise(prevExercise.getId()).size();
 
 /*                    //no sets at all, its cuz abs workout
                     //put one set in it so it can start
@@ -328,7 +317,8 @@ public class WorkoutNow extends AppCompatActivity {
 
                     List<Set> setList = setViewModel.getSetsForExercise(currentExercise.getId());
                     if (!setList.isEmpty() || setList != null)
-                        currentSetsListDataChild.put(exerciseAbstractViewModel.getExerciseAbsFromId(currentExercise.getId_exerciseabs()).getName(),setList);
+                        currentExercise.setSets(setList);
+                        //currentSetsListDataChild.put(exerciseAbstractViewModel.getExerciseAbsFromId(currentExercise.getId_exerciseabs()).getName(),setList);
 
                     foundFlag = Boolean.TRUE;
                     /*else
@@ -344,17 +334,20 @@ public class WorkoutNow extends AppCompatActivity {
 /*                Set set = new Set(currentExercise.getId(),-1.0,-1);
                 setViewModel.insert(set);*/
                 List<Set> setList = setViewModel.getSetsForExercise(currentExercise.getId());
-                currentSetsListDataChild.put(exerciseAbstractViewModel.getExerciseAbsFromId(currentExercise.getId_exerciseabs()).getName(),setList);
+                currentExercise.setSets(setList);
+                //currentSetsListDataChild.put(exerciseAbstractViewModel.getExerciseAbsFromId(currentExercise.getId_exerciseabs()).getName(),setList);
             }
         }
+
+        return newWorkout;
     }
 
 
 
-    private void prepareListDataPrev() {
+/*    private void prepareListDataPrev() {
         exerciseListHeader = new ArrayList<>();
         prevSetsListDataChild = new HashMap<>();
-        Iterator<Exercise> iterator = currentExercises.iterator();
+        Iterator<Exercise> iterator = currentWorkout.getExercises().iterator();
         String exerciseName;// = new String();
         List<Set> childList;
         Exercise exercise;
@@ -374,7 +367,7 @@ public class WorkoutNow extends AppCompatActivity {
             //from the last practical workout made
 
         }
-    }
+    }*/
 
 
     @NonNull//this is a marker, does nothing but telling is can never be null

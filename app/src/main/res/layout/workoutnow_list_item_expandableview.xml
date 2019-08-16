@@ -31,20 +31,35 @@
         android:textAlignment="center">
     </TextView>
 
+    <ImageButton
+        android:id="@+id/arrow_forward_button_duplicate_set"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_arrow_forward"
+        android:background="@color/colorDefault"
+        android:layout_gravity="center"
+        android:paddingHorizontal="8dp"
+    />
 
     <EditText
         android:id="@+id/lblListItemEditextNowWeight"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:ems="4" >
+        android:ems="4"
+        android:inputType="numberDecimal"
+        android:hint="Weight"
+        android:textAlignment="center">
     </EditText>
     <EditText
         android:id="@+id/lblListItemEditextNowReps"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:ems="4" >
+        android:ems="4"
+        android:inputType="number"
+        android:hint="Reps"
+        android:textAlignment="center">
     </EditText>
 
 </LinearLayout>

@@ -9,7 +9,9 @@ import android.widget.TextView;
 
 import com.example.tamirmishali.trainingmanager.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.google.gson.reflect.TypeToken.get;
@@ -34,7 +36,9 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutH
         holder.textViewWorkout.setText(currentWorkout.getWorkoutName());
 
         if(currentWorkout.getDate() != null){
-            holder.textViewWorkoutExercises.setText(currentWorkout.getDate().toString());
+            SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyyy 'at' HH:mm");
+            Date d = new Date(currentWorkout.getDate().getTime());
+            holder.textViewWorkoutExercises.setText(formatter.format(d));
         }
         else {
             holder.textViewWorkoutExercises.setText("");

@@ -1,6 +1,5 @@
 package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 
-import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,10 +9,10 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstractAdapter.ExerciseAbstractHolder> implements Filterable {
@@ -47,10 +46,18 @@ public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstra
     }
 
     public void setExerciseAbstracts(List<ExerciseAbstract> exerciseAbstracts) {
+        Collections.sort(exerciseAbstracts, ExerciseAbstract.MuscleGroupComparator);
         this.exerciseAbstracts = exerciseAbstracts;
         exerciseAbstractsFull = new ArrayList<>(exerciseAbstracts);
         notifyDataSetChanged(); //use itemchanged later
     }
+
+/*    Collections.sort(list, new Comparator<String>() {
+        @Override
+        public int compare(String s1, String s2) {
+            return s1.compareToIgnoreCase(s2);
+        }
+    });*/
 
     public ExerciseAbstract getExerciseAbstractAt(int position) {
         return exerciseAbstracts.get(position);

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.example.tamirmishali.trainingmanager.Database.ExerciseAbstractRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExerciseAbstractViewModel extends AndroidViewModel {
@@ -36,6 +37,9 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
         return allExerciseAbstracts;
     }
     public LiveData<List<ExerciseAbstract>> getExerciseAbstractsForWorkout(int id){ return repository.getExerciseAbstractsForWorkout(id); }
+
+
     public ExerciseAbstract getExerciseAbsFromId(int exerciseAbsId){return repository.getExerciseAbsFromId(exerciseAbsId);}
+    public List<String> getMuscles(){return repository.getMuscles();}
 
 }

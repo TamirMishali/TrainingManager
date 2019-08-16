@@ -19,6 +19,8 @@ import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstrac
 import com.example.tamirmishali.trainingmanager.Routine.Routine;
 import com.example.tamirmishali.trainingmanager.Set.Set;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
+import com.fstyle.library.helper.AssetSQLiteOpenHelperFactory;
+
 import static java.lang.Math.toIntExact;
 
 @Database(version = 11,entities = {Routine.class, Workout.class, Exercise.class, ExerciseAbstract.class, Set.class})
@@ -39,9 +41,12 @@ public abstract class RoutineDatabase extends RoomDatabase {
 
     public static synchronized RoutineDatabase getInstance(Context context) {
         if (INSTANCE == null) {
+            //https://github.com/daolq3012/AssetSQLiteOpenHelper
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                    RoutineDatabase.class, DATABASE_NAME).fallbackToDestructiveMigration()
-                    .addCallback(roomcallback)
+                    RoutineDatabase.class, DATABASE_NAME)
+                    .openHelperFactory(new AssetSQLiteOpenHelperFactory())
+     /*               .fallbackToDestructiveMigration()
+                    .addCallback(roomcallback)*/
                     .build();
         }
         return INSTANCE;

@@ -36,7 +36,7 @@ public interface SetDao {
             "   SELECT id_exercise " +
             "   from exercise_table " +
             "   where id_workout=:workoutId)" +
-            "   and reps = ''")
+            "   and (reps = '-1')")
     List<Set> getUnfilledSetsFromWorkout(int workoutId);
 
     @Query("SELECT * FROM set_table WHERE id_exercise=:id_exercise")

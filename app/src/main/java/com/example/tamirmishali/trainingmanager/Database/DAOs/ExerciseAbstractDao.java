@@ -10,6 +10,7 @@ import android.arch.persistence.room.Update;
 
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -36,6 +37,9 @@ public interface ExerciseAbstractDao {
 
     @Query("select * from exerciseabs_table where id_exerciseabs=:exerciseAbsId")
     ExerciseAbstract getExerciseAbsFromId(int exerciseAbsId);
+
+    @Query("select distinct muscleGroup from exerciseabs_table order by muscleGroup asc")
+    List<String> getMuscles();
 
 /*    @Query("SELECT * FROM exerciseabs_table WHERE id_workout=:id_workout")
     LiveData<List<ExerciseAbstract>> getExercisesForWorkout(final int id_workout);*/

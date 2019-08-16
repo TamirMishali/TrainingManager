@@ -5,7 +5,6 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import com.example.tamirmishali.trainingmanager.Database.RoutineRepository;
-import com.example.tamirmishali.trainingmanager.Workout.Workout;
 
 import java.util.List;
 
@@ -44,25 +43,8 @@ public class RoutineViewModel extends AndroidViewModel {
         }
         return allRoutines;
     }
-    /*public Routine getCurrentRoutine() {repository.getCurrentRoutine();}*/
 
-/*
-
-    public void insert(Workout workout){
-        repository.insert(workout);
-    }
-    public void update(Workout workout){
-        repository.update(workout);
-    }
-    public void delete(Workout workout){
-        repository.delete(workout);
-    }
-    public void deleteAllWorkouts(){
-        repository.deleteAllWorkouts();
-    }
-    public LiveData<List<Workout>> getAllWorkouts(){
-        return allWorkouts;
-    }
-    public LiveData<List<Workout>> getWorkoutsForRoutine(int id){ return repository.getWorkoutsForRoutine(id); }*/
+    public Routine getRoutine(int routineId) {return repository.getRoutine(routineId);}
+    public Routine getFirstRoutine() {return repository.getFirstRoutine();}
 
 }

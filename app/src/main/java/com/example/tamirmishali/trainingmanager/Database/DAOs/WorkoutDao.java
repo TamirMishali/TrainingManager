@@ -7,6 +7,8 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
+
+import com.example.tamirmishali.trainingmanager.Routine.Routine;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 
 import java.util.List;
@@ -50,7 +52,7 @@ public interface WorkoutDao {
             "LIMIT 1 ")
     Workout getCurrentWorkout();
 
-    @Query("select * from workout_table where (name = :workoutName) and (date < :workoutDate) limit 1")
+    @Query("select * from workout_table where (name = :workoutName) and (date < :workoutDate) order by date desc limit 1")
     Workout getPrevWorkout(String workoutName, java.sql.Date workoutDate);
 
     @Query("select * from workout_table where id_workout=:workoutId")
@@ -78,9 +80,11 @@ public interface WorkoutDao {
     @Query("select * from workout_table where (id_routine=:routineId) and (name=:workoutName) and (date is null) limit 1")
     Workout getAbstractWorkoutFromPractical(int routineId, String workoutName);
 
-    @Query("Select id from routine_table Order By date desc limit 1")
+    @Query("Select id from routine_table Order By date asc limit 1")
     int getNewestRoutineId();
 
     @Query("select * from workout_table where (id_routine=:routineId) and (name=:workoutName) and not(date is null) order by date desc limit 1")
     Workout getNewestWorkout(int routineId, String workoutName);
+
+
 }

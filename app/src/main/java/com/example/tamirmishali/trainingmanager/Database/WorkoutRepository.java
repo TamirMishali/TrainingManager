@@ -381,19 +381,6 @@ public class WorkoutRepository {
 
         @Override
         protected Workout doInBackground(Integer... params) {
-/*            Workout workout = workoutDao.getWorkout(params[0]);
-            List<Exercise> exercises = exerciseDao.getExercisesForWorkout(workout.getId());
-            Iterator<Exercise> exerciseIterator = exercises.iterator();
-
-            Exercise exercise;
-            ExerciseAbstract exerciseAbstract;
-            while (exerciseIterator.hasNext()) {
-                exercise = exerciseIterator.next();
-                exercise.setExerciseAbstract(exerciseAbstractDao.getExerciseAbsFromId(exercise.getId_exerciseabs()));
-                exercise.setSets(setDao.getSetsForExercise(exercise.getId()));
-            }
-            workout.setExercises(exercises);*/
-
             return fillWorkout(params[0],workoutDao, exerciseDao,exerciseAbstractDao,setDao);
         }
     }

@@ -21,9 +21,9 @@
         android:id="@+id/edit_text_Exerciseabs_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-       android:textSize="20dp"
-       android:inputType="text"
-       android:gravity="center" />
+        android:textSize="20dp"
+        android:inputType="textCapSentences"
+        android:gravity="center" />
 
 
     <TextView
@@ -36,29 +36,30 @@
        android:textStyle="bold" />
 
     <EditText
-       android:id="@+id/edit_text_Exerciseabs_description"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:textSize="20dp"
-       android:inputType="text"
-       android:gravity="center" />
+        android:id="@+id/edit_text_Exerciseabs_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:inputType="textCapSentences"
+        android:gravity="center" />
 
     <TextView
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:fontFamily="@font/alegreya_black"
-       android:text="Muscle Group:"
-       android:textAppearance="@style/Base.Widget.AppCompat.Spinner.Underlined"
-       android:textSize="25dp"
-       android:textStyle="bold" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/alegreya_black"
+        android:text="Muscle Group:"
+        android:textAppearance="@style/Base.Widget.AppCompat.Spinner.Underlined"
+        android:textSize="25dp"
+        android:textStyle="bold" />
 
-    <EditText
-       android:id="@+id/edit_text_Exerciseabs_muscle"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:textSize="20dp"
-       android:inputType="text"
-       android:gravity="center" />
+
+    <Spinner
+        android:id="@+id/spinner_muscle_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        ></Spinner>
+
 
 
 

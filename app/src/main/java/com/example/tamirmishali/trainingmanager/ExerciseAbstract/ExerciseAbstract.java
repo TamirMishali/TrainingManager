@@ -3,9 +3,12 @@ package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
+import java.util.Comparator;
 
 @Entity(tableName = "exerciseabs_table")
-public class ExerciseAbstract {
+public class ExerciseAbstract{
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id_exerciseabs")
@@ -74,10 +77,23 @@ public class ExerciseAbstract {
     public void setMuscleGroup(String muscleGroup) {
         this.muscleGroup = muscleGroup;
     }
-/*    @ColumnInfo(name = "reps")
-    int[] reps = new int[5]; //maximum 5 sets
 
-    @ColumnInfo(name = "isoriginal")
-    Boolean isOriginal;*/
+
+    //https://beginnersbook.com/2013/12/java-arraylist-of-object-sort-example-comparable-and-comparator/
+    public static Comparator<ExerciseAbstract> MuscleGroupComparator = new Comparator<ExerciseAbstract>() {
+
+        public int compare(ExerciseAbstract ea1, ExerciseAbstract ea2) {
+            String StudentName1 = ea1.getMuscleGroup().toUpperCase();
+            String StudentName2 = ea2.getMuscleGroup().toUpperCase();
+
+            //ascending order
+            return StudentName1.compareTo(StudentName2);
+
+            //descending order
+            //return StudentName2.compareTo(StudentName1);
+        }};
+
+
+
 
 }

@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractDao;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -39,6 +40,9 @@ public class ExerciseAbstractRepository {
     public LiveData<List<ExerciseAbstract>> getExerciseAbstractsForWorkout(int workoutId){
         return exerciseAbstractDao.getExerciseAbstractsForWorkout(workoutId);
     }
+
+
+
     public ExerciseAbstract getExerciseAbsFromId(int exerciseAbsId){
         ExerciseAbstract exerciseAbstract = new ExerciseAbstract();
         try {
@@ -49,6 +53,17 @@ public class ExerciseAbstractRepository {
             e.printStackTrace();
         }
         return exerciseAbstract;
+    }
+    public List<String> getMuscles(){
+        List<String> muscleList = new ArrayList();
+        try {
+            muscleList = new GetMusclesAsyncTask(exerciseAbstractDao).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return muscleList;
     }
 
     //ExerciseAbstract - AsyncTasks
@@ -105,6 +120,7 @@ public class ExerciseAbstractRepository {
         }
     }
 
+
     private static class GetExerciseAbsFromIdAsyncTask extends AsyncTask<Integer, Integer, ExerciseAbstract>{
         private ExerciseAbstractDao exerciseAbstractDao;
 
@@ -115,6 +131,20 @@ public class ExerciseAbstractRepository {
         @Override
         protected ExerciseAbstract doInBackground(Integer... values) {
             return exerciseAbstractDao.getExerciseAbsFromId(values[0]);
+        }
+
+    }
+
+    private static class GetMusclesAsyncTask extends AsyncTask<Void, Void, List<String>>{
+        private ExerciseAbstractDao exerciseAbstractDao;
+
+        private GetMusclesAsyncTask(ExerciseAbstractDao exerciseAbstractDao){
+            this.exerciseAbstractDao = exerciseAbstractDao;
+        }
+
+        @Override
+        protected List<String> doInBackground(Void... voids) {
+            return exerciseAbstractDao.getMuscles();
         }
 
     }

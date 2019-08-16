@@ -1,15 +1,22 @@
 package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 import com.example.tamirmishali.trainingmanager.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddEditExerciseAbsActivity extends AppCompatActivity {
     public static final String EXTRA_EXERCISEABS_ID =
@@ -24,25 +31,45 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
     private EditText editTextExerciseAbsName;
     private EditText editTextExerciseAbsDescription;
     private EditText editTextExerciseAbsMuscle;
+    private Spinner spinnerMuscleGroup;
 
+    private ExerciseAbstractViewModel exerciseAbstractViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_exerciseabs);
 
+
+        exerciseAbstractViewModel = ViewModelProviders.of(this).get(ExerciseAbstractViewModel.class);
+
         editTextExerciseAbsName = findViewById(R.id.edit_text_Exerciseabs_name);
         editTextExerciseAbsDescription = findViewById(R.id.edit_text_Exerciseabs_description);
-        editTextExerciseAbsMuscle = findViewById(R.id.edit_text_Exerciseabs_muscle);
+        //editTextExerciseAbsMuscle = findViewById(R.id.edit_text_Exerciseabs_muscle);
+        spinnerMuscleGroup = findViewById(R.id.spinner_muscle_group);
+
+        //spinner thing
+        List<String> spinnerValues = new ArrayList<>();
+        spinnerValues.add("");
+        spinnerValues.addAll(exerciseAbstractViewModel.getMuscles());
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
+                R.layout.spinner_item, spinnerValues); //
+
+        spinnerMuscleGroup.setAdapter(spinnerAdapter);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerMuscleGroup.setAdapter(spinnerAdapter);
+
+        spinnerMuscleGroup.setSelection(0, false);
 
         //check why we got here: Edit/Add
         Intent intent = getIntent();
-        //intent.getIntExtra(EXTRA_EXERCISEABS_ID, -1);
         if (intent.hasExtra(EXTRA_EXERCISEABS_ID)) {
             setTitle("Edit Exercise Info");
             editTextExerciseAbsName.setText(intent.getStringExtra(EXTRA_EXERCISEABS_NAME));
             editTextExerciseAbsDescription.setText(intent.getStringExtra(EXTRA_EXERCISEABS_DESCRIPTION));
-            editTextExerciseAbsMuscle.setText(intent.getStringExtra(EXTRA_EXERCISEABS_MUSCLE));
+            spinnerMuscleGroup.setSelection(spinnerValues.indexOf(intent.getStringExtra(EXTRA_EXERCISEABS_MUSCLE)));
+
+
 
         }else{
             setTitle("Add Exercise Info");
@@ -52,11 +79,12 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
     }
 
     private void saveExerciseAbs(){
-        String exerciseabsName = editTextExerciseAbsName.getText().toString();
+        String exerciseAbsName = editTextExerciseAbsName.getText().toString();
         String exerciseAbsDescription = editTextExerciseAbsDescription.getText().toString();
-        String exerciseAbsMuscleGroup = editTextExerciseAbsMuscle.getText().toString();
+        //String exerciseAbsMuscleGroup = editTextExerciseAbsMuscle.getText().toString();
+        String exerciseAbsMuscleGroup = spinnerMuscleGroup.getSelectedItem().toString();
 
-        if (exerciseabsName.trim().isEmpty() || exerciseAbsMuscleGroup.trim().isEmpty()){
+        if (exerciseAbsName.trim().isEmpty() || exerciseAbsMuscleGroup.trim().isEmpty()){
             Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -64,7 +92,7 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             exerciseAbsDescription = "";
         }
         Intent data = new Intent();
-        data.putExtra(EXTRA_EXERCISEABS_NAME,exerciseabsName);
+        data.putExtra(EXTRA_EXERCISEABS_NAME,exerciseAbsName);
         data.putExtra(EXTRA_EXERCISEABS_DESCRIPTION,exerciseAbsDescription);
         data.putExtra(EXTRA_EXERCISEABS_MUSCLE,exerciseAbsMuscleGroup);
 
