@@ -148,7 +148,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
         Boolean valid = Boolean.FALSE;
 
         try {
-            int repsI = Integer.parseInt(repsWeight);
+            Double repsI = Double.parseDouble(repsWeight);
             Log.i("",repsWeight+" is a number");
             valid = Boolean.TRUE;
         } catch (NumberFormatException e) {
@@ -266,6 +266,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
                         }
                     }
                 }
+                else{
+                    editTextWeight.setSelectAllOnFocus(true);
+                }
             }
         });
 
@@ -282,6 +285,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
                             editedSet.setReps(Integer.valueOf(editTextReps.getText().toString()));
                             setViewModel.update(editedSet);
                         }
+                    }
+                    else{
+                        editTextReps.setSelectAllOnFocus(true);
                     }
                 }
             }
