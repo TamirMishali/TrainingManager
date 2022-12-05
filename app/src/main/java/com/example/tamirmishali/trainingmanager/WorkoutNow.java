@@ -80,7 +80,8 @@ public class WorkoutNow extends AppCompatActivity {
             String callingClassName = getCallingActivity().getShortClassName();
             sourceWorkoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
 
-            //New Workout
+            //New Workout that was picked from the list of workouts in current routine or id
+            // of unfinished workout to reload.
             if(callingClassName.equals(".MainActivity") && intent.getAction()==null){
                 prevWorkout = workoutViewModel.getWorkout(sourceWorkoutID);
                 prevWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(prevWorkout.getId())));
@@ -88,7 +89,7 @@ public class WorkoutNow extends AppCompatActivity {
 
             }
 
-            //Existing Workout
+            //Existing Workout - finished workout from history
             else if(callingClassName.equals(".History.ViewPracticalWorkouts") || intent.getAction()==ACTION_FINISH_WORKOUT){
                 currentWorkout = workoutViewModel.getWorkout(sourceWorkoutID);
                 currentWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(currentWorkout.getId())));
@@ -108,6 +109,7 @@ public class WorkoutNow extends AppCompatActivity {
             finish();
         }
 
+        // Insert names of routine, workout and date at the top of the screen
         try {
             textViewRoutineName.setText("Routine: " +
                     routineViewModel.getRoutine(currentWorkout.getId_routine()).getRoutineName());
@@ -134,7 +136,7 @@ public class WorkoutNow extends AppCompatActivity {
 
 
         // ListView Group click listener
-        expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+/*        expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v,
@@ -144,32 +146,32 @@ public class WorkoutNow extends AppCompatActivity {
                 // Toast.LENGTH_SHORT).show();
                 return false;
             }
-        });
+        });*/
 
         // ListView Group expanded listener
-        expListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+/*        expListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
             @Override
             public void onGroupExpand(int groupPosition) {
                 Toast.makeText(getApplicationContext(),
-                        /*exerciseListHeader.get(groupPosition) +*/ " Expanded",
+                        exerciseListHeader.get(groupPosition) + " Expanded",
                         Toast.LENGTH_SHORT).show();
 
             }
-        });
+        });*/
 
         // ListView Group collasped listener
-        expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+/*        expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
 
             @Override
             public void onGroupCollapse(int groupPosition) {
-/*                Toast.makeText(getApplicationContext(),
+*//*                Toast.makeText(getApplicationContext(),
                         exerciseListHeader.get(groupPosition) + " Collapsed",
-                        Toast.LENGTH_SHORT).show();*/
+                        Toast.LENGTH_SHORT).show();*//*
                 //listAdapter.notifyDataSetChanged();
 
             }
-        });
+        });*/
 
 /*        // ListView on child click listener
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {

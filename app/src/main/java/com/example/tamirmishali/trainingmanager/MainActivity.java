@@ -70,6 +70,9 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
 
 
         //Main
+        // When clicking on the main menu "Workout":
+        // if no routines exists, raise notification
+        // else, open the last unfinished workout...
         button_WorkoutNow.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {

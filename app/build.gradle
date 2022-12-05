@@ -1,6 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        TamirMishali {
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.tamirmishali.trainingmanager"
@@ -21,11 +25,14 @@ android {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
+        signingConfig signingConfigs.debug
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+            signingConfig signingConfigs.debug
         }
     }
     externalNativeBuild {
