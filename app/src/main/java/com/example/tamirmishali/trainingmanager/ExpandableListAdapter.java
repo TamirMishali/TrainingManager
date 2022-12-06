@@ -1,18 +1,9 @@
 package com.example.tamirmishali.trainingmanager;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
 import android.app.AlertDialog;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.DataSetObserver;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,20 +11,20 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
-import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractViewModel;
-import com.example.tamirmishali.trainingmanager.Routine.RoutineViewModel;
 import com.example.tamirmishali.trainingmanager.Set.Set;
 import com.example.tamirmishali.trainingmanager.Set.SetViewModel;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 
-import javax.xml.transform.Templates;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 //dictionary
 // 0.0 = in view : 0.0   - didn't do it - normal number
@@ -72,8 +63,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
                                  HashMap<String, List<Set>> listChildDataPrev,
                                  HashMap<String, List<Set>> listChildDataCurrent,*/
                                  SetViewModel setViewModel,
-                                 ExerciseViewModel exerciseViewModel,
-                                 ExerciseAbstractViewModel exerciseAbstractViewModel) {
+                                     ExerciseViewModel exerciseViewModel,
+                                     ExerciseAbstractViewModel exerciseAbstractViewModel) {
         this._context = context;
         this.currentWorkout = currentWorkout;
         this.prevWorkout = prevWorkout;
@@ -332,6 +323,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.workoutnow_list_group_expandableview, null);
         }
+
 
         TextView lblListHeader = (TextView) convertView
                 .findViewById(R.id.lblListHeader);

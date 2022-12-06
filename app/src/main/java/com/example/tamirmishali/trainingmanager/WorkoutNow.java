@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -133,6 +134,9 @@ public class WorkoutNow extends AppCompatActivity {
                 setViewModel,exerciseViewModel,exerciseAbstractViewModel);
         // setting list adapter
         expListView.setAdapter(listAdapter);
+        // MY SAVIOUR!!!! Fixed the text jumps!!! <3<3<3 (06.12.2022)
+        // https://stackoverflow.com/questions/18632084/expandablelistview-child-items-edittext-cant-keep-focus
+        expListView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
 
 
         // ListView Group click listener

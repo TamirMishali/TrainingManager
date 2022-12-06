@@ -28,7 +28,8 @@
         <activity android:name=".ExerciseAbstract.AddExerciseAbstractToWorkoutActivity"></activity>
         <activity android:name=".ExerciseAbstract.AddEditExerciseAbsActivity"
             android:parentActivityName=".ExerciseAbstract.AddExerciseAbstractToWorkoutActivity"></activity>
-        <activity android:name=".WorkoutNow"></activity>
+        <activity android:name=".WorkoutNow"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity android:name=".History.History"></activity>
         <activity android:name=".History.ViewPracticalWorkouts"></activity>
         <activity android:name=".History.ViewOldWorkout"></activity>
