@@ -3,11 +3,15 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -38,6 +42,7 @@ import static android.widget.Toast.*;
 
 public class MainActivity extends AppCompatActivity /*implements WorkoutNow_DialogListViewAdapter.CustomDialogListener*/{
     public static final int EDIT_LAST_WORKOUT = 1;
+    public static final int GETDATA_REQUESTCODE = 2;
     protected static final String ACTION_FINISH_WORKOUT = "finish_workout";
 
     // Used to load the 'native-lib' library on application startup.
@@ -128,11 +133,19 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
             routineViewModel.insert(routine);*/
             //Toast.makeText(this,"Nothing and nothing", Toast.LENGTH_SHORT).show();
         }
+        else if (requestCode == GETDATA_REQUESTCODE && resultCode == RESULT_OK){
+            if (data == null){
+                return;
+            }
+            Uri uri_db = data.getData();
+            Toast.makeText(this, uri_db.getPath(), LENGTH_SHORT).show();
+        }
 
         else {
             //Toast.makeText(this,"Nothing and nothing", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     private Boolean dataValidation() {
         //check for existing routines
@@ -184,6 +197,40 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
 
             }
         });
+
+    }
+
+
+    // https://stackoverflow.com/questions/51030963/add-three-dots-in-toolbar#:~:text=Right%2Dclick%20res%20folder%20and,give%20you%20the%203%20dots.
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.mainactivity_menu,menu);
+        return true;
+    }
+
+    public void openfilechooser(){
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        startActivityForResult(intent, GETDATA_REQUESTCODE);
+    }
+
+    // This is the 3 dots options in main activity.
+    // It triggers the openfilechooser function that opens the data storage to pick a file to backup from
+    // https://www.youtube.com/watch?v=go5BdWCKLFk&ab_channel=SWIKbyMirTahaAli
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.import_db:
+                openfilechooser();
+                Toast.makeText(this, "Import database", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.export_db:
+                Toast.makeText(this, "Export database", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
     }
 }

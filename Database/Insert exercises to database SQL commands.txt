@@ -1,0 +1,79 @@
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Straight arms pulldown', 'Use upper poli with straight arms and pull them down from head height to weist', 'Back');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Lower back machine', '', 'Back');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Row machine wide', '', 'Back');
+
+
+
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Pushups', '', 'Chest');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Hummer curls - cross body', 'Hummer curls while lifting the dumbbell sideways, close to the body', 'Biceps');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Incline waiters curls', 'Chest on 60 deg bench. lift dumbbell vertically to face direction', 'Biceps');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('W barbell curl - cheat', '', 'Biceps');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Dumbbell curl on bench - Hammer', 'Arm tight on 60 deg bench', 'Biceps');
+
+
+
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Seated leg extension', 'Machine leg extension', 'Legs');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Hip thrust', 'Push weight using hips', 'Legs');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Nut crusher', '', 'Legs');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Not nut crusher', '', 'Legs');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Hamstring curl', 'Curl hamstring using machine', 'Legs');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Romanian deadlift', 'Legs at shoulder width, init exercise by taking barbell from cage, rotate elbows towards body, look down-straight, keep back staright, lower untill hamstring feels stretched', 'Legs');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Seated leg press', 'Machine', 'Legs');
+
+
+
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Cable face pull', 'Pull cable to face', 'Shoulders');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Dumbbell shoulder press', '', 'Shoulders');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Cheat dumbbell shoulder press', '', 'Shoulders');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Cheat lateral raise', 'Lift weight to shoulder height', 'Shoulders');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Delt stretch tri-set', '21 reps starting from back, mid and then front deltoid. make sure to get them stretched each rep', 'Shoulders');
+
+
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Triceps dips', 'Hold a bench behind you, lower the body and push up', 'Triceps');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Diamond pushups', '', 'Triceps');
+
+INSERT INTO exerciseabs_table (name, description, muscleGroup)
+VALUES ('Triceps kickback', 'Position parallel to floor. hold elbow close to body and push dumbell backwards', 'Triceps');
