@@ -4,10 +4,12 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,8 +31,16 @@ import com.example.tamirmishali.trainingmanager.Set.SetViewModel;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 import com.example.tamirmishali.trainingmanager.Workout.WorkoutViewModel;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Observer;
 
 import static android.widget.Toast.*;
@@ -42,8 +52,10 @@ import static android.widget.Toast.*;
 
 public class MainActivity extends AppCompatActivity /*implements WorkoutNow_DialogListViewAdapter.CustomDialogListener*/{
     public static final int EDIT_LAST_WORKOUT = 1;
-    public static final int GETDATA_REQUESTCODE = 2;
+    public static final int GET_DB_PATH_REQUEST_CODE = 2;
     protected static final String ACTION_FINISH_WORKOUT = "finish_workout";
+
+    protected static String DATABASE_NAME = "routines_database";
 
     // Used to load the 'native-lib' library on application startup.
     static {
@@ -133,12 +145,13 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
             routineViewModel.insert(routine);*/
             //Toast.makeText(this,"Nothing and nothing", Toast.LENGTH_SHORT).show();
         }
-        else if (requestCode == GETDATA_REQUESTCODE && resultCode == RESULT_OK){
+        else if (requestCode == GET_DB_PATH_REQUEST_CODE && resultCode == RESULT_OK){
             if (data == null){
                 return;
             }
             Uri uri_db = data.getData();
             Toast.makeText(this, uri_db.getPath(), LENGTH_SHORT).show();
+            // TODO: Finish the part the loads the DB file to SQLite.
         }
 
         else {
@@ -209,25 +222,67 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
         return true;
     }
 
-    public void openfilechooser(){
+    public void openFileChooser(){
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
-        startActivityForResult(intent, GETDATA_REQUESTCODE);
+        startActivityForResult(intent, GET_DB_PATH_REQUEST_CODE);
+    }
+
+    // https://stackoverflow.com/questions/6540906/simple-export-and-import-of-a-sqlite-database-on-android
+    private boolean exportDB() {
+        boolean operationStatus = false;
+        try {
+            File DirectoryName = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            File dbFile = new File(this.getDatabasePath(DATABASE_NAME).getAbsolutePath());
+            FileInputStream fis = new FileInputStream(dbFile);
+
+            String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+
+            String outFileName = DirectoryName.getPath() + File.separator +
+                    DATABASE_NAME + "_" + currentDate + ".db";
+
+            // Open the empty db as the output stream
+            OutputStream output = new FileOutputStream(outFileName);
+
+            // Transfer bytes from the inputfile to the outputfile
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = fis.read(buffer)) > 0) {
+                output.write(buffer, 0, length);
+            }
+            // Close the streams
+            output.flush();
+            output.close();
+            fis.close();
+            operationStatus = true;
+            Log.e("dbBackup:", "DB exported successfully");
+
+        } catch (IOException e) {
+            Log.e("dbBackup:", e.getMessage());
+            operationStatus = false;
+        }
+        return operationStatus;
     }
 
     // This is the 3 dots options in main activity.
-    // It triggers the openfilechooser function that opens the data storage to pick a file to backup from
+    // It triggers the openFileChooser function that opens the data storage to pick a file to backup from
     // https://www.youtube.com/watch?v=go5BdWCKLFk&ab_channel=SWIKbyMirTahaAli
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.import_db:
-                openfilechooser();
-                Toast.makeText(this, "Import database", Toast.LENGTH_SHORT).show();
+                // openFileChooser();
+                Toast.makeText(this, "Import database - not yet implemented", Toast.LENGTH_SHORT).show();
                 return true;
+
             case R.id.export_db:
-                Toast.makeText(this, "Export database", Toast.LENGTH_SHORT).show();
+                if (exportDB()){
+                    Toast.makeText(this, "DB export file can be found in download folder" , Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "DB export failed", Toast.LENGTH_SHORT).show();
+                }
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
