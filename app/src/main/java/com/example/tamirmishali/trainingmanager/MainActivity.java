@@ -17,7 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
@@ -72,19 +74,23 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+//        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_new);
 
         routineViewModel = ViewModelProviders.of(this).get(RoutineViewModel.class);
         workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
         exerciseViewModel = ViewModelProviders.of(this).get(ExerciseViewModel.class);
         setViewModel = ViewModelProviders.of(this).get(SetViewModel.class);
 
-        ImageButton button_WorkoutNow = findViewById(R.id.imageButton_WorkoutNowActivity);
+//        ImageButton button_WorkoutNow = findViewById(R.id.imageButton_WorkoutNowActivity);
+        LinearLayout button_WorkoutNow = findViewById(R.id.linearLayout_workout_now);
+        TextView textView = findViewById(R.id.linearLayout_workout_now_tv);
+
         ImageButton button_History = findViewById(R.id.imageButton_History);
         ImageButton button_EditWorkout = findViewById(R.id.imageButton_EditActivity);
 
-
-
+        // Update textview to "start new workout" or "continue prev workout":
+        update_text_workout_now_layout();
 
         //Main
         // When clicking on the main menu "Workout":
@@ -133,6 +139,15 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
         });
 
     }
+    
+    @Override
+    protected void onRestart() {
+        // TODO Auto-generated method stub
+        super.onRestart();
+
+        // Update textview to "start new workout" or "continue prev workout":
+        update_text_workout_now_layout();
+    }
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -175,6 +190,29 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
         //check for full sets fields
 
         return Boolean.TRUE;
+    }
+
+    public void update_text_workout_now_layout(){
+        // Some tests to see what to write in the workout now button
+
+        LinearLayout button_WorkoutNow = findViewById(R.id.linearLayout_workout_now);
+        TextView textView = findViewById(R.id.linearLayout_workout_now_tv);
+
+        if (routineViewModel.getFirstRoutine() == null) {
+            textView.setText("No Routines available");
+        } else {
+            textView.setText("Start new workout now!");
+            // get most recent workout from most recent routine
+            Workout most_recent_workout = workoutViewModel.getLastWorkout();
+            if (most_recent_workout != null){
+                List<Set> sets = setViewModel.getUnfilledSetsForWorkout(most_recent_workout.getId());
+                // If last workout filled properly, set text to "start new workout now". else set
+                // text to the current workout and routine name.
+                if (!(sets.isEmpty() || sets == null)) {
+                    textView.setText("Continue current workout");
+                }
+            }
+        }
     }
 
     public void open_dialog(View v){

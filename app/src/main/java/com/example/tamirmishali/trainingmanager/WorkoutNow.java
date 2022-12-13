@@ -197,6 +197,14 @@ public class WorkoutNow extends AppCompatActivity {
         });*/
     }
 
+    @Override
+    public void onBackPressed() {
+        // TODO Auto-generated method stub
+        super.onBackPressed();
+        finish();
+    }
+
+
     private List<Exercise> fillExerciseData(List<Exercise> exerciseList){
         for(int i=0; i<exerciseList.size(); i++){
             Exercise exercise = exerciseList.get(i);
