@@ -21,16 +21,18 @@
             android:id="@+id/linearLayout_workout_now"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.6"
             android:padding="15dp"
             android:orientation="horizontal">
 
+            <!-- android:src="@drawable/ic_baseline_edit_24"-->
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/iv_new_or_edit_workout"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:padding="5dp"
-                android:layout_gravity="center"
-                android:icon="@drawable/ic_baseline_edit_24">
+                android:layout_gravity="center_vertical"
+                android:icon="@drawable/ic_edit_pencil">
                 </ImageView>
 
             <!-- https://stackoverflow.com/questions/5049852/android-drawing-separator-divider-line-in-layout-->
@@ -39,13 +41,35 @@
                 android:layout_height="match_parent"
                 android:background="?android:attr/listDivider" />
 
-            <TextView
-                android:id="@+id/linearLayout_workout_now_tv"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/linearLayout_workout_now_partial"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:layout_gravity="center">
-            </TextView>
+                android:orientation="vertical"
+                android:layout_gravity="start|center_vertical">
+
+                <TextView
+                    android:id="@+id/linearLayout_workout_now_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal">
+                </TextView>
+
+                <!-- https://stackoverflow.com/questions/3482742/what-is-the-difference-between-gravity-and-layout-gravity-in-android-->
+                <TextView
+                    android:id="@+id/linearLayout_workout_now_tv_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="23sp"
+                    android:text="Routine: info\nWorkout: info"
+                    android:layout_gravity="start">
+                </TextView>
+            </LinearLayout>
+
 
         </LinearLayout>
 

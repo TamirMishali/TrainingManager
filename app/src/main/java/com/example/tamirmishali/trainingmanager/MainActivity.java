@@ -3,13 +3,19 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -139,7 +146,7 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
         });
 
     }
-    
+
     @Override
     protected void onRestart() {
         // TODO Auto-generated method stub
@@ -195,24 +202,86 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
     public void update_text_workout_now_layout(){
         // Some tests to see what to write in the workout now button
 
-        LinearLayout button_WorkoutNow = findViewById(R.id.linearLayout_workout_now);
+//        LinearLayout button_WorkoutNow = findViewById(R.id.linearLayout_workout_now);
         TextView textView = findViewById(R.id.linearLayout_workout_now_tv);
+        TextView textView_info = findViewById(R.id.linearLayout_workout_now_tv_info);
+        ImageView imageView = findViewById(R.id.iv_new_or_edit_workout);
 
-        if (routineViewModel.getFirstRoutine() == null) {
-            textView.setText("No Routines available");
+        String layoutStatus = "";
+        String workout_name = "";
+
+        Routine routine = routineViewModel.getFirstRoutine();
+        if (routine == null) {
+            layoutStatus = "no_routines";
+
         } else {
-            textView.setText("Start new workout now!");
+            layoutStatus = "new_workout";
+
             // get most recent workout from most recent routine
             Workout most_recent_workout = workoutViewModel.getLastWorkout();
+            workout_name = most_recent_workout.getWorkoutName();
+
             if (most_recent_workout != null){
                 List<Set> sets = setViewModel.getUnfilledSetsForWorkout(most_recent_workout.getId());
+
                 // If last workout filled properly, set text to "start new workout now". else set
                 // text to the current workout and routine name.
                 if (!(sets.isEmpty() || sets == null)) {
-                    textView.setText("Continue current workout");
+                    layoutStatus = "continue_workout";
+
                 }
             }
         }
+
+        // https://stackoverflow.com/questions/8049620/how-to-set-layout-gravity-programmatically
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        switch(layoutStatus){
+            case "no_routines":
+                textView.setText("No Routines available");
+//                params.gravity = Gravity.CENTER;
+//                textView.setLayoutParams(params);
+                textView_info.setVisibility(View.GONE);
+                imageView.setVisibility(View.GONE);
+                break;
+
+            case "new_workout":
+                textView.setText(getString(R.string.const_Start_new_workout_now));
+                imageView.setImageResource(R.drawable.ic_new_text_image);
+                textView_info.setVisibility(View.GONE);
+                imageView.setVisibility(View.VISIBLE);
+//                params.gravity = Gravity.CENTER;
+//                textView.setLayoutParams(params);
+                break;
+
+            case "continue_workout":
+                textView.setText(getString(R.string.const_continue_current_workout));
+                imageView.setImageResource(R.drawable.ic_edit_pencil);
+
+                // Construct Bold routine and workout and their normal information
+                // Bold "Routine: ", and then add non-bold routine name + new line
+                // https://stackoverflow.com/questions/16961796/android-textview-in-bold-and-normal-text
+                SpannableStringBuilder s = new SpannableStringBuilder("Routine: ");
+                s.setSpan(new StyleSpan(Typeface.BOLD), 0, s.length(), 0);
+                textView_info.setText(s);
+                textView_info.append(routine.getRoutineName()+"\n");
+
+
+                // Bold "Workout: ", and then add non-bold workout name
+                s = new SpannableStringBuilder("Workout: ");
+                s.setSpan(new StyleSpan(Typeface.BOLD), 0, s.length(), 0);
+                textView_info.append(s);
+                textView_info.append(workout_name);
+
+                textView_info.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.VISIBLE);
+                break;
+        }
+
+        // https://stackoverflow.com/questions/2394935/can-i-underline-text-in-an-android-layout
+        // awsleiman answer
+        textView.setPaintFlags(textView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     }
 
     public void open_dialog(View v){
