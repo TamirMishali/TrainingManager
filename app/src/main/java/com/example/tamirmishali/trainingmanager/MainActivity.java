@@ -219,9 +219,9 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
 
             // get most recent workout from most recent routine
             Workout most_recent_workout = workoutViewModel.getLastWorkout();
-            workout_name = most_recent_workout.getWorkoutName();
 
             if (most_recent_workout != null){
+                workout_name = most_recent_workout.getWorkoutName();
                 List<Set> sets = setViewModel.getUnfilledSetsForWorkout(most_recent_workout.getId());
 
                 // If last workout filled properly, set text to "start new workout now". else set
@@ -233,15 +233,13 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
             }
         }
 
-        // https://stackoverflow.com/questions/8049620/how-to-set-layout-gravity-programmatically
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+//        https://proandroiddev.com/android-developer-beginner-faq-2-gravity-vs-layout-gravity-3c461bdeae12
+//        Gravity and layout_gravity explanations
 
         switch(layoutStatus){
             case "no_routines":
                 textView.setText("No Routines available");
-//                params.gravity = Gravity.CENTER;
-//                textView.setLayoutParams(params);
                 textView_info.setVisibility(View.GONE);
                 imageView.setVisibility(View.GONE);
                 break;
@@ -251,8 +249,6 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
                 imageView.setImageResource(R.drawable.ic_new_text_image);
                 textView_info.setVisibility(View.GONE);
                 imageView.setVisibility(View.VISIBLE);
-//                params.gravity = Gravity.CENTER;
-//                textView.setLayoutParams(params);
                 break;
 
             case "continue_workout":
