@@ -56,7 +56,16 @@ import static android.widget.Toast.*;
 
 
 /*TODO
-* - make the expandableListView parent match the exercise name (make it higher)
+* - make the expandableListView group color red in general but green when all sets are inserted.
+*
+* - change the textview inside the exerciseabs listview to make the text not cut.
+*
+* - Change the logic in workout_now. now (i think) its looking at a similar prev workout and taking
+*    its exercises from there. i want it to take the exercise from the abstract workout only.
+*    1. cross names with prev workout. if found, import set information to current workout.
+*    2. if not, add it as a new exercise to current workout even tho it wasn't on prev workout.
+*    3. to make clear, if it exist on prev workout but not on abstract workout, omit it from current
+*
 * - Deep chane in DB. add every exerciseAbs the next possibilities:
 *   - type: example 1: name=dead-lift. type=rdl/stiff/etc
 *           example 2: name=bench press. type=incline/flat/decline.
@@ -64,6 +73,7 @@ import static android.widget.Toast.*;
 *   - weight_type: dumbbell/barbell/cables/smith machine
 *   - position: standing/bench
 *   - if position=bench, angle: 90/75/60/45/30/15/0/-15/-30/-45
+*
 *  - Deep change in DB 2: add the option to do super sets/drop sets
 * */
 
