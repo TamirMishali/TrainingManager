@@ -55,7 +55,7 @@ public class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
             finish();
         }
 
-        //Floating Plus button decleration
+        //Floating Plus button declaration
         FloatingActionButton buttonAddWorkout = findViewById(R.id.button_add_allexerciseabs);
         buttonAddWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,11 +71,11 @@ public class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
         /*recyclerView.addItemDecoration(new DividerItemDecoration(this,
                 DividerItemDecoration.HORIZONTAL));*/
 
-        //WorkoutAdapter Decleration
+        //WorkoutAdapter Declaration
         //final ExerciseAbstractAdapter adapter = new ExerciseAbstractAdapter();
         recyclerView.setAdapter(adapter);
 
-        //ExerciseAbstractViewModel Decleration
+        //ExerciseAbstractViewModel Declaration
         exerciseabstractViewModel = ViewModelProviders.of(this).get(ExerciseAbstractViewModel.class);
         exerciseabstractViewModel.getAllExerciseAbstracts().observe(this, new Observer<List<ExerciseAbstract>>() {
             @Override

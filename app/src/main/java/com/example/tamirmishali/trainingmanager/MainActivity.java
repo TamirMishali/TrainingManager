@@ -56,7 +56,15 @@ import static android.widget.Toast.*;
 
 
 /*TODO
-*
+* - make the expandableListView parent match the exercise name (make it higher)
+* - Deep chane in DB. add every exerciseAbs the next possibilities:
+*   - type: example 1: name=dead-lift. type=rdl/stiff/etc
+*           example 2: name=bench press. type=incline/flat/decline.
+*           example 3: name=biceps curl. type=Hammer/standard/reverse
+*   - weight_type: dumbbell/barbell/cables/smith machine
+*   - position: standing/bench
+*   - if position=bench, angle: 90/75/60/45/30/15/0/-15/-30/-45
+*  - Deep change in DB 2: add the option to do super sets/drop sets
 * */
 
 public class MainActivity extends AppCompatActivity /*implements WorkoutNow_DialogListViewAdapter.CustomDialogListener*/{
@@ -149,7 +157,6 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
 
     @Override
     protected void onRestart() {
-        // TODO Auto-generated method stub
         super.onRestart();
 
         // Update textview to "start new workout" or "continue prev workout":

@@ -27,6 +27,8 @@ import com.example.tamirmishali.trainingmanager.Workout.WorkoutAdapter;
 
 import java.util.List;
 
+// This class is showing exerciseAbstracts for a specific workout
+// For reaching the list of all exercisesAbstracts, there is a button "buttonAddWorkout"
 public class EditExercisesAbstract extends AppCompatActivity {
 
     public static final  String EXTRA_WORKOUT_ID =
@@ -63,7 +65,7 @@ public class EditExercisesAbstract extends AppCompatActivity {
         //Title
         setTitle(sourceWorkoutName);
 
-        //Floating Plus button decleration
+        //Floating Plus button declaration
         FloatingActionButton buttonAddWorkout = findViewById(R.id.button_add_exerciseabs);
         buttonAddWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,11 +80,11 @@ public class EditExercisesAbstract extends AppCompatActivity {
         final RecyclerView recyclerView = findViewById(R.id.recycler_view_exerciseabs);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //ExerciseAbstract Adapter Decleration
+        //ExerciseAbstract Adapter Declaration
         final ExerciseAbstractAdapter adapter = new ExerciseAbstractAdapter();
         recyclerView.setAdapter(adapter);
 
-        //ExerciseAbstractViewModel Decleration
+        //ExerciseAbstractViewModel Declaration
         exerciseabstractViewModel = ViewModelProviders.of(this).get(ExerciseAbstractViewModel.class);
         exerciseabstractViewModel.getExerciseAbstractsForWorkout(sourceWorkoutID).observe(this, new Observer<List<ExerciseAbstract>>() {
             @Override
@@ -91,7 +93,7 @@ public class EditExercisesAbstract extends AppCompatActivity {
             }
         });
 
-        //ExerciseViewModel Decleration
+        //ExerciseViewModel Declaration
         exerciseViewModel = ViewModelProviders.of(this).get(ExerciseViewModel.class);
         exerciseViewModel.getAllExercises();
 
