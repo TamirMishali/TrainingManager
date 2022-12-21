@@ -180,17 +180,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 /*        TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.lblListItemEditextPrevReps);*/
 
-        final EditText editTextWeight = (EditText) convertView
+        final EditText editTextWeight = convertView
                 .findViewById(R.id.lblListItemEditextNowWeight);
-        final EditText editTextReps = (EditText) convertView
+        final EditText editTextReps = convertView
                 .findViewById(R.id.lblListItemEditextNowReps);
 
-        TextView txtListChildWeight = (TextView) convertView
+        TextView txtListChildWeight = convertView
                 .findViewById(R.id.lblListItemEditextPrevWeight);
-        TextView txtListChildReps = (TextView) convertView
+        TextView txtListChildReps = convertView
                 .findViewById(R.id.lblListItemEditextPrevReps);
 
-        ImageButton deleteImageButton = (ImageButton) convertView.findViewById(R.id.delete_button_list_item);
+        ImageButton deleteImageButton = convertView.findViewById(R.id.delete_button_list_item);
         deleteImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,7 +224,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
             }
         });
 
-        ImageButton duplicateSetImageButton = (ImageButton) convertView.findViewById(R.id.arrow_forward_button_duplicate_set);
+        ImageButton duplicateSetImageButton = convertView.findViewById(R.id.arrow_forward_button_duplicate_set);
         duplicateSetImageButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -325,12 +325,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
         }
 
 
-        TextView lblListHeader = (TextView) convertView
+        TextView lblListHeader = convertView
                 .findViewById(R.id.lblListHeader);
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
 
-        ImageButton addImageButton = (ImageButton) convertView.
+        ImageButton addImageButton = convertView.
                 findViewById(R.id.add_button_group_item);
         addImageButton.setFocusable(Boolean.FALSE);
         addImageButton.setOnClickListener(new View.OnClickListener() {

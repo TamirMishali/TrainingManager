@@ -58,8 +58,6 @@ import static android.widget.Toast.*;
 /*TODO
 * - make the expandableListView group color red in general but green when all sets are inserted.
 *
-* - change the textview inside the exerciseabs listview to make the text not cut.
-*
 * - Change the logic in workout_now. now (i think) its looking at a similar prev workout and taking
 *    its exercises from there. i want it to take the exercise from the abstract workout only.
 *    1. cross names with prev workout. if found, import set information to current workout.

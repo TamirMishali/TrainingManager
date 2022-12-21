@@ -126,7 +126,6 @@ public class WorkoutNow extends AppCompatActivity {
         }
 
 
-        //---------------------------New
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
 
@@ -138,44 +137,6 @@ public class WorkoutNow extends AppCompatActivity {
         // https://stackoverflow.com/questions/18632084/expandablelistview-child-items-edittext-cant-keep-focus
         expListView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
 
-
-        // ListView Group click listener
-/*        expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v,
-                                        int groupPosition, long id) {
-                // Toast.makeText(getApplicationContext(),
-                // "Group Clicked " + exerciseListHeader.get(groupPosition),
-                // Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });*/
-
-        // ListView Group expanded listener
-/*        expListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                Toast.makeText(getApplicationContext(),
-                        exerciseListHeader.get(groupPosition) + " Expanded",
-                        Toast.LENGTH_SHORT).show();
-
-            }
-        });*/
-
-        // ListView Group collasped listener
-/*        expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-
-            @Override
-            public void onGroupCollapse(int groupPosition) {
-*//*                Toast.makeText(getApplicationContext(),
-                        exerciseListHeader.get(groupPosition) + " Collapsed",
-                        Toast.LENGTH_SHORT).show();*//*
-                //listAdapter.notifyDataSetChanged();
-
-            }
-        });*/
 
 /*        // ListView on child click listener
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
