@@ -19,14 +19,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.tamirmishali.trainingmanager.ExerciseAbstract.EditExercisesAbstract;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ShowWorkoutAbstractExercises;
 import com.example.tamirmishali.trainingmanager.R;
 
 import java.util.List;
 
-import static com.example.tamirmishali.trainingmanager.Routine.AddEditRoutineActivity.EXTRA_ROUTINE_NAME;
-
-public class EditWorkouts extends AppCompatActivity {
+public class ShowRoutineWorkouts extends AppCompatActivity {
 
     public static final  String EXTRA_ROUTINE_ID =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
@@ -73,7 +71,7 @@ public class EditWorkouts extends AppCompatActivity {
         buttonAddWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditWorkouts.this,AddEditWorkoutActivity.class); //AddEditWorkoutActivity
+                Intent intent = new Intent(ShowRoutineWorkouts.this,AddEditWorkoutActivity.class); //AddEditWorkoutActivity
                 startActivityForResult(intent,ADD_WORKOUT_REQUEST);
             }
         });
@@ -106,7 +104,7 @@ public class EditWorkouts extends AppCompatActivity {
 
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(EditWorkouts.this);
+                AlertDialog.Builder alert = new AlertDialog.Builder(ShowRoutineWorkouts.this);
                 alert.setTitle(R.string.delete_entry_dialog_title);
                 alert.setMessage(R.string.delete_workout_dialog);
                 alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -114,7 +112,7 @@ public class EditWorkouts extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
                         workoutViewModel.delete(adapter.getWorkoutAt(viewHolder.getAdapterPosition()));
-                        Toast.makeText(EditWorkouts.this , "Workout deleted" , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ShowRoutineWorkouts.this , "Workout deleted" , Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -136,7 +134,7 @@ public class EditWorkouts extends AppCompatActivity {
         adapter.setOnItemLongClickListener(new WorkoutAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(Workout workout) {
-                Intent intent = new Intent(EditWorkouts.this, AddEditWorkoutActivity.class);
+                Intent intent = new Intent(ShowRoutineWorkouts.this, AddEditWorkoutActivity.class);
                 intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_ID,workout.getId());
                 intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME, workout.getWorkoutName());
                 if(workout.getWorkoutDate() != null){
@@ -154,9 +152,9 @@ public class EditWorkouts extends AppCompatActivity {
         adapter.setOnItemClickListener(new WorkoutAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Workout workout) {
-                Intent intent = new Intent(EditWorkouts.this, EditExercisesAbstract.class);
-                intent.putExtra(EditExercisesAbstract.EXTRA_WORKOUT_ID,workout.getId());
-                intent.putExtra(EditExercisesAbstract.EXTRA_WORKOUT_NAME,workout.getName());
+                Intent intent = new Intent(ShowRoutineWorkouts.this, ShowWorkoutAbstractExercises.class);
+                intent.putExtra(ShowWorkoutAbstractExercises.EXTRA_WORKOUT_ID,workout.getId());
+                intent.putExtra(ShowWorkoutAbstractExercises.EXTRA_WORKOUT_NAME,workout.getName());
                 startActivityForResult(intent, ADD_EXERCISEABS_REQUEST);
             }
         });

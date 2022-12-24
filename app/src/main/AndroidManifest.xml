@@ -15,18 +15,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Routine.EditRoutines"
+        <activity android:name=".Routine.ShowRoutines"
             android:launchMode="singleTop"/>
         <activity android:name=".Routine.AddEditRoutineActivity"
-            android:parentActivityName=".Routine.EditRoutines"
+            android:parentActivityName=".Routine.ShowRoutines"
             android:launchMode="singleTop"/>
-        <activity android:name=".Workout.EditWorkouts"></activity>
+        <activity android:name=".Workout.ShowRoutineWorkouts"></activity>
         <activity android:name=".Workout.AddEditWorkoutActivity"
-            android:parentActivityName=".Workout.EditWorkouts"></activity>
-        <activity android:name=".ExerciseAbstract.EditExercisesAbstract"></activity>
-        <activity android:name=".ExerciseAbstract.AddExerciseAbstractToWorkoutActivity"></activity>
+            android:parentActivityName=".Workout.ShowRoutineWorkouts"></activity>
+        <activity android:name=".ExerciseAbstract.ShowWorkoutAbstractExercises"></activity>
+        <activity android:name=".ExerciseAbstract.ShowAllAbstractExercises"></activity>
         <activity android:name=".ExerciseAbstract.AddEditExerciseAbsActivity"
-            android:parentActivityName=".ExerciseAbstract.AddExerciseAbstractToWorkoutActivity"></activity>
+            android:parentActivityName=".ExerciseAbstract.ShowAllAbstractExercises"></activity>
         <activity android:name=".WorkoutNow"
             android:windowSoftInputMode="adjustPan"></activity>
         <activity android:name=".History.History"></activity>

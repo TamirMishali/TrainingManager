@@ -7,15 +7,12 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,10 +26,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
 import com.example.tamirmishali.trainingmanager.History.History;
-import com.example.tamirmishali.trainingmanager.Routine.EditRoutines;
+import com.example.tamirmishali.trainingmanager.Routine.ShowRoutines;
 import com.example.tamirmishali.trainingmanager.Routine.Routine;
 import com.example.tamirmishali.trainingmanager.Routine.RoutineViewModel;
 import com.example.tamirmishali.trainingmanager.Set.Set;
@@ -50,7 +46,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Observer;
 
 import static android.widget.Toast.*;
 
@@ -65,10 +60,10 @@ import static android.widget.Toast.*;
 *    3. to make clear, if it exist on prev workout but not on abstract workout, omit it from current
 *
 * - Deep chane in DB. add every exerciseAbs the next possibilities:
-*   - type: example 1: name=dead-lift. type=rdl/stiff/etc
-*           example 2: name=bench press. type=incline/flat/decline.
-*           example 3: name=biceps curl. type=Hammer/standard/reverse
-*   - weight_type: dumbbell/barbell/cables/smith machine
+*   - nickname: example 1: name=dead-lift.   nickname=rdl/stiff/etc
+*               example 2: name=bench press. nickname=
+*               example 3: name=biceps curl. nickname=Hammer/standard/reverse
+*   - load_type: dumbbell/barbell/cables/smith machine/rubber bands/weighted belt/none/other?
 *   - position: standing/bench
 *   - if position=bench, angle: 90/75/60/45/30/15/0/-15/-30/-45
 *
@@ -156,7 +151,7 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
         button_EditWorkout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), EditRoutines.class);
+                Intent intent = new Intent(v.getContext(), ShowRoutines.class);
                 startActivity(intent);
             }
         });

@@ -19,11 +19,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.tamirmishali.trainingmanager.R;
-import com.example.tamirmishali.trainingmanager.Workout.EditWorkouts;
+import com.example.tamirmishali.trainingmanager.Workout.ShowRoutineWorkouts;
 
 import java.util.List;
 
-public class EditRoutines extends AppCompatActivity {
+public class ShowRoutines extends AppCompatActivity {
     public static final int ADD_ROUTINE_REQUEST = 1;
     public static final int EDIT_ROUTINE_REQUEST = 2;
     public static final int ADD_WORKOUTS_REQUEST = 3;
@@ -39,7 +39,7 @@ public class EditRoutines extends AppCompatActivity {
         buttonAddRoutine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditRoutines.this,AddEditRoutineActivity.class);
+                Intent intent = new Intent(ShowRoutines.this,AddEditRoutineActivity.class);
                 startActivityForResult(intent,ADD_ROUTINE_REQUEST);
             }
         });
@@ -71,7 +71,7 @@ public class EditRoutines extends AppCompatActivity {
 
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(EditRoutines.this);
+                AlertDialog.Builder alert = new AlertDialog.Builder(ShowRoutines.this);
                 alert.setTitle(R.string.delete_entry_dialog_title);
                 alert.setMessage(R.string.delete_routine_dialog);
                 alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -79,7 +79,7 @@ public class EditRoutines extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
                         routineViewModel.delete(adapter.getRoutineAt(viewHolder.getAdapterPosition()));
-                        Toast.makeText(EditRoutines.this , "Routine deleted" , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ShowRoutines.this , "Routine deleted" , Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -98,7 +98,7 @@ public class EditRoutines extends AppCompatActivity {
         adapter.setOnItemLongClickListener(new RoutineAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(Routine routine) {
-                Intent intent = new Intent(EditRoutines.this, AddEditRoutineActivity.class);
+                Intent intent = new Intent(ShowRoutines.this, AddEditRoutineActivity.class);
                 intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID, routine.getUid());
                 intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_NAME, routine.getRoutineName());
                 intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_DATE, routine.getRoutineDate().toString());
@@ -110,7 +110,7 @@ public class EditRoutines extends AppCompatActivity {
         adapter.setOnItemClickListener(new RoutineAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Routine routine) {
-                Intent intent = new Intent(EditRoutines.this, EditWorkouts.class); //EditWorkouts
+                Intent intent = new Intent(ShowRoutines.this, ShowRoutineWorkouts.class); //EditWorkouts
                 intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID,routine.getUid());
                 intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_NAME,routine.getRoutineName());
                 startActivityForResult(intent, ADD_WORKOUTS_REQUEST);

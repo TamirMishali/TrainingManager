@@ -5,12 +5,10 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -19,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
@@ -28,7 +25,7 @@ import com.example.tamirmishali.trainingmanager.R;
 
 import java.util.List;
 
-public class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
+public class ShowAllAbstractExercises extends AppCompatActivity {
     public static final  String EXTRA_WORKOUT_ID =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
 
@@ -60,7 +57,7 @@ public class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
         buttonAddWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddExerciseAbstractToWorkoutActivity.this, AddEditExerciseAbsActivity.class);
+                Intent intent = new Intent(ShowAllAbstractExercises.this, AddEditExerciseAbsActivity.class);
                 startActivityForResult(intent,ADD_NEW_EXERCISEABS_REQUEST);
             }
         });
@@ -98,7 +95,7 @@ public class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(AddExerciseAbstractToWorkoutActivity.this);
+                AlertDialog.Builder alert = new AlertDialog.Builder(ShowAllAbstractExercises.this);
                 alert.setTitle(R.string.delete_entry_dialog_title);
                 alert.setMessage(R.string.delete_exerciseabstract_dialog);
                 alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -108,7 +105,7 @@ public class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
                         ExerciseAbstract exerciseAbstract = (adapter.getExerciseAbstractAt(viewHolder.getAdapterPosition()));
                         exerciseabstractViewModel.delete(exerciseAbstract);
 
-                        Toast.makeText(AddExerciseAbstractToWorkoutActivity.this , "Exercise deleted" , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ShowAllAbstractExercises.this , "Exercise deleted" , Toast.LENGTH_SHORT).show();
                     }
                 });
                 alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -131,7 +128,7 @@ public class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
         adapter.setOnItemLongClickListener(new ExerciseAbstractAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(ExerciseAbstract exerciseabstract) {
-                Intent intent = new Intent(AddExerciseAbstractToWorkoutActivity.this, AddEditExerciseAbsActivity.class);
+                Intent intent = new Intent(ShowAllAbstractExercises.this, AddEditExerciseAbsActivity.class);
                 intent.putExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_ID, exerciseabstract.getId());
                 intent.putExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_NAME, exerciseabstract.getName());
                 intent.putExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_DESCRIPTION, exerciseabstract.getDescription());
@@ -144,7 +141,7 @@ public class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new ExerciseAbstractAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(final ExerciseAbstract exerciseabstract) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(AddExerciseAbstractToWorkoutActivity.this);
+                AlertDialog.Builder alert = new AlertDialog.Builder(ShowAllAbstractExercises.this);
                 alert.setTitle(R.string.add_entry_dialog_title);
                 alert.setMessage(R.string.add_exercise_dialog);
                 alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -153,10 +150,10 @@ public class AddExerciseAbstractToWorkoutActivity extends AppCompatActivity {
                         if (exerciseViewModel.getExerciseForWorkout(exerciseabstract.getId(),sourceWorkoutID) == null){ //doesn't exist in workout
                             Exercise exercise = new Exercise(exerciseabstract.getId(),sourceWorkoutID,"");
                             exerciseViewModel.insert(exercise);
-                            Toast.makeText(AddExerciseAbstractToWorkoutActivity.this , "Exercise Added" , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ShowAllAbstractExercises.this , "Exercise Added" , Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            Toast.makeText(AddExerciseAbstractToWorkoutActivity.this , "Exercise Exists in this workout" , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ShowAllAbstractExercises.this , "Exercise Exists in this workout" , Toast.LENGTH_SHORT).show();
                         }
 
                     }
