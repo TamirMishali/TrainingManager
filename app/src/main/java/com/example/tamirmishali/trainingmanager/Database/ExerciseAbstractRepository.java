@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractDao;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractInfoValue;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractNickname;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractOperation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +18,20 @@ public class ExerciseAbstractRepository {
     private ExerciseAbstractDao  exerciseAbstractDao;
     private LiveData<List<ExerciseAbstract>> allExerciseAbstracts;
 
+    // NEW:
+    private LiveData<List<ExerciseAbstractNickname>> allNicknames;
+    private LiveData<List<ExerciseAbstractOperation>> allOperations;
+    private LiveData<List<ExerciseAbstractInfoValue>> allInfoValues;
+
+
+
     public ExerciseAbstractRepository(Application application){
         RoutineDatabase database = RoutineDatabase.getInstance(application);
         exerciseAbstractDao = database.exerciseAbstractDao();
         allExerciseAbstracts = exerciseAbstractDao.getAllExercisesAbstract();
+        allNicknames = exerciseAbstractDao.getAllExerciseAbstractNicknames();
+        allOperations = exerciseAbstractDao.getAllExerciseAbstractOperations();
+        allInfoValues = exerciseAbstractDao.getAllExerciseAbstractInfoValues();
     }
 
     //-----ExerciseAbstracts-----
@@ -40,9 +53,6 @@ public class ExerciseAbstractRepository {
     public LiveData<List<ExerciseAbstract>> getExerciseAbstractsForWorkout(int workoutId){
         return exerciseAbstractDao.getExerciseAbstractsForWorkout(workoutId);
     }
-
-
-
     public ExerciseAbstract getExerciseAbsFromId(int exerciseAbsId){
         ExerciseAbstract exerciseAbstract = new ExerciseAbstract();
         try {
@@ -64,6 +74,18 @@ public class ExerciseAbstractRepository {
             e.printStackTrace();
         }
         return muscleList;
+    }
+
+
+    // NEW
+    public LiveData<List<ExerciseAbstractInfoValue>> getAllExerciseAbstractInfoValues() {
+        return allInfoValues;
+    }
+    public LiveData<List<ExerciseAbstractOperation>> getAllExerciseAbstractOperations() {
+        return allOperations;
+    }
+    public LiveData<List<ExerciseAbstractNickname>> getAllExerciseAbstractNicknames() {
+        return allNicknames;
     }
 
     //ExerciseAbstract - AsyncTasks
@@ -120,7 +142,6 @@ public class ExerciseAbstractRepository {
         }
     }
 
-
     private static class GetExerciseAbsFromIdAsyncTask extends AsyncTask<Integer, Integer, ExerciseAbstract>{
         private ExerciseAbstractDao exerciseAbstractDao;
 
@@ -134,7 +155,6 @@ public class ExerciseAbstractRepository {
         }
 
     }
-
     private static class GetMusclesAsyncTask extends AsyncTask<Void, Void, List<String>>{
         private ExerciseAbstractDao exerciseAbstractDao;
 
@@ -148,5 +168,7 @@ public class ExerciseAbstractRepository {
         }
 
     }
+
+    // NEW - AsyncTasks
 
 }

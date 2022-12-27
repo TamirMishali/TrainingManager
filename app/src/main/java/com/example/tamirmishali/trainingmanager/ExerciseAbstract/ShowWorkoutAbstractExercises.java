@@ -67,8 +67,14 @@ public class ShowWorkoutAbstractExercises extends AppCompatActivity {
         buttonAddWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ShowWorkoutAbstractExercises.this, ShowAllAbstractExercises.class);
-                intent.putExtra(ShowAllAbstractExercises.EXTRA_WORKOUT_ID,sourceWorkoutID);
+//                // Old code
+//                Intent intent = new Intent(ShowWorkoutAbstractExercises.this, ShowAllAbstractExercises.class);
+//                intent.putExtra(ShowAllAbstractExercises.EXTRA_WORKOUT_ID,sourceWorkoutID);
+//                startActivityForResult(intent,ADD_EXERCISEABS_REQUEST);
+
+                // New code after new exercise db change:
+                Intent intent = new Intent(ShowWorkoutAbstractExercises.this, AddEditExerciseAbsActivity.class);
+                intent.putExtra(AddEditExerciseAbsActivity.EXTRA_WORKOUT_ID,sourceWorkoutID);
                 startActivityForResult(intent,ADD_EXERCISEABS_REQUEST);
             }
         });

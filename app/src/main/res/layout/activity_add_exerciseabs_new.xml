@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".ExerciseAbstract.ShowAllAbstractExercises">
+<!--TODO: go to video and the activity that opens the new exercise layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:text="Exercise name"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="start"
+        />
+<!--    android:textAppearance="@style/TextAppearance.AppCompat.Body1"-->
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/textInputEditText_exName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false">
+
+        </android.support.design.widget.TextInputEditText>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <!-- https://stackoverflow.com/questions/5049852/android-drawing-separator-divider-line-in-layout-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="15dp"
+        android:background="?android:attr/dividerHorizontal" />
+
+
+
+
+
+    <!--@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    Mandatory attributes     @@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:text="Mandatory attributes"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        />
+
+<!--Finish this part in code: add string arrays read from DB and insert them as options
+    https://www.youtube.com/watch?v=741l_fPKL3Y&ab_channel=Stevdza-San
+    -->
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:hint="Main muscle">
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextView_Muscle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="none"
+            android:layout_weight="1">
+
+        </AutoCompleteTextView>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+<!-- Finish this in code using string arrays in this video
+    https://www.youtube.com/watch?v=B9YBvqw7CTU&ab_channel=CodinginFlow
+    -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="5dp"
+        android:hint="Operation name">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/autoCompleteTextView_operationName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.textfield.MaterialAutoCompleteTextView>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="15dp"
+        android:background="?android:attr/dividerHorizontal" />
+
+
+
+
+
+<!--@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    Optional attributes     @@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:text="Optional attributes"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:hint="Nickname">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textInputEditText_Nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.textfield.TextInputEditText>
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--Finish this part in code: add string arrays read from DB and insert them as options
+    https://www.youtube.com/watch?v=741l_fPKL3Y&ab_channel=Stevdza-San
+    -->
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:hint="Load type">
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextView_LoadType"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="none"
+            android:layout_weight="1">
+
+        </AutoCompleteTextView>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!--Finish this part in code: add string arrays read from DB and insert them as options
+    https://www.youtube.com/watch?v=741l_fPKL3Y&ab_channel=Stevdza-San
+    -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:hint="Position">
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextView_Position"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="none"
+                android:layout_weight="1"
+                >
+
+            </AutoCompleteTextView>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1.5"
+            android:hint="Angle">
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextView_Angle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="none"
+                android:layout_weight="1">
+
+            </AutoCompleteTextView>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+
+<!--@@@@@@@@@@@@@@@@@    GRIP    @@@@@@@@@@@@@@@-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!--Finish this part in code: add string arrays read from DB and insert them as options
+    https://www.youtube.com/watch?v=741l_fPKL3Y&ab_channel=Stevdza-San
+    -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1.35"
+            android:hint="Grip width">
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextView_GripWidth"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="none"
+                android:layout_weight="1" >
+
+            </AutoCompleteTextView>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:hint="Thumbs direction">
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextView_ThumbsDirection"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="none"
+                android:layout_weight="1">
+
+            </AutoCompleteTextView>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:hint="Separate Hands?">
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextView_SeparateHands"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="none"
+            android:layout_weight="1">
+
+        </AutoCompleteTextView>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+</LinearLayout>

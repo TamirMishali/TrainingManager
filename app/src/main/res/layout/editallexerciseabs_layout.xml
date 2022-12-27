@@ -9,13 +9,13 @@
         android:id="@+id/recycler_view_allexerciseabs"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/exerciseabs_item"
-        >
-
+        tools:listitem="@layout/exerciseabs_item">
 
     </android.support.v7.widget.RecyclerView>
 
+
     <android.support.design.widget.FloatingActionButton
+        android:contentDescription="add exercise"
         android:id="@+id/button_add_allexerciseabs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
