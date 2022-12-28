@@ -16,6 +16,10 @@ import com.example.tamirmishali.trainingmanager.Database.DAOs.SetDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.WorkoutDao;
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractInfo;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractInfoValue;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractNickname;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractOperation;
 import com.example.tamirmishali.trainingmanager.Routine.Routine;
 import com.example.tamirmishali.trainingmanager.Set.Set;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
@@ -23,7 +27,10 @@ import com.fstyle.library.helper.AssetSQLiteOpenHelperFactory;
 
 import static java.lang.Math.toIntExact;
 
-@Database(version = 11,entities = {Routine.class, Workout.class, Exercise.class, ExerciseAbstract.class, Set.class})
+@Database(version = 12,entities = {Routine.class, Workout.class, Exercise.class,
+        ExerciseAbstract.class, ExerciseAbstractInfoValue.class, ExerciseAbstractInfo.class,
+        ExerciseAbstractOperation.class, ExerciseAbstractNickname.class,
+        Set.class})
 @TypeConverters({Converters.class})
 
 public abstract class RoutineDatabase extends RoomDatabase {
@@ -34,6 +41,11 @@ public abstract class RoutineDatabase extends RoomDatabase {
     public abstract ExerciseDao exerciseDao();
     public abstract ExerciseAbstractDao exerciseAbstractDao();
     public abstract SetDao setDao();
+
+//    public abstract ExerciseAbstractInfoValueDao exerciseAbstractInfoValueDao();
+//    public abstract ExerciseAbstractInfoDao exerciseAbstractInfoDao();
+//    public abstract ExerciseAbstractOperationDao exerciseAbstractOperationDao();
+//    public abstract ExerciseAbstractNicknameDao exerciseAbstractNicknameDao();
 
     // Prevention of opening the same database to RAM twice.
     private static final String DATABASE_NAME = "routines_database";
@@ -71,12 +83,25 @@ public abstract class RoutineDatabase extends RoomDatabase {
         private ExerciseAbstractDao exerciseAbstractDao;
         private SetDao setDao;
 
+//        // new
+//        private ExerciseAbstractInfoValueDao exerciseAbstractInfoValueDao;
+//        private ExerciseAbstractInfoDao exerciseAbstractInfoDao;
+//        private ExerciseAbstractOperationDao exerciseAbstractOperationDao;
+//        private ExerciseAbstractNicknameDao exerciseAbstractNicknameDao;
+
         private PopulateDbAsyncTask(RoutineDatabase db) {
             routineDao = db.routineDao();
             workoutDao = db.workoutDao();
             exerciseDao = db.exerciseDao();
             exerciseAbstractDao = db.exerciseAbstractDao();
             setDao = db.setDao();
+
+//            // new
+//            exerciseAbstractInfoValueDao = db.exerciseAbstractInfoValueDao();
+//            exerciseAbstractInfoDao = db.exerciseAbstractInfoDao();
+//            exerciseAbstractOperationDao = db.exerciseAbstractOperationDao();
+//            exerciseAbstractNicknameDao = db.exerciseAbstractNicknameDao();
+
         }
 
         @Override

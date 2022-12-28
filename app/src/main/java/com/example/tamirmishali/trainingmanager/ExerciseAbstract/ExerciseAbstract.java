@@ -1,14 +1,71 @@
 package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 
+import static android.arch.persistence.room.ForeignKey.NO_ACTION;
+
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import java.util.Comparator;
 
-@Entity(tableName = "exerciseabs_table")
+@Entity(tableName = "exerciseabs_table",
+        foreignKeys = {
+            @ForeignKey(
+                    entity = ExerciseAbstractInfoValue.class,
+                    parentColumns = "id",
+                    childColumns = "id_muscle",
+                    onDelete = NO_ACTION
+            ),
+            @ForeignKey(
+                    entity = ExerciseAbstractOperation.class,
+                    parentColumns = "id",
+                    childColumns = "id_operation",
+                    onDelete = NO_ACTION
+            ),
+                @ForeignKey(
+                    entity = ExerciseAbstractNickname.class,
+                    parentColumns = "id",
+                    childColumns = "id_nickname",
+                    onDelete = NO_ACTION
+            ),
+                @ForeignKey(
+                    entity = ExerciseAbstractInfoValue.class,
+                    parentColumns = "id",
+                    childColumns = "id_load_type",
+                    onDelete = NO_ACTION
+            ),
+                @ForeignKey(
+                    entity = ExerciseAbstractInfoValue.class,
+                    parentColumns = "id",
+                    childColumns = "id_position",
+                    onDelete = NO_ACTION
+            ),
+                @ForeignKey(
+                    entity = ExerciseAbstractInfoValue.class,
+                    parentColumns = "id",
+                    childColumns = "id_angle",
+                    onDelete = NO_ACTION
+            ),
+                @ForeignKey(
+                    entity = ExerciseAbstractInfoValue.class,
+                    parentColumns = "id",
+                    childColumns = "id_grip_width",
+                    onDelete = NO_ACTION
+            ),
+                @ForeignKey(
+                    entity = ExerciseAbstractInfoValue.class,
+                    parentColumns = "id",
+                    childColumns = "id_thumbs_direction",
+                    onDelete = NO_ACTION
+            ),
+                @ForeignKey(
+                    entity = ExerciseAbstractInfoValue.class,
+                    parentColumns = "id",
+                    childColumns = "id_separate_sides",
+                    onDelete = NO_ACTION)})
 public class ExerciseAbstract{
 
     @PrimaryKey(autoGenerate = true)

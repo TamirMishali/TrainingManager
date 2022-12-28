@@ -9,8 +9,10 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractInfoValue;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractNickname;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractOperation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -52,21 +54,56 @@ public interface ExerciseAbstractDao {
 
     // NEW:
     // TODO: Understand if i must add new tables DAO's so the auto implemented
-    //  code will be created or maybe there might be another way to avoid it
+    //  code will be created or maybe there might be another way to avoid it - IDK
     @Query("select * from exerciseabs_nickname ")
-    int getAllExerciseAbstractNicknames();
+    LiveData<List<ExerciseAbstractNickname>> getAllExerciseAbstractNicknames();
 
+    @Query("SELECT id FROM exerciseabs_nickname WHERE nickname=:nickname")
+    int getExerciseAbstractNicknameId(String nickname);
+
+    @Query("SELECT nickname FROM exerciseabs_nickname WHERE id=:id")
+    String getExerciseAbstractNicknameNickname(int id);
+
+    @Query("SELECT nickname FROM exerciseabs_nickname WHERE id_exerciseabs_operation=:id_operation")
+    List<String> getExerciseAbstractNicknameByOperationId(int id_operation);
+
+
+    // ------------------ exerciseabs_info_value ----------------------
+    @Query("select * from exerciseabs_info_value")
+    LiveData<List<ExerciseAbstractInfoValue>> getAllExerciseAbstractInfoValues();
+
+    @Query("SELECT id FROM exerciseabs_info_value WHERE value=:value")
+    int getExerciseAbstractInfoValueId(String value);
+
+    @Query("SELECT value FROM exerciseabs_info_value WHERE id=:id")
+    String getExerciseAbstractInfoValueValue(int id);
+
+    @Query("SELECT value FROM exerciseabs_info_value " +
+            "JOIN exerciseabs_info ON " +
+            "exerciseabs_info_value.id_exerciseabs_info=exerciseabs_info.id " +
+            "WHERE info_header_name = :info_header_name1" )
+    List<String> getExerciseAbstractInfoValueValueByHeader(String info_header_name1);
+
+
+    // ------------------ exerciseabs_operation ----------------------
     @Query("select * from exerciseabs_operation ")
-    int getAllExerciseAbstractOperations();
+    LiveData<List<ExerciseAbstractOperation>> getAllExerciseAbstractOperations();
 
-    @Query("select * from exerciseabs_info_value ")
-    int getAllExerciseAbstractInfoValues();
+    @Query("SELECT id FROM exerciseabs_operation WHERE operation=:operation")
+    int getExerciseAbstractOperationId(String operation);
+
+    @Query("SELECT operation FROM exerciseabs_operation WHERE id=:id")
+    String getExerciseAbstractOperationOperation(int id);
 
     @Query("SELECT * FROM exerciseabs_info_value " +
-                "JOIN exerciseabs_info ON " +
-                "exerciseabs_info_value.id_exerciseabs_info=exerciseabs_info.id\n" +
-            "WHERE info_header_name = " + info_header_name1)
+            "JOIN exerciseabs_info ON " +
+            "exerciseabs_info_value.id_exerciseabs_info=exerciseabs_info.id " +
+            "WHERE info_header_name = :info_header_name1" )
     int getAllExerciseAbstractInfoValues(String info_header_name1);
+
+    @Query("SELECT operation FROM exerciseabs_operation WHERE id_exerciseabs_info_value=:id_muscle")
+    List<String> getExerciseAbstractOperationByMuscleId(int id_muscle);
+
 
 //    @Query("select * from exerciseabs_ ")
 //    int getExerciseAbs_info_id();

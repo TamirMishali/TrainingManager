@@ -1,10 +1,25 @@
 package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+import static android.arch.persistence.room.ForeignKey.NO_ACTION;
+
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity(tableName = "exerciseabs_info_value")
+import java.util.Comparator;
+import java.util.List;
+import java.util.OptionalInt;
+
+@Entity(tableName = "exerciseabs_info_value",
+        foreignKeys = {
+        @ForeignKey(
+                entity = ExerciseAbstractInfo.class,
+                parentColumns = "id",
+                childColumns = "id_exerciseabs_info",
+                onDelete = NO_ACTION
+        )})
 public class ExerciseAbstractInfoValue {
 
     @PrimaryKey(autoGenerate = true)
@@ -59,6 +74,23 @@ public class ExerciseAbstractInfoValue {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+
+    // --------------------- Functions ----------------------------
+    public int getIndexByProperty(List<ExerciseAbstractInfoValue> exivList, String value){
+        OptionalInt index = exivList.stream()
+                .mapToInt(exivList::indexOf)
+                .filter(i -> exivList.get(i).getValue().equals(value))
+                .findFirst();
+
+        if (!(index.isPresent())) {
+            System.out.println(value + " not found in the list");
+            return -1;
+        }
+        else{
+            return index.getAsInt();
+        }
     }
 }
 

@@ -88,18 +88,24 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
 
 
         /*TODO 26.12.2022:
-                * add in the exerciseabs "save" button the following logics:
-                  - Operation name: check if inserted operation_name exists for the following muscle.
-                    if not, add it to the SQL table.
-                  - Nickname: same as operation_name.
-                * if "main_muscle" is null/empty/whatever, make all other views unreachable.
-                * add a small 'i' button for information near operation_name to view all possible operations.
-                * In the far future:
-                    - add a "plus" button near each field (except sep_hands) to add
-                      new attributes to the sql table.
-                    - add menu buttons for deleting "operation_name"s, "nickname"s (not all, but from a list)
-                    - add menu button for editing the load_type, position, angle etc...
-                */
+            * add in the exerciseabs "save" button the following logics:
+              - Operation name: check if inserted operation_name exists for the following muscle.
+                if not, add it to the SQL table.
+              - Nickname: same as operation_name.
+            * if "main_muscle" is null/empty/whatever, make all other views unreachable.
+            * add a small 'i' button for information near operation_name to view all possible operations.
+            * In the far future:
+                - add a "plus" button near each field (except sep_hands) to add
+                  new attributes to the sql table.
+                - add menu buttons for deleting "operation_name"s, "nickname"s (not all, but from a list)
+                - add menu button for editing the load_type, position, angle etc...
+            * Not sure about it but if needed:
+              add an observer over ExerciseAbstract Nickname/Operation/InfoValue to activity and use
+              The "LifeCycle" option in order to kill the liveData object from keep updating even
+              after activity closed. The observer
+              https://developer.android.com/topic/libraries/architecture/livedata#observe_livedata_objects
+            */
+
         exerciseAbstractViewModel = ViewModelProviders.of(this).get(ExerciseAbstractViewModel.class);
 
         editTextExerciseAbsName = findViewById(R.id.edit_text_Exerciseabs_name);

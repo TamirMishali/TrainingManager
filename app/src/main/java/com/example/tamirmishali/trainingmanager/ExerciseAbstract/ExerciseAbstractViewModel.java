@@ -3,12 +3,11 @@ package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.support.annotation.NonNull;
 
 import com.example.tamirmishali.trainingmanager.Database.ExerciseAbstractRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class ExerciseAbstractViewModel extends AndroidViewModel {
@@ -16,18 +15,23 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
     private LiveData<List<ExerciseAbstract>> allExerciseAbstracts;
 
     // new
-    private LiveData<List<ExerciseAbstractNickname>> nicknames;
-    private LiveData<List<ExerciseAbstractOperation>> operations;
-    private LiveData<List<ExerciseAbstractInfoValue>> info_values;
+    private LiveData<List<ExerciseAbstractInfoValue>> allInfoValues;
+    private LiveData<List<ExerciseAbstractOperation>> allOperations;
+    private LiveData<List<ExerciseAbstractNickname>> allNicknames;
+
 
     public ExerciseAbstractViewModel(@NonNull Application application) {
         super(application);
         repository = new ExerciseAbstractRepository(application);
 //        allRoutines = repository.getAllRoutines();
         allExerciseAbstracts = repository.getAllExerciseAbstracts();
+        allInfoValues = repository.getAllExerciseAbstractInfoValues();
+        allOperations = repository.getAllExerciseAbstractOperations();
+        allNicknames = repository.getAllExerciseAbstractNicknames();
+
     }
     public void insert(ExerciseAbstract exerciseabstract){
-        repository.insert(exerciseabstract);
+        repository.insert(ExerciseAbstractStringsToIds(exerciseabstract));
     }
     public void update(ExerciseAbstract exerciseabstract){
         repository.update(exerciseabstract);
@@ -45,33 +49,117 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
 
 
     public ExerciseAbstract getExerciseAbsFromId(int exerciseAbsId){return repository.getExerciseAbsFromId(exerciseAbsId);}
-    public List<String> getMuscles(){return repository.getMuscles();}
+//    public List<String> getMuscles(){return repository.getMuscles();}
 
 
     // new
-    public LiveData<List<ExerciseAbstractInfoValue>> getAllExerciseAbstractInfoValues(){ return repository.getAllExerciseAbstractInfoValues();}
-    public LiveData<List<ExerciseAbstractNickname>> getAllExerciseAbstractNicknames(){ return repository.getAllExerciseAbstractNicknames();}
-    public LiveData<List<ExerciseAbstractOperation>> getAllExerciseAbstractOperations(){ return repository.getAllExerciseAbstractOperations();}
+    public LiveData<List<ExerciseAbstractInfoValue>> getAllExerciseAbstractInfoValues(){ return allInfoValues;}
+    public LiveData<List<ExerciseAbstractOperation>> getAllExerciseAbstractOperations(){ return allOperations;}
+    public LiveData<List<ExerciseAbstractNickname>> getAllExerciseAbstractNicknames(){ return allNicknames;}
+    private int getExerciseAbstractInfoValueId(String value){return repository.getExerciseAbstractInfoValueId(value);}
+    private int getExerciseAbstractOperationId(String operation){return repository.getExerciseAbstractOperationId(operation);}
+    private int getExerciseAbstractNicknameId(String nickname){return repository.getExerciseAbstractNicknameId(nickname);}
+    private String getExerciseAbstractInfoValueValue(int id_value){return repository.getExerciseAbstractInfoValueValue(id_value);}
+    private String getExerciseAbstractOperationOperation(int id_operation){return repository.getExerciseAbstractOperationOperation(id_operation);}
+    private String getExerciseAbstractNicknameNickname(int id_nickname){return repository.getExerciseAbstractNicknameNickname(id_nickname);}
+    public List<String> getExerciseAbstractInfoValueValueByHeader(String info_header_name){return repository.getExerciseAbstractInfoValueValueByHeader(info_header_name);}
+    public List<String> getExerciseAbstractOperationByMuscleId(int id_muscle){return repository.getExerciseAbstractOperationByMuscleId(id_muscle);}
+    public List<String> getExerciseAbstractNicknameByOperationId(int id_operation){return repository.getExerciseAbstractNicknameByOperationId(id_operation);}
 
-    public List<ExerciseAbstractInfo> getExerciseAbstractsInfo(int id){ return repository.getExerciseAbstractsInfo(id); }
+/*    public List<ExerciseAbstractInfo> getExerciseAbstractsInfo(int id){ return repository.getExerciseAbstractsInfo(id); }
     public List<ExerciseAbstractInfoValue> getExerciseAbstractsInfoValue(int id){ return repository.getExerciseAbstractsInfoValue(id); }
     public List<ExerciseAbstractOperation> getExerciseAbstractsOperations(int id){return repository.getExerciseAbstractsOperations(id);}
-    public List<ExerciseAbstractNickname> getExerciseAbstractsOperationNicknames(int id){return repository.getExerciseAbstractsOperationNicknames(id);}
-    /*TODO:
-        - create ExerciseAbstractInfo class and ExerciseAbstractInfoValue
-        - Insert functions to ExerciseAbstractDao and all the repository class
-        -
-*/
+    public List<ExerciseAbstractNickname> getExerciseAbstractsOperationNicknames(int id){return repository.getExerciseAbstractsOperationNicknames(id);}*/
 
-    private ExerciseAbstract FillExerciseAbstractIDs(ExerciseAbstract exerciseAbstract){
-//        if (exerciseAbstract.getMuscle() == null){
-//            Exception exception = new Exception("Muscle is missing");
-//
-//        }
 
-        exerciseAbstract.setId_muscle(exerciseAbstract.getMuscle());
+    // Todo: Conclusions: LiveData is not meant to be iterated, only used for observation.
+    public ExerciseAbstract ExerciseAbstractIdsToStrings(@NonNull ExerciseAbstract exerciseAbstract){
+
+        // Start with mandatory id's: Muscle and Operation:
+        exerciseAbstract.setMuscle(getExerciseAbstractInfoValueValue(exerciseAbstract.getId_muscle()));
+        exerciseAbstract.setOperation(getExerciseAbstractOperationOperation(exerciseAbstract.getId_operation()));
+
+        // Get the rest if exists:
+        // If nickname id is not null or invalid (<1), set its string to be right.
+        if (!(exerciseAbstract.getId_nickname() == 0)){
+            exerciseAbstract.setNickname(getExerciseAbstractNicknameNickname(exerciseAbstract.getId_nickname()));
+        }
+        // If load_type id is not null or invalid (<1), set its string to be right.
+        if (!(exerciseAbstract.getId_load_type() == 0)){
+            exerciseAbstract.setLoad_type(getExerciseAbstractInfoValueValue(exerciseAbstract.getId_load_type()));
+        }
+        // If position id is not null or invalid (<1), set its string to be right.
+        if (!(exerciseAbstract.getId_position() == 0)){
+            exerciseAbstract.setPosition(getExerciseAbstractInfoValueValue(exerciseAbstract.getId_position()));
+        }
+        // If angle id is not null or invalid (<1), set its string to be right.
+        if (!(exerciseAbstract.getId_angle() == 0)){
+            exerciseAbstract.setAngle(getExerciseAbstractInfoValueValue(exerciseAbstract.getId_angle()));
+        }
+        // If grip_width id is not null or invalid (<1), set its string to be right.
+        if (!(exerciseAbstract.getId_grip_width() == 0)){
+            exerciseAbstract.setGrip_width(getExerciseAbstractInfoValueValue(exerciseAbstract.getId_grip_width()));
+        }
+        // If thumbs_direction id is not null or invalid (<1), set its string to be right.
+        if (!(exerciseAbstract.getId_thumbs_direction() == 0)){
+            exerciseAbstract.setThumbs_direction(getExerciseAbstractInfoValueValue(exerciseAbstract.getId_thumbs_direction()));
+        }
+        // If separate_sides id is not null or invalid (<1), set its string to be right.
+        if (!(exerciseAbstract.getId_separate_sides() == 0)){
+            exerciseAbstract.setSeparate_sides(getExerciseAbstractInfoValueValue(exerciseAbstract.getId_separate_sides()));
+        }
 
         return exerciseAbstract;
     }
+    public ExerciseAbstract ExerciseAbstractStringsToIds(@NonNull ExerciseAbstract exerciseAbstract){
+        // If muscle string is not null or empty, set its id to be right.
+        if (exerciseAbstract.getMuscle() == null || exerciseAbstract.getMuscle().isEmpty()){
+            return null;
+        }
+        else {
+            exerciseAbstract.setId_muscle(getExerciseAbstractInfoValueId(exerciseAbstract.getMuscle()));
+        }
 
+        // If operation string is not null or empty, set its id to be right.
+        if (exerciseAbstract.getOperation() == null || exerciseAbstract.getOperation().isEmpty()){
+            return null;
+        }
+        else {
+            exerciseAbstract.setId_operation(getExerciseAbstractOperationId(exerciseAbstract.getOperation()));
+        }
+
+        // The rest of the fields are not mandatory, so just check if they are not null or empty,
+        // and if so, find the right id and set it to the right field:
+
+        // If nickname string is not null or empty, set its id to be right.
+        if (!(exerciseAbstract.getNickname() == null || exerciseAbstract.getNickname().isEmpty())){
+            exerciseAbstract.setId_nickname(getExerciseAbstractNicknameId(exerciseAbstract.getNickname()));
+        }
+        // If load_type string is not null or empty, set its id to be right.
+        if (!(exerciseAbstract.getLoad_type() == null || exerciseAbstract.getLoad_type().isEmpty())){
+            exerciseAbstract.setId_load_type(getExerciseAbstractInfoValueId(exerciseAbstract.getLoad_type()));
+        }
+        // If position string is not null or empty, set its id to be right.
+        if (!(exerciseAbstract.getPosition() == null || exerciseAbstract.getPosition().isEmpty())){
+            exerciseAbstract.setId_position(getExerciseAbstractInfoValueId(exerciseAbstract.getPosition()));
+        }
+        // If angle string is not null or empty, set its id to be right.
+        if (!(exerciseAbstract.getAngle() == null || exerciseAbstract.getAngle().isEmpty())){
+            exerciseAbstract.setId_angle(getExerciseAbstractInfoValueId(exerciseAbstract.getAngle()));
+        }
+        // If grip_width string is not null or empty, set its id to be right.
+        if (!(exerciseAbstract.getGrip_width() == null || exerciseAbstract.getGrip_width().isEmpty())){
+            exerciseAbstract.setId_grip_width(getExerciseAbstractInfoValueId(exerciseAbstract.getGrip_width()));
+        }
+        // If thumbs_direction string is not null or empty, set its id to be right.
+        if (!(exerciseAbstract.getThumbs_direction() == null || exerciseAbstract.getThumbs_direction().isEmpty())){
+            exerciseAbstract.setId_thumbs_direction(getExerciseAbstractInfoValueId(exerciseAbstract.getThumbs_direction()));
+        }
+        // If separate_sides string is not null or empty, set its id to be right.
+        if (!(exerciseAbstract.getSeparate_sides() == null || exerciseAbstract.getSeparate_sides().isEmpty())){
+            exerciseAbstract.setId_separate_sides(getExerciseAbstractInfoValueId(exerciseAbstract.getSeparate_sides()));
+        }
+
+        return exerciseAbstract;
+    }
 }

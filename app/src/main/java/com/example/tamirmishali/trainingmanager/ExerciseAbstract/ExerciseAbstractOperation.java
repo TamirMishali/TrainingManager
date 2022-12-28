@@ -1,12 +1,23 @@
 package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+import static android.arch.persistence.room.ForeignKey.NO_ACTION;
+
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.util.List;
 
-@Entity(tableName = "exerciseabs_operation")
+@Entity(tableName = "exerciseabs_operation",
+        foreignKeys = {
+            @ForeignKey(
+                    entity = ExerciseAbstractInfoValue.class,
+                    parentColumns = "id",
+                    childColumns = "id_exerciseabs_info_value",
+                    onDelete = NO_ACTION
+            )})
 public class ExerciseAbstractOperation {
 
     @PrimaryKey(autoGenerate = true)
