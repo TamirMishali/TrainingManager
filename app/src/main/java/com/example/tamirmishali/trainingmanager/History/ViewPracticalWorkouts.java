@@ -1,17 +1,19 @@
 package com.example.tamirmishali.trainingmanager.History;
 
 import android.app.AlertDialog;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.tamirmishali.trainingmanager.R;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 import com.example.tamirmishali.trainingmanager.Workout.WorkoutAdapter;
@@ -75,7 +77,7 @@ public class ViewPracticalWorkouts extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         //WorkoutViewModel Decleration
-        workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
+        workoutViewModel = new ViewModelProvider(this).get(WorkoutViewModel.class);
         workoutViewModel.getPracticalWorkoutsForRoutineLiveData(sourceRoutineID).observe(this, new Observer<List<Workout>>() {
             @Override
             public void onChanged(@Nullable List<Workout> workouts) {

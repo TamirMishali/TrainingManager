@@ -1,9 +1,10 @@
 package com.example.tamirmishali.trainingmanager.Database;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
 import android.os.AsyncTask;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractDao;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
@@ -193,12 +194,12 @@ public class ExerciseAbstractRepository {
         return insertedExerciseAbstractId;
     }
 
-    public void insertOperation(String id_muscle, String operation){
+/*    public void insertOperation(String id_muscle, String operation){
         new InsertOperationAsyncTask(exerciseAbstractDao).execute(id_muscle, operation);
     }
     public void insertNickname(String id_operation, String nickname){
         new InsertNicknameAsyncTask(exerciseAbstractDao).execute(id_operation, nickname);
-    }
+    }*/
 
     // --------------------------- ExerciseAbstract - AsyncTasks -----------------------------------
     private static class InsertExerciseAbstractAsyncTask extends AsyncTask<ExerciseAbstract, Void, Long>{
@@ -389,6 +390,7 @@ public class ExerciseAbstractRepository {
         }
     }
 
+/*
     private static class InsertOperationAsyncTask extends AsyncTask<String, Integer, Void>{
         private ExerciseAbstractDao exerciseAbstractDao;
 
@@ -415,6 +417,7 @@ public class ExerciseAbstractRepository {
         }
     }
 
+*/
 
 }
 

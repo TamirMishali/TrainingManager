@@ -1,9 +1,10 @@
 package com.example.tamirmishali.trainingmanager.Exercise;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
 import com.example.tamirmishali.trainingmanager.Database.ExerciseRepository;
 import com.example.tamirmishali.trainingmanager.Database.ExerciseRepository;

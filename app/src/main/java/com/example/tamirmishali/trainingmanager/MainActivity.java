@@ -1,14 +1,10 @@
 package com.example.tamirmishali.trainingmanager;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
@@ -27,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractViewModel;
 import com.example.tamirmishali.trainingmanager.History.History;
 import com.example.tamirmishali.trainingmanager.Routine.ShowRoutines;
 import com.example.tamirmishali.trainingmanager.Routine.Routine;
@@ -48,6 +45,11 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.widget.Toast.*;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.appcompat.app.AppCompatActivity;
 
 
 /*TODO
@@ -97,10 +99,13 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
 //        setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_main_new);
 
-        routineViewModel = ViewModelProviders.of(this).get(RoutineViewModel.class);
-        workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
-        exerciseViewModel = ViewModelProviders.of(this).get(ExerciseViewModel.class);
-        setViewModel = ViewModelProviders.of(this).get(SetViewModel.class);
+        // new AndroidX thing:
+        // https://stackoverflow.com/questions/57534730/as-viewmodelproviders-of-is-deprecated-how-should-i-create-object-of-viewmode
+        workoutViewModel = new ViewModelProvider(this).get(WorkoutViewModel.class);
+        routineViewModel = new ViewModelProvider(this).get(RoutineViewModel.class);
+        exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
+        setViewModel = new ViewModelProvider(this).get(SetViewModel.class);
+
 
 //        ImageButton button_WorkoutNow = findViewById(R.id.imageButton_WorkoutNowActivity);
         LinearLayout button_WorkoutNow = findViewById(R.id.linearLayout_workout_now);

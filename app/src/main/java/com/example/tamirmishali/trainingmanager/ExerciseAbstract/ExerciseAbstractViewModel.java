@@ -1,10 +1,11 @@
 package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 
 import com.example.tamirmishali.trainingmanager.Database.ExerciseAbstractRepository;
 
@@ -66,8 +67,8 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
     public List<String> getExerciseAbstractInfoValueValueByHeader(String info_header_name){return repository.getExerciseAbstractInfoValueValueByHeader(info_header_name);}
     public List<String> getExerciseAbstractOperationByMuscleId(int id_muscle){return repository.getExerciseAbstractOperationByMuscleId(id_muscle);}
     public List<String> getExerciseAbstractNicknameByOperationId(int id_operation){return repository.getExerciseAbstractNicknameByOperationId(id_operation);}
-    public void insertOperation(String id_muscle, String operation) {repository.insertOperation(id_muscle, operation);}
-    public void insertNickname(String id_operation, String nickname) {repository.insertNickname(id_operation, nickname);}
+//    public void insertOperation(String id_muscle, String operation) {repository.insertOperation(id_muscle, operation);}
+//    public void insertNickname(String id_operation, String nickname) {repository.insertNickname(id_operation, nickname);}
 
     // Thanks gptChat
     // 1. how can i get the id of a recent inserted row in room database

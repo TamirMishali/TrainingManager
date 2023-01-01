@@ -7,7 +7,6 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
 
 import java.util.Comparator;
 
@@ -298,6 +297,18 @@ public class ExerciseAbstract{
     }
 
 
+    // ----------------------------- FUNCTIONS ---------------------------------
+    public String generateExerciseAbstractName(){
+        String name = "";
+        if (nickname.isEmpty()){
+            name = muscle + " " + operation;
+        }
+        else{
+            name = nickname + " " + operation;
+        }
+        return name;
+    }
+
     //https://beginnersbook.com/2013/12/java-arraylist-of-object-sort-example-comparable-and-comparator/
     public static Comparator<ExerciseAbstract> MuscleGroupComparator = new Comparator<ExerciseAbstract>() {
 
@@ -330,7 +341,7 @@ public class ExerciseAbstract{
 //import android.arch.persistence.room.ColumnInfo;
 //import android.arch.persistence.room.Entity;
 //import android.arch.persistence.room.PrimaryKey;
-//import android.support.annotation.NonNull;
+
 //
 //import java.util.Comparator;
 //

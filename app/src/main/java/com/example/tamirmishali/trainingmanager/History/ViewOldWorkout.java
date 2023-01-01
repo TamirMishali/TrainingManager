@@ -1,16 +1,23 @@
 package com.example.tamirmishali.trainingmanager.History;
 
-import android.arch.lifecycle.ViewModelProviders;
+//import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
+//import android.support.annotation.Nullable;
+//import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.fragment.app.Fragment;
+
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractViewModel;
@@ -60,11 +67,11 @@ public class ViewOldWorkout extends AppCompatActivity {
         parentLinearLayout = findViewById(R.id.parent_linear_layout);
         TextView textViewWorkoutName = findViewById(R.id.workoutnow_current_workout);
 
-        workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
-        exerciseAbstractViewModel = ViewModelProviders.of(this).get(ExerciseAbstractViewModel.class);
-        routineViewModel = ViewModelProviders.of(this).get(RoutineViewModel.class);
-        exerciseViewModel = ViewModelProviders.of(this).get(ExerciseViewModel.class);
-        setViewModel = ViewModelProviders.of(this).get(SetViewModel.class);
+        workoutViewModel = new ViewModelProvider(this).get(WorkoutViewModel.class);
+        exerciseAbstractViewModel = new ViewModelProvider(this).get(ExerciseAbstractViewModel.class);
+        routineViewModel = new ViewModelProvider(this).get(RoutineViewModel.class);
+        exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
+        setViewModel = new ViewModelProvider(this).get(SetViewModel.class);
 
 
         try {
@@ -123,7 +130,7 @@ public class ViewOldWorkout extends AppCompatActivity {
             }
         });
 
-        // Listview Group collasped listener
+        // Listview Group collapsed listener
         expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
 
             @Override
@@ -172,7 +179,7 @@ public class ViewOldWorkout extends AppCompatActivity {
         while (iterator.hasNext()) {
             //System.out.println(iterator.next());
             exercise = iterator.next();
-            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs()).getName();
+            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs()).generateExerciseAbstractName();
             listDataHeader.add(exerciseName);
             childList = setViewModel.getSetsForExercise(exercise.getId());
 

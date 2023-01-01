@@ -1,13 +1,14 @@
 package com.example.tamirmishali.trainingmanager.Database;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
+import android.arch.persistence.db.SupportSQLiteOpenHelper;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
+
 import com.example.tamirmishali.trainingmanager.Converters;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseDao;
@@ -23,9 +24,10 @@ import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstrac
 import com.example.tamirmishali.trainingmanager.Routine.Routine;
 import com.example.tamirmishali.trainingmanager.Set.Set;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
-import com.fstyle.library.helper.AssetSQLiteOpenHelperFactory;
 
 import static java.lang.Math.toIntExact;
+
+import androidx.annotation.NonNull;
 
 @Database(version = 12,entities = {Routine.class, Workout.class, Exercise.class,
         ExerciseAbstract.class, ExerciseAbstractInfoValue.class, ExerciseAbstractInfo.class,
@@ -56,7 +58,12 @@ public abstract class RoutineDatabase extends RoomDatabase {
             //https://github.com/daolq3012/AssetSQLiteOpenHelper
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                     RoutineDatabase.class, DATABASE_NAME)
-                    .openHelperFactory(new AssetSQLiteOpenHelperFactory())
+                    .openHelperFactory(new SupportSQLiteOpenHelper.Factory() {
+                        @Override
+                        public SupportSQLiteOpenHelper create(SupportSQLiteOpenHelper.Configuration configuration) {
+                            return null;
+                        }
+                    })
      /*               .fallbackToDestructiveMigration()
                     .addCallback(roomcallback)*/
                     .build();

@@ -1,11 +1,7 @@
 package com.example.tamirmishali.trainingmanager;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +29,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.example.tamirmishali.trainingmanager.MainActivity.ACTION_FINISH_WORKOUT;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 public class WorkoutNow extends AppCompatActivity {
 
@@ -67,11 +68,11 @@ public class WorkoutNow extends AppCompatActivity {
         TextView textViewWorkoutName = findViewById(R.id.workoutnow_current_workout);
         TextView textViewWorkoutDate = findViewById(R.id.workoutnow_workout_date);
 
-        workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
-        exerciseAbstractViewModel = ViewModelProviders.of(this).get(ExerciseAbstractViewModel.class);
-        routineViewModel = ViewModelProviders.of(this).get(RoutineViewModel.class);
-        exerciseViewModel = ViewModelProviders.of(this).get(ExerciseViewModel.class);
-        setViewModel = ViewModelProviders.of(this).get(SetViewModel.class);
+        workoutViewModel = new ViewModelProvider(this).get(WorkoutViewModel.class);
+        exerciseAbstractViewModel = new ViewModelProvider(this).get(ExerciseAbstractViewModel.class);
+        routineViewModel = new ViewModelProvider(this).get(RoutineViewModel.class);
+        exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
+        setViewModel = new ViewModelProvider(this).get(SetViewModel.class);
 
 
 
@@ -198,7 +199,7 @@ public class WorkoutNow extends AppCompatActivity {
 
         while (iterator.hasNext()) {
             exercise = iterator.next();
-            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs()).getName();
+            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs()).generateExerciseAbstractName();
             if (exerciseTitles.contains(exerciseName)){
                 result.put(exerciseName,setViewModel.getSetsForExercise(exercise.getId()));
             }
@@ -222,7 +223,7 @@ public class WorkoutNow extends AppCompatActivity {
         //Constructing exercise names for adapter
         while (iterator.hasNext()) {
             exercise = iterator.next();
-            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs()).getName();
+            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs()).generateExerciseAbstractName();
             listHeader.add(exerciseName);
         }
         return listHeader;

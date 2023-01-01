@@ -1,12 +1,7 @@
 package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 
-
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -17,6 +12,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
@@ -192,7 +192,7 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
 //        }
         //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
 
-        exerciseAbstractViewModel = ViewModelProviders.of(this).get(ExerciseAbstractViewModel.class);
+        exerciseAbstractViewModel = new ViewModelProvider(this).get(ExerciseAbstractViewModel.class);
 
         // Explanation for how to access operationValues from inner method:
         // https://stackoverflow.com/questions/14425826/variable-is-accessed-within-inner-class-needs-to-be-declared-final
@@ -276,13 +276,17 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
         // Observer for detecting the recent exerciseAbstract id that was inserted (after pressing
         // save in this activity). after we get its id, we can save it to exercise_table with the
         // workout id.
-        exerciseAbstractViewModel.getInsertedExerciseAbstractId().observe(this, new Observer<Long>() {
+
+        // Create the observer which updates the UI.
+        final Observer<Long> exerciseAbstractInsertedIdObserver = new Observer<Long>() {
             @Override
-            public void onChanged(@Nullable Long idExerciseAbs) {
-                Exercise exercise = new Exercise(idExerciseAbs, sourceWorkoutID, "");
+            public void onChanged(@Nullable final Long idExerciseAbs) {
+                Exercise exercise = new Exercise(idExerciseAbs.intValue(), sourceWorkoutID, "");
                 exerciseViewModel.insert(exercise);
             }
-        });
+        };
+        exerciseAbstractViewModel.getInsertedExerciseAbstractId().observe(this, exerciseAbstractInsertedIdObserver );
+
     }
 
     private void saveExerciseAbs(){
@@ -306,18 +310,18 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
                 opName);
 
         if (current_operation_id == -1){
-            exerciseAbstractViewModel.insertOperation(
-                    String.valueOf(current_muscle_id),
-                    String.valueOf(current_operation_id));
+//            exerciseAbstractViewModel.insertOperation(
+//                    String.valueOf(current_muscle_id),
+//                    String.valueOf(current_operation_id));
 
             // if nickname is not empty, get the new inserted operation id and insert nickname as well
             if (!currentExerciseAbstract.getNickname().isEmpty()){
                 current_operation_id = exerciseAbstractViewModel.getExerciseAbstractOperationId(
                         String.valueOf(current_muscle_id),
                         opName);
-                exerciseAbstractViewModel.insertNickname(
-                        String.valueOf(current_operation_id),
-                        String.valueOf(currentExerciseAbstract.getNickname()));
+//                exerciseAbstractViewModel.insertNickname(
+//                        String.valueOf(current_operation_id),
+//                        String.valueOf(currentExerciseAbstract.getNickname()));
             }
         }
 

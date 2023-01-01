@@ -3,26 +3,28 @@ package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 import static com.example.tamirmishali.trainingmanager.ExerciseAbstract.AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_ID;
 
 import android.app.AlertDialog;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
 import com.example.tamirmishali.trainingmanager.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -90,8 +92,8 @@ public class ShowWorkoutAbstractExercises extends AppCompatActivity {
         recyclerView.setAdapter(exerciseAbstractAdapter);
 
         //ExerciseAbstractViewModel Declaration
-        exerciseabstractViewModel = ViewModelProviders.of(this).get(ExerciseAbstractViewModel.class);
-        exerciseabstractViewModel.getExerciseAbstractsForWorkout(sourceWorkoutID).observe(this, new Observer<List<ExerciseAbstract>>() {
+        exerciseabstractViewModel = new ViewModelProvider(this).get(ExerciseAbstractViewModel.class);
+        exerciseabstractViewModel.getExerciseAbstractsForWorkout(sourceWorkoutID).observe( this, new Observer<List<ExerciseAbstract>>() {
             @Override
             public void onChanged(@Nullable List<ExerciseAbstract> exerciseAbstracts) {
                 exerciseAbstractAdapter.setExerciseAbstracts(exerciseAbstracts);
@@ -99,7 +101,7 @@ public class ShowWorkoutAbstractExercises extends AppCompatActivity {
         });
 
         //ExerciseViewModel Declaration
-        exerciseViewModel = ViewModelProviders.of(this).get(ExerciseViewModel.class);
+        exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
         exerciseViewModel.getAllExercises();
 
         //---------------------------------ACTIONS--------------------------------

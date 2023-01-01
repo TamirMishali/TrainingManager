@@ -1,3 +1,4 @@
+/*
 package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 
 import android.app.AlertDialog;
@@ -65,8 +66,10 @@ public class ShowAllAbstractExercises extends AppCompatActivity {
         //Init
         final RecyclerView recyclerView = findViewById(R.id.recycler_view_allexerciseabs);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        /*recyclerView.addItemDecoration(new DividerItemDecoration(this,
-                DividerItemDecoration.HORIZONTAL));*/
+        */
+/*recyclerView.addItemDecoration(new DividerItemDecoration(this,
+                DividerItemDecoration.HORIZONTAL));*//*
+
 
         //WorkoutAdapter Declaration
         //final ExerciseAbstractAdapter adapter = new ExerciseAbstractAdapter();
@@ -170,11 +173,13 @@ public class ShowAllAbstractExercises extends AppCompatActivity {
 
 
 
+*/
 /*                Intent intent = new Intent(EditExercisesAbstract.this, AddExerciseAbstractToWorkoutActivity.class); //EditWorkouts
                 intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_ID,exerciseabstract.getId());
                 //intent.putExtra(AddEditWorkoutActivity.EXTRA_ROUTINE_NAME, workout.getWorkoutName());
                 //intent.putExtra(AddEditWorkoutActivity.EXTRA_ROUTINE_DATE, workout.getWorkoutDate().toString());
-                startActivityForResult(intent, ADD_EXERCISEABS_REQUEST);*/
+                startActivityForResult(intent, ADD_EXERCISEABS_REQUEST);*//*
+
             });
     }
 
@@ -240,6 +245,7 @@ public class ShowAllAbstractExercises extends AppCompatActivity {
         return true;
     }
 
+*/
 /*    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -251,6 +257,8 @@ public class ShowAllAbstractExercises extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }*/
+    }*//*
+
 
 }
+*/

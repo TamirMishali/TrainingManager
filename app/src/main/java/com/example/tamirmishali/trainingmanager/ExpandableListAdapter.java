@@ -82,7 +82,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
     private HashMap<String,List<Set>> fillDataChildCurrent(Workout currentWorkout) {
         HashMap<String,List<Set>> dataChildCurrent = new HashMap<>();
         for(int i=0 ; i<currentWorkout.getExercises().size(); i++){
-            dataChildCurrent.put(currentWorkout.getExercises().get(i).getExerciseAbstract().getName(),
+            dataChildCurrent.put(currentWorkout.getExercises().get(i).getExerciseAbstract().generateExerciseAbstractName(),
                     currentWorkout.getExercises().get(i).getSets());
         }
         return dataChildCurrent;
@@ -107,7 +107,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
                     }
                 }
 
-                dataChildPrev.put(prevWorkout.getExercises().get(i).getExerciseAbstract().getName(),
+                dataChildPrev.put(prevWorkout.getExercises().get(i).getExerciseAbstract().generateExerciseAbstractName(),
                         prevWorkout.getExercises().get(i).getSets());
             }
         }
@@ -358,7 +358,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
                 ExpandableListAdapter.this.notifyDataSetChanged();
                 //_listDataChildCurrent.get(headerTitle).add();
 
-                Toast.makeText(_context, "Set added to " + exercise.getExerciseAbstract().getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(_context, "Set added to " + exercise.getExerciseAbstract().generateExerciseAbstractName(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -369,7 +369,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
     private Exercise getExerciseFromName(String exerciseName, List<Exercise> exerciseList) {
         Exercise exercise = new Exercise();
         for(int i=0; i<exerciseList.size();i++){
-            if(exerciseName == exerciseList.get(i).getExerciseAbstract().getName()) return exerciseList.get(i);
+            if(exerciseName == exerciseList.get(i).getExerciseAbstract().generateExerciseAbstractName()) return exerciseList.get(i);
         }
         return exercise;
     }
@@ -387,7 +387,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
     private List<String> getExNames(List<Exercise> exercises) {
         List<String> headers = new ArrayList<>();
         for(int i=0; i<exercises.size(); i++){
-            headers.add(exercises.get(i).getExerciseAbstract().getName());
+            headers.add(exercises.get(i).getExerciseAbstract().generateExerciseAbstractName());
         }
         return headers;
     }

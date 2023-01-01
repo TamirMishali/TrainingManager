@@ -1,8 +1,9 @@
 package com.example.tamirmishali.trainingmanager.Database;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
+
+import androidx.lifecycle.LiveData;
 
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseDao;

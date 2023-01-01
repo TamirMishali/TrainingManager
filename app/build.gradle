@@ -5,11 +5,11 @@ android {
         TamirMishali {
         }
     }
-    compileSdkVersion 27
+    compileSdkVersion 33
     defaultConfig {
         applicationId "com.example.tamirmishali.trainingmanager"
         minSdkVersion 24
-        targetSdkVersion 27
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -44,6 +44,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.android.support:support-v4:28.0.0'
     def lifecycle_version = "1.1.1"
     def room_version = "1.1.1"
 
@@ -67,6 +68,7 @@ dependencies {
     // ViewModel and LiveData - LifeCycle
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
     annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version" // use kapt for Kotlin
+    implementation 'com.android.support:support-annotations:28.0.0'
 
     //Room Dependencies
     implementation "android.arch.persistence.room:runtime:$room_version"

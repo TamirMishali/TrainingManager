@@ -1,12 +1,13 @@
 package com.example.tamirmishali.trainingmanager.Database.DAOs;
 
 
-import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
+
+import androidx.lifecycle.LiveData;
 
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractInfoValue;
@@ -65,8 +66,8 @@ public interface ExerciseAbstractDao {
 
 
     // ------------------ exerciseabs_operation ----------------------
-    @Query("INSERT INTO exerciseabs_operation VALUES(:id_muscle, :operation)")
-    Void insertOperation(String id_muscle, String operation);
+/*    @Query("INSERT INTO exerciseabs_operation VALUES(:id_muscle, :operation)")
+    Void insertOperation(String id_muscle, String operation);*/
 
     @Query("select * from exerciseabs_operation ")
     LiveData<List<ExerciseAbstractOperation>> getAllExerciseAbstractOperations();
@@ -90,8 +91,8 @@ public interface ExerciseAbstractDao {
 
 
     // ------------------ exerciseabs_nickname ----------------------
-    @Query("INSERT INTO exerciseabs_nickname VALUES(:id_operation, :nickname)")
-    Void insertNickname(String id_operation, String nickname);
+/*    @Query("INSERT INTO exerciseabs_nickname VALUES(:id_operation, :nickname)")
+    Void insertNickname(String id_operation, String nickname);*/
 
     @Query("select * from exerciseabs_nickname ")
     LiveData<List<ExerciseAbstractNickname>> getAllExerciseAbstractNicknames();

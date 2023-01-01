@@ -1,0 +1,538 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 12,
+    "identityHash": "22c22e6c6b29aa5bd3da63dd5ac2337f",
+    "entities": [
+      {
+        "tableName": "routine_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` INTEGER, `name` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "routineDate",
+            "columnName": "date",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "routineName",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "workout_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_workout` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_routine` INTEGER NOT NULL, `name` TEXT, `date` INTEGER, FOREIGN KEY(`id_routine`) REFERENCES `routine_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_workout",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_routine",
+            "columnName": "id_routine",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_workout"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "routine_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_routine"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "exercise_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_exercise` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_exerciseabs` INTEGER NOT NULL, `id_workout` INTEGER NOT NULL, `comment` TEXT, FOREIGN KEY(`id_exerciseabs`) REFERENCES `exerciseabs_table`(`id_exerciseabs`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_workout`) REFERENCES `workout_table`(`id_workout`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_exercise",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_exerciseabs",
+            "columnName": "id_exerciseabs",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_workout",
+            "columnName": "id_workout",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "comment",
+            "columnName": "comment",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_exercise"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "exerciseabs_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_exerciseabs"
+            ],
+            "referencedColumns": [
+              "id_exerciseabs"
+            ]
+          },
+          {
+            "table": "workout_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_workout"
+            ],
+            "referencedColumns": [
+              "id_workout"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "exerciseabs_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_exerciseabs` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_muscle` INTEGER NOT NULL, `id_operation` INTEGER NOT NULL, `id_nickname` INTEGER NOT NULL, `id_load_type` INTEGER NOT NULL, `id_position` INTEGER NOT NULL, `id_angle` INTEGER NOT NULL, `id_grip_width` INTEGER NOT NULL, `id_thumbs_direction` INTEGER NOT NULL, `id_separate_sides` INTEGER NOT NULL, FOREIGN KEY(`id_muscle`) REFERENCES `exerciseabs_info_value`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`id_operation`) REFERENCES `exerciseabs_operation`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`id_nickname`) REFERENCES `exerciseabs_nickname`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`id_load_type`) REFERENCES `exerciseabs_info_value`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`id_position`) REFERENCES `exerciseabs_info_value`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`id_angle`) REFERENCES `exerciseabs_info_value`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`id_grip_width`) REFERENCES `exerciseabs_info_value`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`id_thumbs_direction`) REFERENCES `exerciseabs_info_value`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`id_separate_sides`) REFERENCES `exerciseabs_info_value`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_exerciseabs",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_muscle",
+            "columnName": "id_muscle",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_operation",
+            "columnName": "id_operation",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_nickname",
+            "columnName": "id_nickname",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_load_type",
+            "columnName": "id_load_type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_position",
+            "columnName": "id_position",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_angle",
+            "columnName": "id_angle",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_grip_width",
+            "columnName": "id_grip_width",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_thumbs_direction",
+            "columnName": "id_thumbs_direction",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_separate_sides",
+            "columnName": "id_separate_sides",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_exerciseabs"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "exerciseabs_info_value",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_muscle"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "exerciseabs_operation",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_operation"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "exerciseabs_nickname",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_nickname"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "exerciseabs_info_value",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_load_type"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "exerciseabs_info_value",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_position"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "exerciseabs_info_value",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_angle"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "exerciseabs_info_value",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_grip_width"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "exerciseabs_info_value",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_thumbs_direction"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "exerciseabs_info_value",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_separate_sides"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "exerciseabs_info_value",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_exerciseabs_info` INTEGER NOT NULL, `value` TEXT, FOREIGN KEY(`id_exerciseabs_info`) REFERENCES `exerciseabs_info`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_exerciseabs_info",
+            "columnName": "id_exerciseabs_info",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "exerciseabs_info",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_exerciseabs_info"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "exerciseabs_info",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `info_header_name` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "info_header_name",
+            "columnName": "info_header_name",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "exerciseabs_operation",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_exerciseabs_info_value` INTEGER NOT NULL, `operation` TEXT, FOREIGN KEY(`id_exerciseabs_info_value`) REFERENCES `exerciseabs_info_value`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_exerciseabs_info_value",
+            "columnName": "id_exerciseabs_info_value",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "operation",
+            "columnName": "operation",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "exerciseabs_info_value",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_exerciseabs_info_value"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "exerciseabs_nickname",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_exerciseabs_operation` INTEGER NOT NULL, `nickname` TEXT, FOREIGN KEY(`id_exerciseabs_operation`) REFERENCES `exerciseabs_operation`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_exerciseabs_operation",
+            "columnName": "id_exerciseabs_operation",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nickname",
+            "columnName": "nickname",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "exerciseabs_operation",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_exerciseabs_operation"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "set_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_set` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_exercise` INTEGER NOT NULL, `weight` REAL NOT NULL, `reps` INTEGER NOT NULL, FOREIGN KEY(`id_exercise`) REFERENCES `exercise_table`(`id_exercise`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id_set",
+            "columnName": "id_set",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id_exercise",
+            "columnName": "id_exercise",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "weight",
+            "columnName": "weight",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reps",
+            "columnName": "reps",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_set"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "exercise_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_exercise"
+            ],
+            "referencedColumns": [
+              "id_exercise"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"22c22e6c6b29aa5bd3da63dd5ac2337f\")"
+    ]
+  }
+}

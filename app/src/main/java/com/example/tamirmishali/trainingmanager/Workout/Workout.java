@@ -5,7 +5,6 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
 
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Routine.Routine;
@@ -15,6 +14,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
+
+import androidx.annotation.NonNull;
 
 
 @Entity(tableName = "workout_table",

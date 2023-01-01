@@ -1,14 +1,17 @@
 package com.example.tamirmishali.trainingmanager.History;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.tamirmishali.trainingmanager.R;
 import com.example.tamirmishali.trainingmanager.Routine.AddEditRoutineActivity;
 import com.example.tamirmishali.trainingmanager.Routine.Routine;
@@ -39,7 +42,7 @@ public class History extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         //RoutineViewModel Decleration
-        routineViewModel = ViewModelProviders.of(this).get(RoutineViewModel.class);
+        routineViewModel = new ViewModelProvider(this).get(RoutineViewModel.class);
         routineViewModel.getAllRoutines().observe(this, new Observer<List<Routine>>() {
             @Override
             public void onChanged(@Nullable List<Routine> routines) {
