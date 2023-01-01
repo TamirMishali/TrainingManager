@@ -2,6 +2,7 @@ package com.example.tamirmishali.trainingmanager.Database;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.os.AsyncTask;
 
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractDao;
@@ -24,6 +25,7 @@ public class ExerciseAbstractRepository {
     private LiveData<List<ExerciseAbstractOperation>> allOperations;
     private LiveData<List<ExerciseAbstractInfoValue>> allInfoValues;
     private LiveData<List<ExerciseAbstractInfo>> allInfo;
+    private static MediatorLiveData<Long> insertedExerciseAbstractId = new MediatorLiveData<>();
 
     // Amazing clear explanation about LiveData - don't use AsyncTask with livedata. livedata should
     // only be used to view the data, not manipulate it:
@@ -57,7 +59,6 @@ public class ExerciseAbstractRepository {
     public LiveData<List<ExerciseAbstract>> getExerciseAbstractsForWorkout(int workoutId){
         return exerciseAbstractDao.getExerciseAbstractsForWorkout(workoutId);
     }
-
     public ExerciseAbstract getExerciseAbsFromId(int exerciseAbsId){
         ExerciseAbstract exerciseAbstract = new ExerciseAbstract();
         try {
@@ -69,21 +70,9 @@ public class ExerciseAbstractRepository {
         }
         return exerciseAbstract;
     }
-/*    public List<String> getMuscles(){
-        List<String> muscleList = new ArrayList();
-        try {
-            muscleList = new GetMusclesAsyncTask(exerciseAbstractDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return muscleList;
-    }*/
 
 
-
-    // NEW
+    // ------------------------- NEW functions -------------------------------------
     // REMEMBER: livedata doesn't need AsyncTask
     public LiveData<List<ExerciseAbstractInfoValue>> getAllExerciseAbstractInfoValues() {
         return allInfoValues;
@@ -109,10 +98,10 @@ public class ExerciseAbstractRepository {
         }
         return id;
     }
-    public int getExerciseAbstractOperationId(String operation){
+    public int getExerciseAbstractOperationId(String id_muscle, String operation){
         int id = 0;
         try {
-            id = new GetExerciseAbstractOperationIdAsyncTask(exerciseAbstractDao).execute(operation).get();
+            id = new GetExerciseAbstractOperationIdAsyncTask(exerciseAbstractDao).execute(id_muscle, operation).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -200,8 +189,19 @@ public class ExerciseAbstractRepository {
             return nicknames;
     }
 
+    public MediatorLiveData<Long> getInsertedExerciseAbstractId() {
+        return insertedExerciseAbstractId;
+    }
+
+    public void insertOperation(String id_muscle, String operation){
+        new InsertOperationAsyncTask(exerciseAbstractDao).execute(id_muscle, operation);
+    }
+    public void insertNickname(String id_operation, String nickname){
+        new InsertNicknameAsyncTask(exerciseAbstractDao).execute(id_operation, nickname);
+    }
+
     // --------------------------- ExerciseAbstract - AsyncTasks -----------------------------------
-    private static class InsertExerciseAbstractAsyncTask extends AsyncTask<ExerciseAbstract, Void, Void>{
+    private static class InsertExerciseAbstractAsyncTask extends AsyncTask<ExerciseAbstract, Void, Long>{
         private ExerciseAbstractDao exerciseAbstractDao;
 
         private InsertExerciseAbstractAsyncTask(ExerciseAbstractDao exerciseAbstractDao){
@@ -209,9 +209,13 @@ public class ExerciseAbstractRepository {
         }
 
         @Override
-        protected Void doInBackground(ExerciseAbstract... exerciseAbstracts) {
+        protected Long doInBackground(ExerciseAbstract... exerciseAbstracts) {
             exerciseAbstractDao.insert(exerciseAbstracts[0]);
             return null;
+        }
+
+        protected void onPostExecute(Long id) {
+            insertedExerciseAbstractId.setValue(id);
         }
     }
     private static class UpdateExerciseAbstractAsyncTask extends AsyncTask<ExerciseAbstract, Void, Void>{
@@ -267,21 +271,10 @@ public class ExerciseAbstractRepository {
         }
 
     }
-/*    private static class GetMusclesAsyncTask extends AsyncTask<Void, Void, List<String>>{
-        private ExerciseAbstractDao exerciseAbstractDao;
 
-        private GetMusclesAsyncTask(ExerciseAbstractDao exerciseAbstractDao){
-            this.exerciseAbstractDao = exerciseAbstractDao;
-        }
 
-        @Override
-        protected List<String> doInBackground(Void... voids) {
-            return exerciseAbstractDao.getMuscles();
-        }
 
-    }*/
-
-    // NEW - AsyncTasks
+    // ------ NEW - AsyncTasks ------
     // Get Ids
     private static class GetExerciseAbstractInfoValueIdAsyncTask extends AsyncTask<String, Integer, Integer>{
         private ExerciseAbstractDao exerciseAbstractDao;
@@ -304,7 +297,7 @@ public class ExerciseAbstractRepository {
 
         @Override
         protected Integer doInBackground(String... params) {
-            return exerciseAbstractDao.getExerciseAbstractOperationId(params[0]);
+            return exerciseAbstractDao.getExerciseAbstractOperationId(params[0], params[1]);
         }
     }
     private static class GetExerciseAbstractNicknameIdAsyncTask extends AsyncTask<String, Integer, Integer>{
@@ -396,7 +389,46 @@ public class ExerciseAbstractRepository {
         }
     }
 
+    private static class InsertOperationAsyncTask extends AsyncTask<String, Integer, Void>{
+        private ExerciseAbstractDao exerciseAbstractDao;
 
+        private InsertOperationAsyncTask(ExerciseAbstractDao exerciseAbstractDao){
+            this.exerciseAbstractDao = exerciseAbstractDao;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            return exerciseAbstractDao.insertOperation(params[0], params[1]);
+        }
+    }
+
+    private static class InsertNicknameAsyncTask extends AsyncTask<String, Integer, Void>{
+        private ExerciseAbstractDao exerciseAbstractDao;
+
+        private InsertNicknameAsyncTask(ExerciseAbstractDao exerciseAbstractDao){
+            this.exerciseAbstractDao = exerciseAbstractDao;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            return exerciseAbstractDao.insertNickname(params[0], params[1]);
+        }
+    }
 
 
 }
+
+
+/*    private static class GetMusclesAsyncTask extends AsyncTask<Void, Void, List<String>>{
+        private ExerciseAbstractDao exerciseAbstractDao;
+
+        private GetMusclesAsyncTask(ExerciseAbstractDao exerciseAbstractDao){
+            this.exerciseAbstractDao = exerciseAbstractDao;
+        }
+
+        @Override
+        protected List<String> doInBackground(Void... voids) {
+            return exerciseAbstractDao.getMuscles();
+        }
+
+    }*/

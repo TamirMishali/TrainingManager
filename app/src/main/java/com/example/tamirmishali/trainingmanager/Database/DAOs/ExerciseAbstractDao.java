@@ -29,12 +29,10 @@ public interface ExerciseAbstractDao {
     @Query("DELETE FROM exerciseabs_table")
     void deleteAllexerciseAbstracts();
 
-    //    @Query("SELECT * from exerciseabs_table Order by id_exerciseabs DESC")
-    // TODO: change it to sort by the strings and not the id values:
     @Query("SELECT * from exerciseabs_table Order by id_muscle, id_operation")
     LiveData<List<ExerciseAbstract>> getAllExercisesAbstract();
 
-    @Query("select EA.id_exerciseabs, EA.name, EA.description, EA.muscleGroup " +
+    @Query("select * " +
             "from exerciseabs_table EA inner join exercise_table E ON EA.id_exerciseabs  = E.id_exerciseabs " +
             "where E.id_workout IN (:workoutId)")
     LiveData<List<ExerciseAbstract>> getExerciseAbstractsForWorkout(int workoutId);
@@ -42,31 +40,11 @@ public interface ExerciseAbstractDao {
     @Query("select * from exerciseabs_table where id_exerciseabs=:exerciseAbsId")
     ExerciseAbstract getExerciseAbsFromId(int exerciseAbsId);
 
-    @Query("select distinct muscleGroup from exerciseabs_table order by muscleGroup asc")
-    List<String> getMuscles();
-
-    @Query("select distinct muscleGroup from exerciseabs_table order by muscleGroup asc")
-    int getExerciseAbs_info_id();
-
-/*    @Query("SELECT * FROM exerciseabs_table WHERE id_workout=:id_workout")
-    LiveData<List<ExerciseAbstract>> getExercisesForWorkout(final int id_workout);*/
 
 
     // NEW:
     // TODO: Understand if i must add new tables DAO's so the auto implemented
     //  code will be created or maybe there might be another way to avoid it - IDK
-    @Query("select * from exerciseabs_nickname ")
-    LiveData<List<ExerciseAbstractNickname>> getAllExerciseAbstractNicknames();
-
-    @Query("SELECT id FROM exerciseabs_nickname WHERE nickname=:nickname")
-    int getExerciseAbstractNicknameId(String nickname);
-
-    @Query("SELECT nickname FROM exerciseabs_nickname WHERE id=:id")
-    String getExerciseAbstractNicknameNickname(int id);
-
-    @Query("SELECT nickname FROM exerciseabs_nickname WHERE id_exerciseabs_operation=:id_operation")
-    List<String> getExerciseAbstractNicknameByOperationId(int id_operation);
-
 
     // ------------------ exerciseabs_info_value ----------------------
     @Query("select * from exerciseabs_info_value")
@@ -85,12 +63,17 @@ public interface ExerciseAbstractDao {
     List<String> getExerciseAbstractInfoValueValueByHeader(String info_header_name1);
 
 
+
     // ------------------ exerciseabs_operation ----------------------
+    @Query("INSERT INTO exerciseabs_operation VALUES(:id_muscle, :operation)")
+    Void insertOperation(String id_muscle, String operation);
+
     @Query("select * from exerciseabs_operation ")
     LiveData<List<ExerciseAbstractOperation>> getAllExerciseAbstractOperations();
 
-    @Query("SELECT id FROM exerciseabs_operation WHERE operation=:operation")
-    int getExerciseAbstractOperationId(String operation);
+    @Query("SELECT id FROM exerciseabs_operation " +
+            "WHERE id_exerciseabs_info_value=:id_muscle and operation=:operation")
+    int getExerciseAbstractOperationId(String id_muscle, String operation);
 
     @Query("SELECT operation FROM exerciseabs_operation WHERE id=:id")
     String getExerciseAbstractOperationOperation(int id);
@@ -105,8 +88,23 @@ public interface ExerciseAbstractDao {
     List<String> getExerciseAbstractOperationByMuscleId(int id_muscle);
 
 
-//    @Query("select * from exerciseabs_ ")
-//    int getExerciseAbs_info_id();
+
+    // ------------------ exerciseabs_nickname ----------------------
+    @Query("INSERT INTO exerciseabs_nickname VALUES(:id_operation, :nickname)")
+    Void insertNickname(String id_operation, String nickname);
+
+    @Query("select * from exerciseabs_nickname ")
+    LiveData<List<ExerciseAbstractNickname>> getAllExerciseAbstractNicknames();
+
+    @Query("SELECT id FROM exerciseabs_nickname WHERE nickname=:nickname")
+    int getExerciseAbstractNicknameId(String nickname);
+
+    @Query("SELECT nickname FROM exerciseabs_nickname WHERE id=:id")
+    String getExerciseAbstractNicknameNickname(int id);
+
+    @Query("SELECT nickname FROM exerciseabs_nickname WHERE id_exerciseabs_operation=:id_operation")
+    List<String> getExerciseAbstractNicknameByOperationId(int id_operation);
+
 
 
 }

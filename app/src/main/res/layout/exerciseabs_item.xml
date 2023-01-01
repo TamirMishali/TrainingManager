@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@id/text_view_exerciseabs_text">
+            android:layout_below="@id/text_view_exerciseabs_name">
 
 <!--        Muscle      -->
             <LinearLayout

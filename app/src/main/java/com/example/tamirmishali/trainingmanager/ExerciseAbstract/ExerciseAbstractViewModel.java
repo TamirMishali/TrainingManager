@@ -18,6 +18,7 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
     private LiveData<List<ExerciseAbstractInfoValue>> allInfoValues;
     private LiveData<List<ExerciseAbstractOperation>> allOperations;
     private LiveData<List<ExerciseAbstractNickname>> allNicknames;
+    private MediatorLiveData<Long> exerciseAbstractId = new MediatorLiveData<>();
 
 
     public ExerciseAbstractViewModel(@NonNull Application application) {
@@ -48,23 +49,31 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
     public LiveData<List<ExerciseAbstract>> getExerciseAbstractsForWorkout(int id){ return repository.getExerciseAbstractsForWorkout(id); }
 
 
-    public ExerciseAbstract getExerciseAbsFromId(int exerciseAbsId){return repository.getExerciseAbsFromId(exerciseAbsId);}
-//    public List<String> getMuscles(){return repository.getMuscles();}
+    public ExerciseAbstract getExerciseAbsFromId(int exerciseAbsId){
+        return ExerciseAbstractIdsToStrings(repository.getExerciseAbsFromId(exerciseAbsId));}
 
 
     // new
     public LiveData<List<ExerciseAbstractInfoValue>> getAllExerciseAbstractInfoValues(){ return allInfoValues;}
     public LiveData<List<ExerciseAbstractOperation>> getAllExerciseAbstractOperations(){ return allOperations;}
     public LiveData<List<ExerciseAbstractNickname>> getAllExerciseAbstractNicknames(){ return allNicknames;}
-    private int getExerciseAbstractInfoValueId(String value){return repository.getExerciseAbstractInfoValueId(value);}
-    private int getExerciseAbstractOperationId(String operation){return repository.getExerciseAbstractOperationId(operation);}
-    private int getExerciseAbstractNicknameId(String nickname){return repository.getExerciseAbstractNicknameId(nickname);}
+    public int getExerciseAbstractInfoValueId(String value){return repository.getExerciseAbstractInfoValueId(value);}
+    public int getExerciseAbstractOperationId(String id_muscle, String operation){return repository.getExerciseAbstractOperationId(id_muscle, operation);}
+    public int getExerciseAbstractNicknameId(String nickname){return repository.getExerciseAbstractNicknameId(nickname);}
     private String getExerciseAbstractInfoValueValue(int id_value){return repository.getExerciseAbstractInfoValueValue(id_value);}
     private String getExerciseAbstractOperationOperation(int id_operation){return repository.getExerciseAbstractOperationOperation(id_operation);}
     private String getExerciseAbstractNicknameNickname(int id_nickname){return repository.getExerciseAbstractNicknameNickname(id_nickname);}
     public List<String> getExerciseAbstractInfoValueValueByHeader(String info_header_name){return repository.getExerciseAbstractInfoValueValueByHeader(info_header_name);}
     public List<String> getExerciseAbstractOperationByMuscleId(int id_muscle){return repository.getExerciseAbstractOperationByMuscleId(id_muscle);}
     public List<String> getExerciseAbstractNicknameByOperationId(int id_operation){return repository.getExerciseAbstractNicknameByOperationId(id_operation);}
+    public void insertOperation(String id_muscle, String operation) {repository.insertOperation(id_muscle, operation);}
+    public void insertNickname(String id_operation, String nickname) {repository.insertNickname(id_operation, nickname);}
+
+    // Thanks gptChat
+    // 1. how can i get the id of a recent inserted row in room database
+    // 2. how can i get this id when using a ViewModel, and not the Dao directly?
+    // 3. im using a "Repository" class to manage the Dao from the ViewModel. how can i access the MediatorLiveData object that way?
+    public LiveData<Long> getInsertedExerciseAbstractId() { return repository.getInsertedExerciseAbstractId(); }
 
 /*    public List<ExerciseAbstractInfo> getExerciseAbstractsInfo(int id){ return repository.getExerciseAbstractsInfo(id); }
     public List<ExerciseAbstractInfoValue> getExerciseAbstractsInfoValue(int id){ return repository.getExerciseAbstractsInfoValue(id); }
@@ -125,7 +134,9 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
             return null;
         }
         else {
-            exerciseAbstract.setId_operation(getExerciseAbstractOperationId(exerciseAbstract.getOperation()));
+            exerciseAbstract.setId_operation(getExerciseAbstractOperationId(
+                    exerciseAbstract.getMuscle(),
+                    exerciseAbstract.getOperation()));
         }
 
         // The rest of the fields are not mandatory, so just check if they are not null or empty,

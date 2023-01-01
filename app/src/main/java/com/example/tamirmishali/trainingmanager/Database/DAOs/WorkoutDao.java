@@ -33,10 +33,10 @@ public interface WorkoutDao {
     @Query("SELECT * FROM workout_table WHERE (id_routine=:id_routine and date is NULL)")
     LiveData<List<Workout>> getWorkoutsForRoutine(final int id_routine);
 
-    @Query("select EA.muscleGroup " +
+/*    @Query("select EA.muscleGroup " +
             "from exerciseabs_table EA inner join exercise_table E ON EA.id_exerciseabs  = E.id_exerciseabs " +
             "where E.id_workout IN (:workoutId)")
-    List<String> getMusselsInWorkout(final int workoutId);
+    List<String> getMusselsInWorkout(final int workoutId);*/
 
     @Query("select * from( " +
             "   select * from workout_table " +

@@ -1,5 +1,7 @@
 package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 
+import static com.example.tamirmishali.trainingmanager.ExerciseAbstract.AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_ID;
+
 import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -84,15 +86,15 @@ public class ShowWorkoutAbstractExercises extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //ExerciseAbstract Adapter Declaration
-        final ExerciseAbstractAdapter adapter = new ExerciseAbstractAdapter();
-        recyclerView.setAdapter(adapter);
+        final ExerciseAbstractAdapter exerciseAbstractAdapter = new ExerciseAbstractAdapter();
+        recyclerView.setAdapter(exerciseAbstractAdapter);
 
         //ExerciseAbstractViewModel Declaration
         exerciseabstractViewModel = ViewModelProviders.of(this).get(ExerciseAbstractViewModel.class);
         exerciseabstractViewModel.getExerciseAbstractsForWorkout(sourceWorkoutID).observe(this, new Observer<List<ExerciseAbstract>>() {
             @Override
             public void onChanged(@Nullable List<ExerciseAbstract> exerciseAbstracts) {
-                adapter.setExerciseAbstracts(exerciseAbstracts);
+                exerciseAbstractAdapter.setExerciseAbstracts(exerciseAbstracts);
             }
         });
 
@@ -114,23 +116,31 @@ public class ShowWorkoutAbstractExercises extends AppCompatActivity {
                 AlertDialog.Builder alert = new AlertDialog.Builder(ShowWorkoutAbstractExercises.this);
                 alert.setTitle(R.string.delete_entry_dialog_title);
                 alert.setMessage(R.string.delete_exerciseabstract_dialog);
-                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
+                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
-                        ExerciseAbstract exerciseAbstract = (adapter.getExerciseAbstractAt(viewHolder.getAdapterPosition()));
+                        ExerciseAbstract exerciseAbstract = (exerciseAbstractAdapter.getExerciseAbstractAt(viewHolder.getAdapterPosition()));
                         Exercise exercise = exerciseViewModel.getExerciseForWorkout(exerciseAbstract.getId(),sourceWorkoutID);
+
+                        // Delete the exercise from exercise_table:
                         exerciseViewModel.delete(exercise);
+
+                        // Delete the exercise from exerciseabs_table so it wont be a ghost without
+                        //  a pointer in DB:
+                        exerciseabstractViewModel.delete(exerciseAbstract);
+
                         Toast.makeText(ShowWorkoutAbstractExercises.this , "Exercise deleted" , Toast.LENGTH_SHORT).show();
                     }
                 });
+
                 alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // close dialog
                         dialog.cancel();
 
                         //https://stackoverflow.com/questions/31787272/android-recyclerview-itemtouchhelper-revert-swipe-and-restore-view-holder
-                        adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                        exerciseAbstractAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
 
                     }
                 });
@@ -142,11 +152,14 @@ public class ShowWorkoutAbstractExercises extends AppCompatActivity {
 
 
         //Edit Workout name and date
-        adapter.setOnItemLongClickListener(new ExerciseAbstractAdapter.OnItemLongClickListener() {
+        exerciseAbstractAdapter.setOnItemLongClickListener(new ExerciseAbstractAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(ExerciseAbstract exerciseabstract) {
-/*                Intent intent = new Intent(EditExercisesAbstract.this, AddEditExerciseAbstractActivity.class);
-                intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_ID,exerciseabstract.getId());
+                Intent intent = new Intent(ShowWorkoutAbstractExercises.this, AddEditExerciseAbsActivity.class);
+                intent.putExtra(AddEditExerciseAbsActivity.EXTRA_WORKOUT_ID, sourceWorkoutID);
+                intent.putExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_ID, exerciseabstract.getId());
+/*
+
                 intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME, exerciseabstract.getName());
                 if(workout.getWorkoutDate() != null){
                     intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE, exerciseabstract.getWorkoutDate().toString());
@@ -160,7 +173,7 @@ public class ShowWorkoutAbstractExercises extends AppCompatActivity {
         });
 
         //Add Exercises to that workout
-        adapter.setOnItemClickListener(new ExerciseAbstractAdapter.OnItemClickListener() {
+        exerciseAbstractAdapter.setOnItemClickListener(new ExerciseAbstractAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ExerciseAbstract exerciseabstract) {
 /*                Intent intent = new Intent(EditExercisesAbstract.this, AddExerciseAbstractToWorkoutActivity.class); //EditWorkouts

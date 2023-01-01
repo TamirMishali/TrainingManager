@@ -33,13 +33,13 @@ public class Exercise {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id_exercise")
-    private int id;
+    private long id;
 
     @ColumnInfo(name = "id_exerciseabs")
-    private int id_exerciseabs;
+    private long id_exerciseabs;
 
     @ColumnInfo(name = "id_workout")
-    private int id_workout;
+    private long id_workout;
 
     @ColumnInfo(name = "comment")
     private String comment;
@@ -66,7 +66,7 @@ public class Exercise {
         this.comment = exercise.comment;
     }
 
-    public Exercise(int idExerciseAbs, int idWorkout, String comment/*, String data*/){
+    public Exercise(long idExerciseAbs, long idWorkout, String comment/*, String data*/){
         this.id = 0;
         this.id_exerciseabs = idExerciseAbs;
         this.id_workout = idWorkout;
@@ -74,27 +74,27 @@ public class Exercise {
     }
 
     //---------------Getters & Setters---------------
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getId_exerciseabs() {
+    public long getId_exerciseabs() {
         return id_exerciseabs;
     }
 
-    public void setId_exerciseabs(int id_exerciseAbs) {
+    public void setId_exerciseabs(long id_exerciseAbs) {
         this.id_exerciseabs = id_exerciseAbs;
     }
 
-    public int getId_workout() {
+    public long getId_workout() {
         return id_workout;
     }
 
-    public void setId_workout(int id_workout) {
+    public void setId_workout(long id_workout) {
         this.id_workout = id_workout;
     }
 

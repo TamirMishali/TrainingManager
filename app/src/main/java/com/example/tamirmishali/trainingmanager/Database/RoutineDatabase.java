@@ -138,24 +138,24 @@ public abstract class RoutineDatabase extends RoomDatabase {
             longId = workoutDao.insert(workout);
             int workoutFourId = toIntExact(longId);*/
 
-            populateExerciseAbstractDatabase(exerciseAbstractDao);
-            //---------------------------------------Exercises and Sets-----------------------------
-            //first abstract workout
-            Set set;
-            Exercise exercise = new Exercise(1,workoutAbsOneId,"");
-            longId =  exerciseDao.insert(exercise);
-            exercise = new Exercise(2,workoutAbsOneId,"");
-            longId =  exerciseDao.insert(exercise);
-            exercise = new Exercise(3,workoutAbsOneId,"");
-            longId =  exerciseDao.insert(exercise);
-
-            //second abstract workout
-            exercise = new Exercise(14,workoutAbsTwoId,"");
-            longId =  exerciseDao.insert(exercise);
-            exercise = new Exercise(15,workoutAbsTwoId,"");
-            longId =  exerciseDao.insert(exercise);
-            exercise = new Exercise(16,workoutAbsTwoId,"");
-            longId =  exerciseDao.insert(exercise);
+//            populateExerciseAbstractDatabase(exerciseAbstractDao);
+//            //---------------------------------------Exercises and Sets-----------------------------
+//            //first abstract workout
+//            Set set;
+//            Exercise exercise = new Exercise(1,workoutAbsOneId,"");
+//            longId =  exerciseDao.insert(exercise);
+//            exercise = new Exercise(2,workoutAbsOneId,"");
+//            longId =  exerciseDao.insert(exercise);
+//            exercise = new Exercise(3,workoutAbsOneId,"");
+//            longId =  exerciseDao.insert(exercise);
+//
+//            //second abstract workout
+//            exercise = new Exercise(14,workoutAbsTwoId,"");
+//            longId =  exerciseDao.insert(exercise);
+//            exercise = new Exercise(15,workoutAbsTwoId,"");
+//            longId =  exerciseDao.insert(exercise);
+//            exercise = new Exercise(16,workoutAbsTwoId,"");
+//            longId =  exerciseDao.insert(exercise);
 
 
 
@@ -273,7 +273,7 @@ public abstract class RoutineDatabase extends RoomDatabase {
         }
     }
 
-    private static void populateExerciseAbstractDatabase(ExerciseAbstractDao dao){
+    /*private static void populateExerciseAbstractDatabase(ExerciseAbstractDao dao){
         dao.insert(new ExerciseAbstract("Bench press - Barbell", "press of chest on bench and shit", "Chest"));
         dao.insert(new ExerciseAbstract("Bench press - Dumbbells", "press of chest on bench and shit", "Chest"));
         dao.insert(new ExerciseAbstract("Incline bench press - Dumbbells", "press of chest on bench and shit", "Chest"));
@@ -302,6 +302,6 @@ public abstract class RoutineDatabase extends RoomDatabase {
         dao.insert(new ExerciseAbstract("Squat", "Fuck", "Legs"));
         dao.insert(new ExerciseAbstract("Bulgarian Split Squat", "Leg on bench. good luck", "Legs"));
         dao.insert(new ExerciseAbstract("Deadlift", "Romanian Deadlift", "Legs"));
-    }
+    }*/
 }
 

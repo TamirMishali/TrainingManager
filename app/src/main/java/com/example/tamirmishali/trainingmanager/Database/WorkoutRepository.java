@@ -58,17 +58,17 @@ public class WorkoutRepository {
         return workoutDao.getPracticalWorkoutsForRoutineLiveData(routineId);
     }
 
-    public List<String> getMusselsInWorkout(int workout_id){
-        List<String> mussles = new ArrayList<>();
-        try {
-            mussles = new GetMusselsInWorkoutAsyncTask(workoutDao).execute(workout_id).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return mussles;
-    }
+//    public List<String> getMusselsInWorkout(int workout_id){
+//        List<String> mussles = new ArrayList<>();
+//        try {
+//            mussles = new GetMusselsInWorkoutAsyncTask(workoutDao).execute(workout_id).get();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+//        return mussles;
+//    }
     public Workout getCurrentWorkout(){
         Workout workout = new Workout();
         try {
@@ -252,7 +252,7 @@ public class WorkoutRepository {
         }
     }
 
-    //https://stackoverflow.com/questions/6053602/what-arguments-are-passed-into-asynctaskarg1-arg2-arg3
+    /*//https://stackoverflow.com/questions/6053602/what-arguments-are-passed-into-asynctaskarg1-arg2-arg3
     private static class GetMusselsInWorkoutAsyncTask extends AsyncTask<Integer, Integer, List<String>>{
         private WorkoutDao workoutDao;
 
@@ -264,7 +264,7 @@ public class WorkoutRepository {
         protected List<String> doInBackground(Integer... values) {
             return workoutDao.getMusselsInWorkout(values[0]);
         }
-    }
+    }*/
 
     //https://stackoverflow.com/questions/6053602/what-arguments-are-passed-into-asynctaskarg1-arg2-arg3
     private static class GetCurrentWorkoutAsyncTask extends AsyncTask<Void, Void, Workout>{
@@ -445,8 +445,8 @@ public class WorkoutRepository {
         Exercise exercise;
         while (exerciseIterator.hasNext()) {
             exercise = exerciseIterator.next();
-            exercise.setExerciseAbstract(exerciseAbstractDao.getExerciseAbsFromId(exercise.getId_exerciseabs()));
-            exercise.setSets(setDao.getSetsForExercise(exercise.getId()));
+            exercise.setExerciseAbstract(exerciseAbstractDao.getExerciseAbsFromId((int)exercise.getId_exerciseabs()));
+            exercise.setSets(setDao.getSetsForExercise((int)exercise.getId()));
         }
         workout.setExercises(exercises);
 
