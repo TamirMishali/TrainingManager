@@ -1,10 +1,8 @@
 package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-
-import java.util.List;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 @Entity(tableName = "exerciseabs_info")
 public class ExerciseAbstractInfo {

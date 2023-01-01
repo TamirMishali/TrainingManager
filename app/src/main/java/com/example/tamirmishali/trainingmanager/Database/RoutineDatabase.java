@@ -1,11 +1,11 @@
 package com.example.tamirmishali.trainingmanager.Database;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.db.SupportSQLiteOpenHelper;
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.TypeConverters;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+import androidx.sqlite.db.SupportSQLiteOpenHelper;
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -24,6 +24,7 @@ import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstrac
 import com.example.tamirmishali.trainingmanager.Routine.Routine;
 import com.example.tamirmishali.trainingmanager.Set.Set;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
+import com.fstyle.library.helper.AssetSQLiteOpenHelperFactory;
 
 import static java.lang.Math.toIntExact;
 
@@ -58,12 +59,8 @@ public abstract class RoutineDatabase extends RoomDatabase {
             //https://github.com/daolq3012/AssetSQLiteOpenHelper
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                     RoutineDatabase.class, DATABASE_NAME)
-                    .openHelperFactory(new SupportSQLiteOpenHelper.Factory() {
-                        @Override
-                        public SupportSQLiteOpenHelper create(SupportSQLiteOpenHelper.Configuration configuration) {
-                            return null;
-                        }
-                    })
+                    .openHelperFactory(new AssetSQLiteOpenHelperFactory())
+                    .fallbackToDestructiveMigration()
      /*               .fallbackToDestructiveMigration()
                     .addCallback(roomcallback)*/
                     .build();

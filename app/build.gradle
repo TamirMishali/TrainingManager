@@ -12,7 +12,7 @@ android {
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         externalNativeBuild {
             cmake {
                 cppFlags ""
@@ -44,18 +44,18 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     def lifecycle_version = "1.1.1"
     def room_version = "1.1.1"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 
     // Outline Box for TextInputLayout
     implementation 'com.google.android.material:material:1.7.0'
@@ -66,19 +66,19 @@ dependencies {
     // for DatabaseDebug
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
     // ViewModel and LiveData - LifeCycle
-    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
-    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version" // use kapt for Kotlin
-    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.0.0' // use kapt for Kotlin
+    implementation 'androidx.annotation:annotation:1.0.0'
 
     //Room Dependencies
-    implementation "android.arch.persistence.room:runtime:$room_version"
-    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+    implementation 'androidx.room:room-runtime:2.0.0'
+    annotationProcessor 'androidx.room:room-compiler:2.0.0'
     // use kapt for Kotlin
 
     //for loading existing sql db
     implementation 'com.github.daolq3012:AssetSQLiteOpenHelper:V1.0.1'
     // Because AssetSQLiteOpenHelper releases are few and far between (persistence room version using in module is 1.0.0),
     // it is recommended you also explicitly depend on Persistence Room's latest version for bug fixes and new features.
-    implementation 'android.arch.persistence.room:runtime:x.x.x'
+    implementation 'androidx.room:room-runtime:2.0.0'
 
 }
