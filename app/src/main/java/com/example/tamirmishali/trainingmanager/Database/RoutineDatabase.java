@@ -1,7 +1,6 @@
 package com.example.tamirmishali.trainingmanager.Database;
 
 import androidx.sqlite.db.SupportSQLiteDatabase;
-import androidx.sqlite.db.SupportSQLiteOpenHelper;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -11,6 +10,10 @@ import android.os.AsyncTask;
 
 import com.example.tamirmishali.trainingmanager.Converters;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractDao;
+import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractInfoDao;
+import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractInfoValueDao;
+import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractNicknameDao;
+import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractOperationDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.RoutineDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.SetDao;
@@ -30,6 +33,11 @@ import static java.lang.Math.toIntExact;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
+
+// Another tutorial i found online:
+// https://blog.devgenius.io/implementing-room-database-bc9e4deb6600
+
 @Database(version = 12,entities = {Routine.class, Workout.class, Exercise.class,
         ExerciseAbstract.class, ExerciseAbstractInfoValue.class, ExerciseAbstractInfo.class,
         ExerciseAbstractOperation.class, ExerciseAbstractNickname.class,
@@ -45,13 +53,13 @@ public abstract class RoutineDatabase extends RoomDatabase {
     public abstract ExerciseAbstractDao exerciseAbstractDao();
     public abstract SetDao setDao();
 
-//    public abstract ExerciseAbstractInfoValueDao exerciseAbstractInfoValueDao();
-//    public abstract ExerciseAbstractInfoDao exerciseAbstractInfoDao();
-//    public abstract ExerciseAbstractOperationDao exerciseAbstractOperationDao();
-//    public abstract ExerciseAbstractNicknameDao exerciseAbstractNicknameDao();
+    public abstract ExerciseAbstractInfoValueDao exerciseAbstractInfoValueDao();
+    public abstract ExerciseAbstractInfoDao exerciseAbstractInfoDao();
+    public abstract ExerciseAbstractOperationDao exerciseAbstractOperationDao();
+    public abstract ExerciseAbstractNicknameDao exerciseAbstractNicknameDao();
 
     // Prevention of opening the same database to RAM twice.
-    private static final String DATABASE_NAME = "routines_database";
+    private static final String DATABASE_NAME = "routines_database.db";
     private static volatile RoutineDatabase INSTANCE;
 
     public static synchronized RoutineDatabase getInstance(Context context) {
@@ -60,9 +68,8 @@ public abstract class RoutineDatabase extends RoomDatabase {
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                     RoutineDatabase.class, DATABASE_NAME)
                     .openHelperFactory(new AssetSQLiteOpenHelperFactory())
-                    .fallbackToDestructiveMigration()
-     /*               .fallbackToDestructiveMigration()
-                    .addCallback(roomcallback)*/
+//                    .fallbackToDestructiveMigration() // this destroys current db each time app is launched for the first time
+                    .addCallback(roomCallback)
                     .build();
         }
         return INSTANCE;
@@ -72,7 +79,7 @@ public abstract class RoutineDatabase extends RoomDatabase {
     //callback to the current database. when the app is opened for the first time
     //it create that database. we want to access the same database over time
     //and not creating a new database every time we open the app.
-    private static RoomDatabase.Callback roomcallback = new RoomDatabase.Callback() {
+    private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
                 @Override
                 public void onCreate(@NonNull SupportSQLiteDatabase db) {
                     super.onCreate(db);
@@ -87,11 +94,12 @@ public abstract class RoutineDatabase extends RoomDatabase {
         private ExerciseAbstractDao exerciseAbstractDao;
         private SetDao setDao;
 
-//        // new
-//        private ExerciseAbstractInfoValueDao exerciseAbstractInfoValueDao;
-//        private ExerciseAbstractInfoDao exerciseAbstractInfoDao;
-//        private ExerciseAbstractOperationDao exerciseAbstractOperationDao;
-//        private ExerciseAbstractNicknameDao exerciseAbstractNicknameDao;
+        // new
+        private ExerciseAbstractInfoValueDao exerciseAbstractInfoValueDao;
+        private ExerciseAbstractInfoDao exerciseAbstractInfoDao;
+        private ExerciseAbstractOperationDao exerciseAbstractOperationDao;
+        private ExerciseAbstractNicknameDao exerciseAbstractNicknameDao;
+
 
         private PopulateDbAsyncTask(RoutineDatabase db) {
             routineDao = db.routineDao();
@@ -100,16 +108,20 @@ public abstract class RoutineDatabase extends RoomDatabase {
             exerciseAbstractDao = db.exerciseAbstractDao();
             setDao = db.setDao();
 
-//            // new
-//            exerciseAbstractInfoValueDao = db.exerciseAbstractInfoValueDao();
-//            exerciseAbstractInfoDao = db.exerciseAbstractInfoDao();
-//            exerciseAbstractOperationDao = db.exerciseAbstractOperationDao();
-//            exerciseAbstractNicknameDao = db.exerciseAbstractNicknameDao();
+            // new
+            exerciseAbstractInfoValueDao = db.exerciseAbstractInfoValueDao();
+            exerciseAbstractInfoDao = db.exerciseAbstractInfoDao();
+            exerciseAbstractOperationDao = db.exerciseAbstractOperationDao();
+            exerciseAbstractNicknameDao = db.exerciseAbstractNicknameDao();
 
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
+
+//            ArrayList<String> info = new ArrayList<>();
+//            ArrayList<String> muscles = new ArrayList<>();
+
             Routine routine = new Routine("Mass","2019-02-25");//, "20-02-2019");
 
             long longId = routineDao.insert(routine);
@@ -276,6 +288,19 @@ public abstract class RoutineDatabase extends RoomDatabase {
             return null;
         }
     }
+
+/*    private static void populateExerciseAbstractInfoDatabase(ExerciseAbstractInfoDao dao){
+        dao.insert(new ExerciseAbstractInfo("muscle"));
+        dao.insert(new ExerciseAbstractInfo("load_type"));
+        dao.insert(new ExerciseAbstractInfo("position"));
+        dao.insert(new ExerciseAbstractInfo("angle"));
+        dao.insert(new ExerciseAbstractInfo("grip_width"));
+        dao.insert(new ExerciseAbstractInfo("thumbs_direction"));
+        dao.insert(new ExerciseAbstractInfo("separate_hands"));
+
+    }*/
+
+
 
     /*private static void populateExerciseAbstractDatabase(ExerciseAbstractDao dao){
         dao.insert(new ExerciseAbstract("Bench press - Barbell", "press of chest on bench and shit", "Chest"));

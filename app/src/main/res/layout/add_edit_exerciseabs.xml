@@ -23,13 +23,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="15dp"
-        android:paddingEnd="15dp">
+        android:paddingEnd="15dp"
+        android:clickable="false">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textInputEditText_exName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="false">
+            android:enabled="false"
+            android:textColor="@color/black"
+            android:gravity="center">
 
         </com.google.android.material.textfield.TextInputEditText>
 
@@ -85,23 +88,19 @@
 <!-- Finish this in code using string arrays in this video
     https://www.youtube.com/watch?v=B9YBvqw7CTU&ab_channel=CodinginFlow
     -->
-    <com.google.android.material.textfield.TextInputLayout
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextView_operationName"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="5dp"
-        android:completionThreshold="0"
-        android:hint="Operation name">
+        android:hint="Operation name"
+        android:completionThreshold="1">
 
-        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-            android:id="@+id/autoCompleteTextView_operationName"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    </AutoCompleteTextView>
 
-        </com.google.android.material.textfield.MaterialAutoCompleteTextView>
-
-    </com.google.android.material.textfield.TextInputLayout>
 
     <View
         android:layout_width="match_parent"
@@ -125,25 +124,18 @@
         android:gravity="center"
         />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:completionThreshold="0"
-        android:hint="Nickname">
-
-
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/autoCompleteTextView_Nickname"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:completionThreshold="1"
+            android:hint="Nickname">
 
         </com.google.android.material.textfield.MaterialAutoCompleteTextView>
 
-
-    </com.google.android.material.textfield.TextInputLayout>
 
     <!--Finish this part in code: add string arrays read from DB and insert them as options
     https://www.youtube.com/watch?v=741l_fPKL3Y&ab_channel=Stevdza-San

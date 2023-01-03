@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -58,6 +59,7 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             "com.example.tamirmishali.trainingmanager.EXTRA_WORKOUT_ID";
 
     // new
+    private static final String TAG = "AddEditExerciseAbsActivity";
     private ExerciseAbstract currentExerciseAbstract = new ExerciseAbstract();
     int sourceWorkoutID;
     private TextInputEditText textInputEditText_exName;
@@ -105,6 +107,7 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
         autoCompleteTextView_ThumbsDirection = findViewById(R.id.autoCompleteTextView_ThumbsDirection);
         autoCompleteTextView_SeparateHands = findViewById(R.id.autoCompleteTextView_SeparateHands);
 
+        exerciseAbstractViewModel = new ViewModelProvider(this).get(ExerciseAbstractViewModel.class);
 
         // Free text views:
         ArrayAdapter<String> operationAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item, operationValues);
@@ -179,39 +182,18 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             finish();
         }
 
-        // Old
-//        //check why we got here: Edit/Add
-//        Intent intent = getIntent();
-//        if (intent.hasExtra(EXTRA_EXERCISEABS_ID)) {
-//            setTitle("Edit Exercise Info");
-//            editTextExerciseAbsName.setText(intent.getStringExtra(EXTRA_EXERCISEABS_NAME));
-//            editTextExerciseAbsDescription.setText(intent.getStringExtra(EXTRA_EXERCISEABS_DESCRIPTION));
-//            spinnerMuscleGroup.setSelection(spinnerValues.indexOf(intent.getStringExtra(EXTRA_EXERCISEABS_MUSCLE)));
-//        }else{
-//            setTitle("Add Exercise Info");
-//        }
-        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-
-        exerciseAbstractViewModel = new ViewModelProvider(this).get(ExerciseAbstractViewModel.class);
-
-        // Explanation for how to access operationValues from inner method:
-        // https://stackoverflow.com/questions/14425826/variable-is-accessed-within-inner-class-needs-to-be-declared-final
-        // Retrieve relevant Operation data after muscle was chosen:
-        autoCompleteTextView_Muscle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        autoCompleteTextView_Muscle.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 // clear current value in operation and nickname:
-                autoCompleteTextView_Operation.clearListSelection();
-                autoCompleteTextView_Nickname.clearListSelection();
+                autoCompleteTextView_Operation.setText("");
+                autoCompleteTextView_Nickname.setText("");
+//                Log.d(TAG, "autoCompleteTextView_Muscle.setOnItemClickListener Triggered");
 
-                int current_muscle_id = exerciseAbstractViewModel.getExerciseAbstractInfoValueId(adapterView.getItemAtPosition(i).toString());
+                int current_muscle_id = exerciseAbstractViewModel.getExerciseAbstractInfoValueId(adapterView.getItemAtPosition(position).toString());
                 operationValues = new ArrayList<>(exerciseAbstractViewModel.getExerciseAbstractOperationByMuscleId(current_muscle_id));
+                operationAdapter.addAll(operationValues);
                 operationAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
 
@@ -232,6 +214,7 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
                     else{
                         nicknameValues = new ArrayList<>();
                     }
+                    nicknameAdapter.addAll(nicknameValues);
                     nicknameAdapter.notifyDataSetChanged();
                 }
 
