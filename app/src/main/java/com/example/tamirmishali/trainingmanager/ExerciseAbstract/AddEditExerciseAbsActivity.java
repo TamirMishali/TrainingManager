@@ -1,5 +1,6 @@
 package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -49,12 +51,6 @@ import java.util.List;
 public class AddEditExerciseAbsActivity extends AppCompatActivity {
     public static final String EXTRA_EXERCISEABS_ID =
             "com.example.tamirmishali.trainingmanager.EXTRA_EXERCISEABS_ID";
-    public static final String EXTRA_EXERCISEABS_NAME =
-            "com.example.tamirmishali.trainingmanager.EXTRA_EXERCISEABS_NAME";
-    public static final String EXTRA_EXERCISEABS_DESCRIPTION =
-            "com.example.tamirmishali.trainingmanager.EXTRA_EXERCISEABS_DESCRIPTION";
-    public static final String EXTRA_EXERCISEABS_MUSCLE =
-            "com.example.tamirmishali.trainingmanager.EXTRA_EXERCISEABS_MUSCLE";
     public static final  String EXTRA_WORKOUT_ID =
             "com.example.tamirmishali.trainingmanager.EXTRA_WORKOUT_ID";
 
@@ -108,6 +104,7 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
         autoCompleteTextView_SeparateHands = findViewById(R.id.autoCompleteTextView_SeparateHands);
 
         exerciseAbstractViewModel = new ViewModelProvider(this).get(ExerciseAbstractViewModel.class);
+        exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
 
         // Free text views:
         ArrayAdapter<String> operationAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item, operationValues);
@@ -192,6 +189,7 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
 
                 int current_muscle_id = exerciseAbstractViewModel.getExerciseAbstractInfoValueId(adapterView.getItemAtPosition(position).toString());
                 operationValues = new ArrayList<>(exerciseAbstractViewModel.getExerciseAbstractOperationByMuscleId(current_muscle_id));
+                operationAdapter.clear();
                 operationAdapter.addAll(operationValues);
                 operationAdapter.notifyDataSetChanged();
             }
@@ -201,6 +199,11 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (!hasFocus) {
+                    // remove the keyboard that stays on when moving to other view:
+                    // https://stackoverflow.com/questions/15412943/hide-soft-keyboard-on-losing-focus#:~:text=Best%20way%20is%20to%20set,when%20the%20EditText%20loses%20focus.
+                    InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
                     // get muscle id in order to get operation id
                     int current_muscle_id = exerciseAbstractViewModel.getExerciseAbstractInfoValueId( autoCompleteTextView_Muscle.getText().toString());
                     int current_operation_id = exerciseAbstractViewModel.getExerciseAbstractOperationId(
@@ -214,10 +217,23 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
                     else{
                         nicknameValues = new ArrayList<>();
                     }
+                    nicknameAdapter.clear();
                     nicknameAdapter.addAll(nicknameValues);
                     nicknameAdapter.notifyDataSetChanged();
                 }
 
+            }
+        });
+
+        autoCompleteTextView_Nickname.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    // remove the keyboard that stays on when moving to other view:
+                    // https://stackoverflow.com/questions/15412943/hide-soft-keyboard-on-losing-focus#:~:text=Best%20way%20is%20to%20set,when%20the%20EditText%20loses%20focus.
+                    InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
             }
         });
 
@@ -273,10 +289,6 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
     }
 
     private void saveExerciseAbs(){
-
-        // Set global "currentExerciseAbstract" string using view's values:
-        constructExerciseAbstractStringsFromView();
-
         // Make sure mandatory fields are not empty:
         String muscle = autoCompleteTextView_Muscle.getText().toString();
         String opName = autoCompleteTextView_Operation.getText().toString();
@@ -285,6 +297,13 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             return;
         }
 
+        // TODO: 2 main questions:
+        //  1. How can i prevent exerciseAbstract insertion before new Operation was inserted
+        //  2. Handle the operation-nickname problem. need to insert operation together with nickname. - check internet tutorials
+        //  update: must do the insertion separately.
+        //  UPDATE: i don't care about async, jest insert the shit inside. if operation was not existed, just use the async func
+        //  that insert it with nickname. otherwise, insert it separately. When finished (DON'T CHECK THAT) just insert the new exerciseAbs
+
         // if operation doesn't exist in db, add it with nickname (if nickname not empty)
         // get muscle id in order to get operation id
         int current_muscle_id = exerciseAbstractViewModel.getExerciseAbstractInfoValueId(muscle);
@@ -292,28 +311,40 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
                 String.valueOf(current_muscle_id),
                 opName);
 
-        if (current_operation_id == -1){
-//            exerciseAbstractViewModel.insertOperation(
-//                    String.valueOf(current_muscle_id),
-//                    String.valueOf(current_operation_id));
+        if (current_operation_id == -1) {
+            ExerciseAbstractOperation exerciseAbstractOperation = new ExerciseAbstractOperation(current_muscle_id, opName);
+            exerciseAbstractViewModel.insertOperation(exerciseAbstractOperation);
+            Log.d(TAG, "Insertion of new operation: " + opName);
+        }
 
-            // if nickname is not empty, get the new inserted operation id and insert nickname as well
-            if (!currentExerciseAbstract.getNickname().isEmpty()){
-                current_operation_id = exerciseAbstractViewModel.getExerciseAbstractOperationId(
-                        String.valueOf(current_muscle_id),
-                        opName);
-//                exerciseAbstractViewModel.insertNickname(
-//                        String.valueOf(current_operation_id),
-//                        String.valueOf(currentExerciseAbstract.getNickname()));
-            }
+        // if nickname is not empty, get the new inserted operation id and insert nickname as well
+        if (!autoCompleteTextView_Nickname.getText().toString().isEmpty()){
+            ExerciseAbstractNickname exerciseAbstractNickname = new ExerciseAbstractNickname();
+            current_operation_id = exerciseAbstractViewModel.getExerciseAbstractOperationId(
+                    String.valueOf(current_muscle_id),
+                    opName);
+            exerciseAbstractNickname.setNickname(currentExerciseAbstract.getNickname());
+            exerciseAbstractNickname.setId_exerciseabs_operation(current_operation_id);
+            exerciseAbstractViewModel.insertNickname(exerciseAbstractNickname);
+            Log.d(TAG, "Insertion of new nickname: " + autoCompleteTextView_Nickname.getText().toString());
+
         }
 
 
+        // this means old exerciseAbstract to edit, and not a new one:
+        int tempEditedEAId = currentExerciseAbstract.getId();
+
+        // Set global "currentExerciseAbstract" string using view's values:
+        // This line deletes the old id that was inside, therefor, back it up and insert back as
+        //   finishing loading view to object
+        currentExerciseAbstract = constructExerciseAbstractStringsFromView();
+        if (tempEditedEAId != 0){
+            currentExerciseAbstract.setId(tempEditedEAId);
+        }
+
         // insert the new exerciseAbstract. inside insert, it fills the missing id's:
         exerciseAbstractViewModel.insert(currentExerciseAbstract);
-
-
-
+        Log.d(TAG, "Insertion of new exerciseAbstract");
 
 
         // old part:
@@ -359,18 +390,21 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
         autoCompleteTextView_SeparateHands.setText(exerciseAbstract.getSeparate_sides());
     }
 
-    private void constructExerciseAbstractStringsFromView(){
-        currentExerciseAbstract.setMuscle(autoCompleteTextView_Muscle.getText().toString());
-        currentExerciseAbstract.setOperation(autoCompleteTextView_Operation.getText().toString());
-        currentExerciseAbstract.setNickname(autoCompleteTextView_Nickname.getText().toString());
-        currentExerciseAbstract.setLoad_type(autoCompleteTextView_LoadType.getText().toString());
-        currentExerciseAbstract.setPosition(autoCompleteTextView_Position.getText().toString());
-        currentExerciseAbstract.setAngle(autoCompleteTextView_Angle.getText().toString());
-        currentExerciseAbstract.setGrip_width(autoCompleteTextView_GripWidth.getText().toString());
-        currentExerciseAbstract.setThumbs_direction(autoCompleteTextView_ThumbsDirection.getText().toString());
-        currentExerciseAbstract.setSeparate_sides(autoCompleteTextView_SeparateHands.getText().toString());
+    private ExerciseAbstract constructExerciseAbstractStringsFromView(){
+        ExerciseAbstract exerciseAbstract = new ExerciseAbstract();
+        exerciseAbstract.setMuscle(autoCompleteTextView_Muscle.getText().toString());
+        exerciseAbstract.setOperation(autoCompleteTextView_Operation.getText().toString());
+        exerciseAbstract.setNickname(autoCompleteTextView_Nickname.getText().toString());
+        exerciseAbstract.setLoad_type(autoCompleteTextView_LoadType.getText().toString());
+        exerciseAbstract.setPosition(autoCompleteTextView_Position.getText().toString());
+        exerciseAbstract.setAngle(autoCompleteTextView_Angle.getText().toString());
+        exerciseAbstract.setGrip_width(autoCompleteTextView_GripWidth.getText().toString());
+        exerciseAbstract.setThumbs_direction(autoCompleteTextView_ThumbsDirection.getText().toString());
+        exerciseAbstract.setSeparate_sides(autoCompleteTextView_SeparateHands.getText().toString());
 
-        currentExerciseAbstract = exerciseAbstractViewModel.ExerciseAbstractStringsToIds(currentExerciseAbstract);
+//        exerciseAbstract = exerciseAbstractViewModel.ExerciseAbstractStringsToIds(exerciseAbstract);
+
+        return exerciseAbstract;
     }
 
     private void setExerciseabsNameEditText(){

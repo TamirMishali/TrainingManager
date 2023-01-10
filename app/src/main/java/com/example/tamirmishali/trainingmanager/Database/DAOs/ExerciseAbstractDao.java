@@ -9,6 +9,7 @@ import androidx.room.Update;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractInfoValue;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractNickname;
@@ -20,6 +21,9 @@ import java.util.List;
 public interface ExerciseAbstractDao {
     @Insert
     long insert(ExerciseAbstract exerciseAbstract);
+
+//    @Insert
+//    long insertExercise(Exercise exercise);
 
     @Update
     void update(ExerciseAbstract exerciseAbstract);

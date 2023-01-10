@@ -10,6 +10,9 @@ import androidx.room.PrimaryKey;
 
 import java.util.Comparator;
 
+// todo: add under all Classes the @Ignore thing above all constructors that are not the main constructors.
+//  use only the constructor with id in it.
+
 @Entity(tableName = "exerciseabs_table",
         foreignKeys = {
             @ForeignKey(
@@ -78,7 +81,7 @@ public class ExerciseAbstract{
     private int id_operation;
 
     @ColumnInfo(name = "id_nickname")
-    private int id_nickname;
+    private Integer id_nickname;
 
     @ColumnInfo(name = "id_load_type")
     private int id_load_type;
@@ -105,7 +108,8 @@ public class ExerciseAbstract{
 
     // ------------Constructors ---------------
     //For new ExerciseAbs
-    public ExerciseAbstract(int id_muscle, int id_operation, int id_nickname, int id_load_type,
+    @Ignore
+    public ExerciseAbstract(int id_muscle, int id_operation, Integer id_nickname, int id_load_type,
                             int id_position, int id_grip_width, int id_thumbs_direction,
                             int id_separate_sides) {
         this.id = 0;
@@ -121,7 +125,7 @@ public class ExerciseAbstract{
     }
 
     //For existing ExerciseAbs
-    public ExerciseAbstract(int id, int id_muscle, int id_operation, int id_nickname, int id_load_type,
+    public ExerciseAbstract(int id, int id_muscle, int id_operation, Integer id_nickname, int id_load_type,
                             int id_position, int id_grip_width, int id_thumbs_direction,
                             int id_separate_sides) {
         this.id = id;
@@ -168,11 +172,11 @@ public class ExerciseAbstract{
         this.id_operation = id_operation;
     }
 
-    public int getId_nickname() {
+    public Integer getId_nickname() {
         return id_nickname;
     }
 
-    public void setId_nickname(int id_nickname) {
+    public void setId_nickname(Integer id_nickname) {
         this.id_nickname = id_nickname;
     }
 

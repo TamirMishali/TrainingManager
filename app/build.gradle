@@ -81,4 +81,7 @@ dependencies {
     // it is recommended you also explicitly depend on Persistence Room's latest version for bug fixes and new features.
     implementation 'androidx.room:room-runtime:2.0.0'
 
+    // play Task library
+    implementation 'com.google.android.play:core:1.7.2'
+
 }

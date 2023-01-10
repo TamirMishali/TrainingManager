@@ -16,9 +16,9 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
     private LiveData<List<ExerciseAbstract>> allExerciseAbstracts;
 
     // new
-    private LiveData<List<ExerciseAbstractInfoValue>> allInfoValues;
-    private LiveData<List<ExerciseAbstractOperation>> allOperations;
-    private LiveData<List<ExerciseAbstractNickname>> allNicknames;
+//    private LiveData<List<ExerciseAbstractInfoValue>> allInfoValues;
+//    private LiveData<List<ExerciseAbstractOperation>> allOperations;
+//    private LiveData<List<ExerciseAbstractNickname>> allNicknames;
     private MediatorLiveData<Long> exerciseAbstractId = new MediatorLiveData<>();
 
 
@@ -27,9 +27,9 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
         repository = new ExerciseAbstractRepository(application);
 //        allRoutines = repository.getAllRoutines();
         allExerciseAbstracts = repository.getAllExerciseAbstracts();
-        allInfoValues = repository.getAllExerciseAbstractInfoValues();
-        allOperations = repository.getAllExerciseAbstractOperations();
-        allNicknames = repository.getAllExerciseAbstractNicknames();
+//        allInfoValues = repository.getAllExerciseAbstractInfoValues();
+//        allOperations = repository.getAllExerciseAbstractOperations();
+//        allNicknames = repository.getAllExerciseAbstractNicknames();
 
     }
     public void insert(ExerciseAbstract exerciseabstract){
@@ -55,9 +55,9 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
 
 
     // new
-    public LiveData<List<ExerciseAbstractInfoValue>> getAllExerciseAbstractInfoValues(){ return allInfoValues;}
-    public LiveData<List<ExerciseAbstractOperation>> getAllExerciseAbstractOperations(){ return allOperations;}
-    public LiveData<List<ExerciseAbstractNickname>> getAllExerciseAbstractNicknames(){ return allNicknames;}
+//    public LiveData<List<ExerciseAbstractInfoValue>> getAllExerciseAbstractInfoValues(){ return allInfoValues;}
+//    public LiveData<List<ExerciseAbstractOperation>> getAllExerciseAbstractOperations(){ return allOperations;}
+//    public LiveData<List<ExerciseAbstractNickname>> getAllExerciseAbstractNicknames(){ return allNicknames;}
     public int getExerciseAbstractInfoValueId(String value){return repository.getExerciseAbstractInfoValueId(value);}
     public int getExerciseAbstractOperationId(String id_muscle, String operation){return repository.getExerciseAbstractOperationId(id_muscle, operation);}
     public int getExerciseAbstractNicknameId(String nickname){return repository.getExerciseAbstractNicknameId(nickname);}
@@ -67,10 +67,14 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
     public List<String> getExerciseAbstractInfoValueValueByHeader(String info_header_name){return repository.getExerciseAbstractInfoValueValueByHeader(info_header_name);}
     public List<String> getExerciseAbstractOperationByMuscleId(int id_muscle){return repository.getExerciseAbstractOperationByMuscleId(id_muscle);}
     public List<String> getExerciseAbstractNicknameByOperationId(int id_operation){return repository.getExerciseAbstractNicknameByOperationId(id_operation);}
-//    public void insertOperation(String id_muscle, String operation) {repository.insertOperation(id_muscle, operation);}
-//    public void insertNickname(String id_operation, String nickname) {repository.insertNickname(id_operation, nickname);}
+    public void insertOperation(ExerciseAbstractOperation exerciseAbstractOperation) {
+        repository.insert(exerciseAbstractOperation);
+//        long id = repository.insert(exerciseAbstractOperation);
+    }
+    //public void getOperation(int id) {repository.getExerciseAbstractOperation(id);}
+    public void insertNickname(ExerciseAbstractNickname exerciseAbstractNickname) {repository.insert(exerciseAbstractNickname);}
 
-    // Thanks gptChat
+    // Thanks gptChat that answered the next questions:
     // 1. how can i get the id of a recent inserted row in room database
     // 2. how can i get this id when using a ViewModel, and not the Dao directly?
     // 3. im using a "Repository" class to manage the Dao from the ViewModel. how can i access the MediatorLiveData object that way?
@@ -135,40 +139,46 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
             return null;
         }
         else {
-            exerciseAbstract.setId_operation(getExerciseAbstractOperationId(
-                    exerciseAbstract.getMuscle(),
-                    exerciseAbstract.getOperation()));
+            int opId = getExerciseAbstractOperationId(String.valueOf(exerciseAbstract.getId_muscle()),
+                                                                    exerciseAbstract.getOperation());
+            exerciseAbstract.setId_operation(opId);
         }
-
         // The rest of the fields are not mandatory, so just check if they are not null or empty,
         // and if so, find the right id and set it to the right field:
 
         // If nickname string is not null or empty, set its id to be right.
-        if (!(exerciseAbstract.getNickname() == null || exerciseAbstract.getNickname().isEmpty())){
+//        if (!(exerciseAbstract.getNickname() == null || exerciseAbstract.getNickname().isEmpty())){
+        if (!(exerciseAbstract.getNickname().isEmpty())){
             exerciseAbstract.setId_nickname(getExerciseAbstractNicknameId(exerciseAbstract.getNickname()));
         }
         // If load_type string is not null or empty, set its id to be right.
-        if (!(exerciseAbstract.getLoad_type() == null || exerciseAbstract.getLoad_type().isEmpty())){
+//        if (!(exerciseAbstract.getLoad_type() == null || exerciseAbstract.getLoad_type().isEmpty())){
+        if (!(exerciseAbstract.getLoad_type() == null)){
             exerciseAbstract.setId_load_type(getExerciseAbstractInfoValueId(exerciseAbstract.getLoad_type()));
         }
         // If position string is not null or empty, set its id to be right.
-        if (!(exerciseAbstract.getPosition() == null || exerciseAbstract.getPosition().isEmpty())){
+//        if (!(exerciseAbstract.getPosition() == null || exerciseAbstract.getPosition().isEmpty())){
+        if (!(exerciseAbstract.getPosition() == null)){
             exerciseAbstract.setId_position(getExerciseAbstractInfoValueId(exerciseAbstract.getPosition()));
         }
         // If angle string is not null or empty, set its id to be right.
-        if (!(exerciseAbstract.getAngle() == null || exerciseAbstract.getAngle().isEmpty())){
+//        if (!(exerciseAbstract.getAngle() == null || exerciseAbstract.getAngle().isEmpty())){
+        if (!(exerciseAbstract.getAngle() == null)){
             exerciseAbstract.setId_angle(getExerciseAbstractInfoValueId(exerciseAbstract.getAngle()));
         }
         // If grip_width string is not null or empty, set its id to be right.
-        if (!(exerciseAbstract.getGrip_width() == null || exerciseAbstract.getGrip_width().isEmpty())){
-            exerciseAbstract.setId_grip_width(getExerciseAbstractInfoValueId(exerciseAbstract.getGrip_width()));
+//        if (!(exerciseAbstract.getGrip_width() == null || exerciseAbstract.getGrip_width().isEmpty())){
+        if (!(exerciseAbstract.getGrip_width() == null)){
+                exerciseAbstract.setId_grip_width(getExerciseAbstractInfoValueId(exerciseAbstract.getGrip_width()));
         }
         // If thumbs_direction string is not null or empty, set its id to be right.
-        if (!(exerciseAbstract.getThumbs_direction() == null || exerciseAbstract.getThumbs_direction().isEmpty())){
+//        if (!(exerciseAbstract.getThumbs_direction() == null || exerciseAbstract.getThumbs_direction().isEmpty())){
+        if (!(exerciseAbstract.getThumbs_direction() == null)){
             exerciseAbstract.setId_thumbs_direction(getExerciseAbstractInfoValueId(exerciseAbstract.getThumbs_direction()));
         }
         // If separate_sides string is not null or empty, set its id to be right.
-        if (!(exerciseAbstract.getSeparate_sides() == null || exerciseAbstract.getSeparate_sides().isEmpty())){
+//        if (!(exerciseAbstract.getSeparate_sides() == null || exerciseAbstract.getSeparate_sides().isEmpty())){
+        if (!(exerciseAbstract.getSeparate_sides() == null)){
             exerciseAbstract.setId_separate_sides(getExerciseAbstractInfoValueId(exerciseAbstract.getSeparate_sides()));
         }
 

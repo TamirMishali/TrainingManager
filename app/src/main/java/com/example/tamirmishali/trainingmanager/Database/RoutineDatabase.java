@@ -38,7 +38,7 @@ import java.util.ArrayList;
 // Another tutorial i found online:
 // https://blog.devgenius.io/implementing-room-database-bc9e4deb6600
 
-@Database(version = 12,entities = {Routine.class, Workout.class, Exercise.class,
+@Database(version = 13,entities = {Routine.class, Workout.class, Exercise.class,
         ExerciseAbstract.class, ExerciseAbstractInfoValue.class, ExerciseAbstractInfo.class,
         ExerciseAbstractOperation.class, ExerciseAbstractNickname.class,
         Set.class})
@@ -68,7 +68,7 @@ public abstract class RoutineDatabase extends RoomDatabase {
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                     RoutineDatabase.class, DATABASE_NAME)
                     .openHelperFactory(new AssetSQLiteOpenHelperFactory())
-//                    .fallbackToDestructiveMigration() // this destroys current db each time app is launched for the first time
+                    .fallbackToDestructiveMigration() // this destroys current db each time app is launched for the first time
                     .addCallback(roomCallback)
                     .build();
         }
