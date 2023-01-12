@@ -158,6 +158,7 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             // Handle exerciseAbstract
             currentExerciseAbstract = exerciseAbstractViewModel.getExerciseAbsFromId(
                     intent.getIntExtra(EXTRA_EXERCISEABS_ID, -1));
+
             setExerciseAbstractToView(currentExerciseAbstract);
             operationAdapter.notifyDataSetChanged();
             nicknameAdapter.notifyDataSetChanged();
@@ -172,7 +173,7 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
 //            sourceWorkoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
 
         } else if (intent.hasExtra(EXTRA_WORKOUT_ID)) {
-            setTitle("Add exercise");
+            setTitle("Add new exercise");
             sourceWorkoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
         }else{
             setResult(RESULT_CANCELED,intent);
@@ -340,12 +341,21 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
         currentExerciseAbstract = constructExerciseAbstractStringsFromView();
         if (tempEditedEAId != 0){
             currentExerciseAbstract.setId(tempEditedEAId);
+            // if i update the exAbs, the insertedExerciseAbstractId listener will not trigger,
+            // cuz the AsyncTask func is updating it only on insert. therefor, it will not insert
+            // a new exercise like in insert (and doesn't need to...).
+            exerciseAbstractViewModel.update(currentExerciseAbstract);
+        }
+        else{
+            // insert the new exerciseAbstract. inside insert, it fills the missing id's:
+            exerciseAbstractViewModel.insert(currentExerciseAbstract);
         }
 
-        // insert the new exerciseAbstract. inside insert, it fills the missing id's:
-        exerciseAbstractViewModel.insert(currentExerciseAbstract);
+
         Log.d(TAG, "Insertion of new exerciseAbstract");
 
+        setResult(RESULT_OK);
+        finish();
 
         // old part:
 

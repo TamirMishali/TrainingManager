@@ -30,28 +30,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@id/text_view_exerciseabs_name">
+            android:layout_below="@id/text_view_exerciseabs_name"
+            android:layout_marginTop="8dp">
 
 <!--        Muscle      -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal">-->
 
-                <TextView
-                    android:id="@+id/text_view_exerciseabs_muscle_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Muscle: " />
+<!--                <TextView-->
+<!--                    android:id="@+id/text_view_exerciseabs_muscle_title"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Muscle: " />-->
 
-                <TextView
-                    android:id="@+id/text_view_exerciseabs_muscle_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="Muscle1" />
+<!--                <TextView-->
+<!--                    android:id="@+id/text_view_exerciseabs_muscle_value"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:text="Muscle1" />-->
 
-            </LinearLayout>
+<!--            </LinearLayout>-->
 
             <View
                 android:layout_width="match_parent"
@@ -252,9 +253,10 @@
             android:id="@+id/text_view_exerciseabs_musclegroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="19dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:layout_alignBaseline="@+id/text_view_exerciseabs_text"
+            android:layout_alignBaseline="@+id/text_view_exerciseabs_name"
             android:text="Muscle Group"/>
 
 

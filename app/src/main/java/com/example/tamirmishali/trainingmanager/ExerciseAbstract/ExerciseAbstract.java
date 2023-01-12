@@ -304,11 +304,11 @@ public class ExerciseAbstract{
     // ----------------------------- FUNCTIONS ---------------------------------
     public String generateExerciseAbstractName(){
         String name = "";
-        if (nickname.isEmpty()){
-            name = muscle + " " + operation;
+        if (this.nickname == null || this.nickname.isEmpty()){
+            name = this.muscle + " " + this.operation;
         }
         else{
-            name = nickname + " " + operation;
+            name = this.nickname + " " + this.operation;
         }
         return name;
     }

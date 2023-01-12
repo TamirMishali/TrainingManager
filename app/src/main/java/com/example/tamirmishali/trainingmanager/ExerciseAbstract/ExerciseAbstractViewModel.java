@@ -36,7 +36,7 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
         repository.insert(ExerciseAbstractStringsToIds(exerciseabstract));
     }
     public void update(ExerciseAbstract exerciseabstract){
-        repository.update(exerciseabstract);
+        repository.update(ExerciseAbstractStringsToIds(exerciseabstract));
     }
     public void delete(ExerciseAbstract exerciseabstract){
         repository.delete(exerciseabstract);
@@ -95,7 +95,7 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
 
         // Get the rest if exists:
         // If nickname id is not null or invalid (<1), set its string to be right.
-        if (!(exerciseAbstract.getId_nickname() == 0)){
+        if (exerciseAbstract.getId_nickname() != null){// || !(exerciseAbstract.getId_nickname() == 0)){
             exerciseAbstract.setNickname(getExerciseAbstractNicknameNickname(exerciseAbstract.getId_nickname()));
         }
         // If load_type id is not null or invalid (<1), set its string to be right.

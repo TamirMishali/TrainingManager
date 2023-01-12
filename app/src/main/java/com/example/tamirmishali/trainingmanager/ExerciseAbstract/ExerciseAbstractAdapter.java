@@ -15,6 +15,7 @@ import com.example.tamirmishali.trainingmanager.R;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 
 public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstractAdapter.ExerciseAbstractHolder> implements Filterable {
 
@@ -34,6 +35,7 @@ public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstra
     @Override
     public void onBindViewHolder(@NonNull ExerciseAbstractHolder holder, final int position) {
         ExerciseAbstract currentExerciseAbstract = exerciseAbstracts.get(position);
+
         // TODO: 24/12/2022: Uncomment new section after DB change and exerciseabs class adaptation.
 //        // old
 //        holder.textViewExerciseAbstract.setText(currentExerciseAbstract.getName());
@@ -48,30 +50,30 @@ public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstra
 //            sepHands="Yes";
 //        }
 //
-//        holder.text_view_exerciseabs_name.setText(currentExerciseAbstract.getName());
-//        holder.text_view_exerciseabs_muscle_value.setText(currentExerciseAbstract.getMuscle());
-//        holder.text_view_exerciseabs_operation_value.setText(currentExerciseAbstract.getOperation());
-//        holder.text_view_exerciseabs_nickname_value.setText(currentExerciseAbstract.getNickname());
-//        holder.text_view_exerciseabs_load_type_value.setText(currentExerciseAbstract.getLoadType());
-//        holder.text_view_exerciseabs_separate_hands_value.setText(sepHands);
-//        holder.text_view_exerciseabs_position_value.setText(currentExerciseAbstract.getPosition());
-//        holder.text_view_exerciseabs_angle_value.setText(currentExerciseAbstract.getAngle());
-//        holder.text_view_exerciseabs_grip_width_value.setText(currentExerciseAbstract.getGripWidth());
-//        holder.text_view_exerciseabs_thumbs_direction_value.setText(currentExerciseAbstract.getThumbsDirection());
+        holder.text_view_exerciseabs_name.setText(currentExerciseAbstract.generateExerciseAbstractName());
+        holder.text_view_exerciseabs_muscle_value.setText(currentExerciseAbstract.getMuscle());
+        holder.text_view_exerciseabs_operation_value.setText(currentExerciseAbstract.getOperation());
+        holder.text_view_exerciseabs_nickname_value.setText(currentExerciseAbstract.getNickname());
+        holder.text_view_exerciseabs_load_type_value.setText(currentExerciseAbstract.getLoad_type());
+        holder.text_view_exerciseabs_separate_hands_value.setText(currentExerciseAbstract.getSeparate_sides());
+        holder.text_view_exerciseabs_position_value.setText(currentExerciseAbstract.getPosition());
+        holder.text_view_exerciseabs_angle_value.setText(currentExerciseAbstract.getAngle());
+        holder.text_view_exerciseabs_grip_width_value.setText(currentExerciseAbstract.getGrip_width());
+        holder.text_view_exerciseabs_thumbs_direction_value.setText(currentExerciseAbstract.getThumbs_direction());
 
 
 
         // Temporary until DB change is complete
-        holder.text_view_exerciseabs_name.setText("ExerciseAbs name");
-        holder.text_view_exerciseabs_muscle_value.setText("ExerciseAbs name");
-        holder.text_view_exerciseabs_operation_value.setText("ExerciseAbs operation");
-        holder.text_view_exerciseabs_nickname_value.setText("ExerciseAbs nickname");
-        holder.text_view_exerciseabs_load_type_value.setText("ExerciseAbs load type");
-        holder.text_view_exerciseabs_separate_hands_value.setText("No");
-        holder.text_view_exerciseabs_position_value.setText("ExerciseAbs position");
-        holder.text_view_exerciseabs_angle_value.setText("ExerciseAbs angle");
-        holder.text_view_exerciseabs_grip_width_value.setText("ExerciseAbs grip width");
-        holder.text_view_exerciseabs_thumbs_direction_value.setText("ExerciseAbs thumbs dir");
+//        holder.text_view_exerciseabs_name.setText("ExerciseAbs name");
+//        holder.text_view_exerciseabs_muscle_value.setText("ExerciseAbs name");
+//        holder.text_view_exerciseabs_operation_value.setText("ExerciseAbs operation");
+//        holder.text_view_exerciseabs_nickname_value.setText("ExerciseAbs nickname");
+//        holder.text_view_exerciseabs_load_type_value.setText("ExerciseAbs load type");
+//        holder.text_view_exerciseabs_separate_hands_value.setText("No");
+//        holder.text_view_exerciseabs_position_value.setText("ExerciseAbs position");
+//        holder.text_view_exerciseabs_angle_value.setText("ExerciseAbs angle");
+//        holder.text_view_exerciseabs_grip_width_value.setText("ExerciseAbs grip width");
+//        holder.text_view_exerciseabs_thumbs_direction_value.setText("ExerciseAbs thumbs dir");
 
         holder.itemView.setTag(holder);
     }
@@ -83,6 +85,9 @@ public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstra
 
     public void setExerciseAbstracts(List<ExerciseAbstract> exerciseAbstracts) {
         Collections.sort(exerciseAbstracts, ExerciseAbstract.MuscleGroupComparator);
+
+
+
         this.exerciseAbstracts = exerciseAbstracts;
         exerciseAbstractsFull = new ArrayList<>(exerciseAbstracts);
         notifyDataSetChanged(); //use itemchanged later
@@ -147,16 +152,16 @@ public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstra
 //        private TextView textViewExerciseAbstractMuscleGroup;
 
         // new
-        private TextView text_view_exerciseabs_name;
-        private TextView text_view_exerciseabs_muscle_value;
-        private TextView text_view_exerciseabs_operation_value;
-        private TextView text_view_exerciseabs_nickname_value;
-        private TextView text_view_exerciseabs_load_type_value;
-        private TextView text_view_exerciseabs_separate_hands_value;
-        private TextView text_view_exerciseabs_position_value;
-        private TextView text_view_exerciseabs_angle_value;
-        private TextView text_view_exerciseabs_grip_width_value;
-        private TextView text_view_exerciseabs_thumbs_direction_value;
+        private final TextView text_view_exerciseabs_name;
+        private final TextView text_view_exerciseabs_muscle_value;
+        private final TextView text_view_exerciseabs_operation_value;
+        private final TextView text_view_exerciseabs_nickname_value;
+        private final TextView text_view_exerciseabs_load_type_value;
+        private final TextView text_view_exerciseabs_separate_hands_value;
+        private final TextView text_view_exerciseabs_position_value;
+        private final TextView text_view_exerciseabs_angle_value;
+        private final TextView text_view_exerciseabs_grip_width_value;
+        private final TextView text_view_exerciseabs_thumbs_direction_value;
 
         public ExerciseAbstractHolder(View itemView) {
             super(itemView);
@@ -167,7 +172,7 @@ public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstra
 
             // new
             text_view_exerciseabs_name = itemView.findViewById(R.id.text_view_exerciseabs_name);
-            text_view_exerciseabs_muscle_value = itemView.findViewById(R.id.text_view_exerciseabs_muscle_value);
+            text_view_exerciseabs_muscle_value = itemView.findViewById(R.id.text_view_exerciseabs_musclegroup);
             text_view_exerciseabs_operation_value = itemView.findViewById(R.id.text_view_exerciseabs_operation_value);
             text_view_exerciseabs_nickname_value = itemView.findViewById(R.id.text_view_exerciseabs_nickname_value);
             text_view_exerciseabs_load_type_value = itemView.findViewById(R.id.text_view_exerciseabs_load_type_value);

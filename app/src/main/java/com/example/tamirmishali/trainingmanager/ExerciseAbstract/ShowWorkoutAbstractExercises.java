@@ -27,6 +27,7 @@ import com.example.tamirmishali.trainingmanager.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
+import java.util.ListIterator;
 
 // This class is showing exerciseAbstracts for a specific workout
 // For reaching the list of all exercisesAbstracts, there is a button "buttonAddWorkout"
@@ -39,8 +40,9 @@ public class ShowWorkoutAbstractExercises extends AppCompatActivity {
     public static final  String EXTRA_WORKOUT_DATE =
             "com.example.tamirmishali.trainingmanager.EXTRA_ROUTINE_ID";
 
-    public static final int ADD_WORKOUT_REQUEST = 1;
-    public static final int EDIT_WORKOUT_REQUEST = 2;
+//    public static final int ADD_WORKOUT_REQUEST = 1;
+//    public static final int EDIT_WORKOUT_REQUEST = 2;
+    public static final int EDIT_EXERCISEABS_REQUEST = 2;
     public static final int ADD_EXERCISEABS_REQUEST = 3;
     private int sourceWorkoutID;
     private String sourceWorkoutName;
@@ -96,6 +98,11 @@ public class ShowWorkoutAbstractExercises extends AppCompatActivity {
         exerciseabstractViewModel.getExerciseAbstractsForWorkout(sourceWorkoutID).observe( this, new Observer<List<ExerciseAbstract>>() {
             @Override
             public void onChanged(@Nullable List<ExerciseAbstract> exerciseAbstracts) {
+                for (ListIterator<ExerciseAbstract> iterator = exerciseAbstracts.listIterator(); iterator.hasNext(); ) {
+                    ExerciseAbstract exerciseAbstract = iterator.next();
+                    iterator.set(exerciseabstractViewModel.ExerciseAbstractIdsToStrings(exerciseAbstract));
+
+                }
                 exerciseAbstractAdapter.setExerciseAbstracts(exerciseAbstracts);
             }
         });
@@ -160,6 +167,7 @@ public class ShowWorkoutAbstractExercises extends AppCompatActivity {
                 Intent intent = new Intent(ShowWorkoutAbstractExercises.this, AddEditExerciseAbsActivity.class);
                 intent.putExtra(AddEditExerciseAbsActivity.EXTRA_WORKOUT_ID, sourceWorkoutID);
                 intent.putExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_ID, exerciseabstract.getId());
+                startActivityForResult(intent, EDIT_EXERCISEABS_REQUEST);
 /*
 
                 intent.putExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME, exerciseabstract.getName());
@@ -190,7 +198,9 @@ public class ShowWorkoutAbstractExercises extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
         if(requestCode == ADD_EXERCISEABS_REQUEST && resultCode == RESULT_OK){
-/*
+
+            Toast.makeText(this, "Exercise saved!", Toast.LENGTH_SHORT).show();
+            /*
             String workoutName = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME);
             String workoutDate = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE);
 
@@ -200,15 +210,16 @@ public class ShowWorkoutAbstractExercises extends AppCompatActivity {
 
             //Toast.makeText(this,"Workout saved", Toast.LENGTH_SHORT).show();
         }
-        else if(requestCode == ADD_WORKOUT_REQUEST && resultCode == RESULT_OK){
-/*            String workoutName = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME);
+/*        else if(requestCode == ADD_WORKOUT_REQUEST && resultCode == RESULT_OK){
+*//*            String workoutName = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME);
             String workoutDate = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE);
             Workout workout = new Workout(sourceWorkoutID,workoutName, Boolean.TRUE);//, workoutDate);
             //Workout workout = new Workout(sourceWorkoutID ,workoutName, workoutDate,Boolean.TRUE);//, workoutDate);
             exerciseabstractViewModel.insert(workout);
-            Toast.makeText(this,"Workout saved", Toast.LENGTH_SHORT).show();*/
-        }
-        else if(requestCode == EDIT_WORKOUT_REQUEST && resultCode == RESULT_OK){
+            Toast.makeText(this,"Workout saved", Toast.LENGTH_SHORT).show();*//*
+        }*/
+        else if(requestCode == EDIT_EXERCISEABS_REQUEST && resultCode == RESULT_OK){
+            Toast.makeText(this, "Exercise edited!", Toast.LENGTH_SHORT).show();
 /*            String workoutName = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_NAME);
             String workoutDate = data.getStringExtra(AddEditWorkoutActivity.EXTRA_WORKOUT_DATE);
             Workout workout = new Workout(sourceWorkoutID,workoutName, workoutDate,Boolean.TRUE);//, workoutDate);
