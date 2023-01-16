@@ -207,6 +207,15 @@ public class ExerciseAbstractRepository {
     public MediatorLiveData<Long> getInsertedExerciseAbstractId() {
         return insertedExerciseAbstractId;
     }
+    public int getExerciseAbstractId(ExerciseAbstract exerciseAbstract){
+        int id = 0;
+        try {
+            id = new GetExerciseAbstractIdAsyncTask(exerciseAbstractDao).execute(exerciseAbstract).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
 
     // Operation:
     public void insert(ExerciseAbstractOperation exerciseAbstractOperation){
@@ -467,6 +476,43 @@ public class ExerciseAbstractRepository {
 //            insertedExerciseAbstractNicknameId.setValue(id);
         }
     }
+
+    private static class GetExerciseAbstractIdAsyncTask extends AsyncTask<ExerciseAbstract, Integer, Integer>{
+        private ExerciseAbstractDao exerciseAbstractDao;
+
+        private GetExerciseAbstractIdAsyncTask(ExerciseAbstractDao exerciseAbstractDao){
+            this.exerciseAbstractDao = exerciseAbstractDao;
+        }
+
+        @Override
+        protected Integer doInBackground(ExerciseAbstract... params) {
+            ExerciseAbstract ea = params[0];
+            if (ea.getId_nickname() != null) {
+                return exerciseAbstractDao.getExerciseAbstractId_inner(
+                    ea.getId_muscle(),
+                    ea.getId_operation(),
+                    ea.getId_nickname(),
+                    ea.getId_load_type(),
+                    ea.getId_position(),
+                    ea.getId_angle(),
+                    ea.getId_grip_width(),
+                    ea.getId_thumbs_direction(),
+                    ea.getId_separate_sides());
+            }
+            else{
+                return exerciseAbstractDao.getExerciseAbstractId_inner(
+                    ea.getId_muscle(),
+                    ea.getId_operation(),
+                    ea.getId_load_type(),
+                    ea.getId_position(),
+                    ea.getId_angle(),
+                    ea.getId_grip_width(),
+                    ea.getId_thumbs_direction(),
+                    ea.getId_separate_sides());
+            }
+        }
+    }
+
 
 /*
     private static class InsertOperationAsyncTask extends AsyncTask<String, Integer, Void>{

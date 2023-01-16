@@ -39,6 +39,17 @@ public interface ExerciseDao {
     @Query("SELECT * FROM exercise_table WHERE id_workout=:id_workout")
     List<Exercise> getExercisesForWorkout(final int id_workout);
 
-
+/*    SELECT exerciseabs_table.id_exerciseabs, eaiv1.value as muscle, exerciseabs_operation.operation ,exerciseabs_nickname.nickname,
+eaiv2.value as load_type, eaiv3.value as position, eaiv4.value as angle ,eaiv5.value as grip_width ,eaiv6.value as thumbs_direction ,eaiv7.value as separate_sides
+FROM exerciseabs_table
+	LEFT JOIN exerciseabs_info_value eaiv1 ON eaiv1.id = exerciseabs_table.id_muscle
+	JOIN exerciseabs_operation ON exerciseabs_operation.id = exerciseabs_table.id_operation
+	LEFT JOIN exerciseabs_nickname ON exerciseabs_nickname.id = exerciseabs_table.id_nickname
+	LEFT JOIN exerciseabs_info_value eaiv2 ON eaiv2.id = exerciseabs_table.id_load_type
+	LEFT JOIN exerciseabs_info_value eaiv3 ON eaiv3.id = exerciseabs_table.id_position
+	LEFT JOIN exerciseabs_info_value eaiv4 ON eaiv4.id = exerciseabs_table.id_angle
+	LEFT JOIN exerciseabs_info_value eaiv5 ON eaiv5.id = exerciseabs_table.id_grip_width
+	LEFT JOIN exerciseabs_info_value eaiv6 ON eaiv6.id = exerciseabs_table.id_thumbs_direction
+	LEFT JOIN exerciseabs_info_value eaiv7 ON eaiv7.id = exerciseabs_table.id_separate_sides */
 
 }

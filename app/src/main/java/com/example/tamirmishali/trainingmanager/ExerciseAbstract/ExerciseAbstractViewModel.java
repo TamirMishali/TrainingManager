@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
 import com.example.tamirmishali.trainingmanager.Database.ExerciseAbstractRepository;
+import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 
 import java.util.List;
 
@@ -79,6 +80,7 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
     // 2. how can i get this id when using a ViewModel, and not the Dao directly?
     // 3. im using a "Repository" class to manage the Dao from the ViewModel. how can i access the MediatorLiveData object that way?
     public LiveData<Long> getInsertedExerciseAbstractId() { return repository.getInsertedExerciseAbstractId(); }
+    public int getExerciseAbstractId(ExerciseAbstract exerciseAbstract){ return repository.getExerciseAbstractId(exerciseAbstract); }
 
 /*    public List<ExerciseAbstractInfo> getExerciseAbstractsInfo(int id){ return repository.getExerciseAbstractsInfo(id); }
     public List<ExerciseAbstractInfoValue> getExerciseAbstractsInfoValue(int id){ return repository.getExerciseAbstractsInfoValue(id); }

@@ -281,8 +281,10 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
         final Observer<Long> exerciseAbstractInsertedIdObserver = new Observer<Long>() {
             @Override
             public void onChanged(@Nullable final Long idExerciseAbs) {
-                Exercise exercise = new Exercise(idExerciseAbs.intValue(), sourceWorkoutID, "");
-                exerciseViewModel.insert(exercise);
+                if (idExerciseAbs != -1) {
+                    Exercise exercise = new Exercise(idExerciseAbs.intValue(), sourceWorkoutID, "");
+                    exerciseViewModel.insert(exercise);
+                }
             }
         };
         exerciseAbstractViewModel.getInsertedExerciseAbstractId().observe(this, exerciseAbstractInsertedIdObserver );
@@ -290,6 +292,7 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
     }
 
     private void saveExerciseAbs(){
+        Log.d(TAG, "Starting to save exercise abstract");
         // Make sure mandatory fields are not empty:
         String muscle = autoCompleteTextView_Muscle.getText().toString();
         String opName = autoCompleteTextView_Operation.getText().toString();
@@ -297,13 +300,6 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             Toast.makeText(this, "Please fill mandatory fields", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        // TODO: 2 main questions:
-        //  1. How can i prevent exerciseAbstract insertion before new Operation was inserted
-        //  2. Handle the operation-nickname problem. need to insert operation together with nickname. - check internet tutorials
-        //  update: must do the insertion separately.
-        //  UPDATE: i don't care about async, jest insert the shit inside. if operation was not existed, just use the async func
-        //  that insert it with nickname. otherwise, insert it separately. When finished (DON'T CHECK THAT) just insert the new exerciseAbs
 
         // if operation doesn't exist in db, add it with nickname (if nickname not empty)
         // get muscle id in order to get operation id
@@ -319,19 +315,22 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
         }
 
         // if nickname is not empty, get the new inserted operation id and insert nickname as well
+        // todo: (16.01.2023) i don't check if nickname exists in db before inserting new one. do it.
         if (!autoCompleteTextView_Nickname.getText().toString().isEmpty()){
             ExerciseAbstractNickname exerciseAbstractNickname = new ExerciseAbstractNickname();
             current_operation_id = exerciseAbstractViewModel.getExerciseAbstractOperationId(
                     String.valueOf(current_muscle_id),
                     opName);
-            exerciseAbstractNickname.setNickname(currentExerciseAbstract.getNickname());
+            exerciseAbstractNickname.setNickname(autoCompleteTextView_Nickname.getText().toString());
             exerciseAbstractNickname.setId_exerciseabs_operation(current_operation_id);
             exerciseAbstractViewModel.insertNickname(exerciseAbstractNickname);
             Log.d(TAG, "Insertion of new nickname: " + autoCompleteTextView_Nickname.getText().toString());
 
         }
 
-
+        // todo: (16.01.2023) DEBUG this with Triceps exercise same as in db already
+        //  last time is still inserted the EA although its in db. understand why.
+        //  make sure all scenarios of new/edit Exercise are ok
         // this means old exerciseAbstract to edit, and not a new one:
         int tempEditedEAId = currentExerciseAbstract.getId();
 
@@ -339,49 +338,57 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
         // This line deletes the old id that was inside, therefor, back it up and insert back as
         //   finishing loading view to object
         currentExerciseAbstract = constructExerciseAbstractStringsFromView();
-        if (tempEditedEAId != 0){
-            currentExerciseAbstract.setId(tempEditedEAId);
-            // if i update the exAbs, the insertedExerciseAbstractId listener will not trigger,
-            // cuz the AsyncTask func is updating it only on insert. therefor, it will not insert
-            // a new exercise like in insert (and doesn't need to...).
-            exerciseAbstractViewModel.update(currentExerciseAbstract);
+
+        // Check if EA already exists in database. if so, get its id:
+        int exerciseAbstractId = exerciseAbstractViewModel.getExerciseAbstractId(currentExerciseAbstract);
+
+        // Now logic gets hard (phrasing, boom):
+        // INIT to be INSERTED exercise:
+        Exercise exercise = new Exercise();
+        exercise.setId_workout(sourceWorkoutID);
+        exercise.setComment("");
+
+        // Check if the new EA already exists in exerciseAbstract_table in DB:
+        if (exerciseAbstractId != 0){ // if it exists in DB
+            // use the already exist one, don't create and insert a new EA:
+            exercise.setId_exerciseabs(exerciseAbstractId);
+            Log.d(TAG, "ExerciseAbstract already exist in DB with id = " + exerciseAbstractId);
         }
-        else{
-            // insert the new exerciseAbstract. inside insert, it fills the missing id's:
+        else{ // if it doesn't exists in DB
+            // insert it to DB:
             exerciseAbstractViewModel.insert(currentExerciseAbstract);
+            int insertedExerciseAbstractId = exerciseAbstractViewModel.getExerciseAbstractId(currentExerciseAbstract);
+            Log.d(TAG, "New ExerciseAbstract have been inserted to DB with id = " + insertedExerciseAbstractId);
+            exercise.setId_exerciseabs(insertedExerciseAbstractId);
         }
 
+        // We are on "new exercise" activity:
+        if (tempEditedEAId == 0) {
+            // Insert new exercise to DB:
+            exerciseViewModel.insert(exercise);
+            Log.d(TAG, "Inserted new Exercise to DB");
+        }
 
-        Log.d(TAG, "Insertion of new exerciseAbstract");
+        // We are on "edit exercise" activity:
+        else{
+            // Insert edited Exercise id to the to be UPDATED exercise and update it:
+            exercise.setId(tempEditedEAId);
+            exerciseViewModel.update(exercise);
+            Log.d(TAG, "Updated Exercise to DB with an updated ExerciseAbstract");
+
+            // now try to delete the old exerciseAbstract that we started editing in the first place.
+            // if some other Exercise is linked to it, the "try" statement will fail, and nothing happens:
+            try {
+                exerciseAbstractViewModel.delete(exerciseAbstractViewModel.getExerciseAbsFromId(tempEditedEAId));
+                Log.d(TAG, "Deleted old unlinked ExerciseAbstract id: " + tempEditedEAId);
+            } finally {
+                Log.d(TAG, "Could not delete old ExerciseAbstract because it is linked in db. id = " + tempEditedEAId);
+            }
+        }
 
         setResult(RESULT_OK);
         finish();
 
-        // old part:
-
-/*        String exerciseAbsName = editTextExerciseAbsName.getText().toString();
-        String exerciseAbsDescription = editTextExerciseAbsDescription.getText().toString();
-        //String exerciseAbsMuscleGroup = editTextExerciseAbsMuscle.getText().toString();
-        String exerciseAbsMuscleGroup = spinnerMuscleGroup.getSelectedItem().toString();
-
-        if (exerciseAbsName.trim().isEmpty() || exerciseAbsMuscleGroup.trim().isEmpty()){
-            Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (exerciseAbsDescription.trim().isEmpty()){
-            exerciseAbsDescription = "";
-        }
-        Intent data = new Intent();
-        data.putExtra(EXTRA_EXERCISEABS_NAME,exerciseAbsName);
-        data.putExtra(EXTRA_EXERCISEABS_DESCRIPTION,exerciseAbsDescription);
-        data.putExtra(EXTRA_EXERCISEABS_MUSCLE,exerciseAbsMuscleGroup);
-
-        int id = getIntent().getIntExtra(EXTRA_EXERCISEABS_ID, -1);
-        if (id != -1) {
-            data.putExtra(EXTRA_EXERCISEABS_ID, id);
-        }
-        setResult(RESULT_OK,data);
-        finish();*/
     }
 
 

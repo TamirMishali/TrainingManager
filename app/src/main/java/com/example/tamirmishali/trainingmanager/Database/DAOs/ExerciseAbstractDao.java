@@ -45,6 +45,31 @@ public interface ExerciseAbstractDao {
     @Query("select * from exerciseabs_table where id_exerciseabs=:exerciseAbsId")
     ExerciseAbstract getExerciseAbsFromId(int exerciseAbsId);
 
+    @Query("SELECT id_exerciseabs FROM exerciseabs_table WHERE (id_muscle=:id_muscle) " +
+            "and (id_operation=:id_operation) " +
+            "and (id_nickname=:id_nickname) " +
+            "and (id_load_type=:id_load_type) " +
+            "and (id_position=:id_position) " +
+            "and (id_angle=:id_angle) " +
+            "and (id_grip_width=:id_grip_width) " +
+            "and (id_thumbs_direction=:id_thumbs_direction) " +
+            "and (id_separate_sides=:id_separate_sides)")
+    int getExerciseAbstractId_inner(int id_muscle, int id_operation, Integer id_nickname, int id_load_type,
+                                    int id_position, int id_angle, int id_grip_width, int id_thumbs_direction,
+                                    int id_separate_sides);
+
+    @Query("SELECT id_exerciseabs FROM exerciseabs_table WHERE (id_muscle=:id_muscle) " +
+            "and (id_operation=:id_operation) " +
+            "and (id_load_type=:id_load_type) " +
+            "and (id_position=:id_position) " +
+            "and (id_angle=:id_angle) " +
+            "and (id_grip_width=:id_grip_width) " +
+            "and (id_thumbs_direction=:id_thumbs_direction) " +
+            "and (id_separate_sides=:id_separate_sides)")
+    int getExerciseAbstractId_inner(int id_muscle, int id_operation, int id_load_type,
+                                    int id_position, int id_angle, int id_grip_width, int id_thumbs_direction,
+                                    int id_separate_sides);
+
 
 
     // NEW:

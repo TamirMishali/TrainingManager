@@ -110,7 +110,7 @@ public class ExerciseAbstract{
     //For new ExerciseAbs
     @Ignore
     public ExerciseAbstract(int id_muscle, int id_operation, Integer id_nickname, int id_load_type,
-                            int id_position, int id_grip_width, int id_thumbs_direction,
+                            int id_position, int id_angle, int id_grip_width, int id_thumbs_direction,
                             int id_separate_sides) {
         this.id = 0;
         this.id_muscle = id_muscle;
@@ -118,6 +118,7 @@ public class ExerciseAbstract{
         this.id_nickname = id_nickname;
         this.id_load_type = id_load_type;
         this.id_position = id_position;
+        this.id_angle = id_angle;
         this.id_grip_width = id_grip_width;
         this.id_thumbs_direction = id_thumbs_direction;
         this.id_separate_sides = id_separate_sides;
@@ -126,7 +127,7 @@ public class ExerciseAbstract{
 
     //For existing ExerciseAbs
     public ExerciseAbstract(int id, int id_muscle, int id_operation, Integer id_nickname, int id_load_type,
-                            int id_position, int id_grip_width, int id_thumbs_direction,
+                            int id_position, int id_angle, int id_grip_width, int id_thumbs_direction,
                             int id_separate_sides) {
         this.id = id;
         this.id_muscle = id_muscle;
@@ -134,6 +135,7 @@ public class ExerciseAbstract{
         this.id_nickname = id_nickname;
         this.id_load_type = id_load_type;
         this.id_position = id_position;
+        this.id_angle = id_angle;
         this.id_grip_width = id_grip_width;
         this.id_thumbs_direction = id_thumbs_direction;
         this.id_separate_sides = id_separate_sides;
