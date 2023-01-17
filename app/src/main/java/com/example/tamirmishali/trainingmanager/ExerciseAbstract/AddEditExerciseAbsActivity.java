@@ -273,22 +273,6 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             }
         });
 
-        // Observer for detecting the recent exerciseAbstract id that was inserted (after pressing
-        // save in this activity). after we get its id, we can save it to exercise_table with the
-        // workout id.
-
-        // Create the observer which updates the UI.
-        final Observer<Long> exerciseAbstractInsertedIdObserver = new Observer<Long>() {
-            @Override
-            public void onChanged(@Nullable final Long idExerciseAbs) {
-                if (idExerciseAbs != -1) {
-                    Exercise exercise = new Exercise(idExerciseAbs.intValue(), sourceWorkoutID, "");
-                    exerciseViewModel.insert(exercise);
-                }
-            }
-        };
-        exerciseAbstractViewModel.getInsertedExerciseAbstractId().observe(this, exerciseAbstractInsertedIdObserver );
-
     }
 
     private void saveExerciseAbs(){
@@ -317,20 +301,31 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
         // if nickname is not empty, get the new inserted operation id and insert nickname as well
         // todo: (16.01.2023) i don't check if nickname exists in db before inserting new one. do it.
         if (!autoCompleteTextView_Nickname.getText().toString().isEmpty()){
-            ExerciseAbstractNickname exerciseAbstractNickname = new ExerciseAbstractNickname();
+            // Check if nickname exists for current exercise first
+
             current_operation_id = exerciseAbstractViewModel.getExerciseAbstractOperationId(
                     String.valueOf(current_muscle_id),
                     opName);
-            exerciseAbstractNickname.setNickname(autoCompleteTextView_Nickname.getText().toString());
-            exerciseAbstractNickname.setId_exerciseabs_operation(current_operation_id);
-            exerciseAbstractViewModel.insertNickname(exerciseAbstractNickname);
-            Log.d(TAG, "Insertion of new nickname: " + autoCompleteTextView_Nickname.getText().toString());
+
+            new ExerciseAbstractNickname();
+            ExerciseAbstractNickname exerciseAbstractNickname1;
+            exerciseAbstractNickname1 = exerciseAbstractViewModel.getExerciseAbstractNickname(current_operation_id, autoCompleteTextView_Nickname.getText().toString());
+
+            if (exerciseAbstractNickname1 == null){
+                ExerciseAbstractNickname exerciseAbstractNickname = new ExerciseAbstractNickname();
+                exerciseAbstractNickname.setNickname(autoCompleteTextView_Nickname.getText().toString());
+                exerciseAbstractNickname.setId_exerciseabs_operation(current_operation_id);
+                exerciseAbstractViewModel.insertNickname(exerciseAbstractNickname);
+                Log.d(TAG, "Insertion of new nickname: " + autoCompleteTextView_Nickname.getText().toString());
+            }
+
 
         }
 
-        // todo: (16.01.2023) DEBUG this with Triceps exercise same as in db already
-        //  last time is still inserted the EA although its in db. understand why.
-        //  make sure all scenarios of new/edit Exercise are ok
+
+        // todo: (17.01.23) i have zero concentration. The problem is that after editing an EA,
+        //  the Exercise is deleted, and the EA stay in database with no pointer. need to understand
+        //  what i did with the order of id of each object, and the order of saving/deleting...
         // this means old exerciseAbstract to edit, and not a new one:
         int tempEditedEAId = currentExerciseAbstract.getId();
 
@@ -338,15 +333,17 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
         // This line deletes the old id that was inside, therefor, back it up and insert back as
         //   finishing loading view to object
         currentExerciseAbstract = constructExerciseAbstractStringsFromView();
+        currentExerciseAbstract = exerciseAbstractViewModel.ExerciseAbstractStringsToIds(currentExerciseAbstract);
 
-        // Check if EA already exists in database. if so, get its id:
-        int exerciseAbstractId = exerciseAbstractViewModel.getExerciseAbstractId(currentExerciseAbstract);
-
-        // Now logic gets hard (phrasing, boom):
         // INIT to be INSERTED exercise:
         Exercise exercise = new Exercise();
         exercise.setId_workout(sourceWorkoutID);
         exercise.setComment("");
+
+        // Check if EA already exists in database. if so, get its id:
+        int exerciseAbstractId = exerciseAbstractViewModel.getExerciseAbstractId(currentExerciseAbstract);
+        currentExerciseAbstract.setId(exerciseAbstractId);
+
 
         // Check if the new EA already exists in exerciseAbstract_table in DB:
         if (exerciseAbstractId != 0){ // if it exists in DB
@@ -358,17 +355,28 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             // insert it to DB:
             exerciseAbstractViewModel.insert(currentExerciseAbstract);
             int insertedExerciseAbstractId = exerciseAbstractViewModel.getExerciseAbstractId(currentExerciseAbstract);
+            currentExerciseAbstract.setId(insertedExerciseAbstractId);
             Log.d(TAG, "New ExerciseAbstract have been inserted to DB with id = " + insertedExerciseAbstractId);
             exercise.setId_exerciseabs(insertedExerciseAbstractId);
         }
 
+
+
         // We are on "new exercise" activity:
         if (tempEditedEAId == 0) {
-            // Insert new exercise to DB:
-            exerciseViewModel.insert(exercise);
-            Log.d(TAG, "Inserted new Exercise to DB");
+            // Check if exercise not exists in DB already:
+            Exercise exercise1 = exerciseViewModel.getExerciseForWorkout(
+                    exerciseAbstractId, sourceWorkoutID);
+            if (exercise1 == null) {
+                // Insert new exercise to DB:
+                exerciseViewModel.insert(exercise);
+                Log.d(TAG, "Inserted new Exercise to DB");
+            }
+            else{
+                Toast.makeText(this, "Exercise already exists in this workout", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
-
         // We are on "edit exercise" activity:
         else{
             // Insert edited Exercise id to the to be UPDATED exercise and update it:

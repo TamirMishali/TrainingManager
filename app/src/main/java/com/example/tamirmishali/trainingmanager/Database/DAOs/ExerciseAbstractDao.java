@@ -135,6 +135,9 @@ public interface ExerciseAbstractDao {
     @Query("SELECT nickname FROM exerciseabs_nickname WHERE id_exerciseabs_operation=:id_operation")
     List<String> getExerciseAbstractNicknameByOperationId(int id_operation);
 
+    @Query("SELECT * FROM exerciseabs_nickname WHERE (id_exerciseabs_operation=:op_id) and (nickname=:nickname) LIMIT 1")
+    ExerciseAbstractNickname getExerciseAbstractNickname(int op_id, String nickname);
+
 
 
 }

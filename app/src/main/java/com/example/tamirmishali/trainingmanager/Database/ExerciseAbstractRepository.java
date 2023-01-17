@@ -17,7 +17,11 @@ import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstrac
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import com.google.android.play.core.tasks.OnSuccessListener;
 import com.google.android.play.core.tasks.Task;
@@ -29,15 +33,7 @@ public class ExerciseAbstractRepository {
     private ExerciseAbstractNicknameDao exerciseAbstractNicknameDao;
     private LiveData<List<ExerciseAbstract>> allExerciseAbstracts;
 
-    // NEW:
-//    private LiveData<List<ExerciseAbstractNickname>> allNicknames;
-//    private LiveData<List<ExerciseAbstractOperation>> allOperations;
-//    private LiveData<List<ExerciseAbstractInfoValue>> allInfoValues;
-//    private LiveData<List<ExerciseAbstractInfo>> allInfo;
-    private static MediatorLiveData<Long> insertedExerciseAbstractId = new MediatorLiveData<>();
-//    private static MediatorLiveData<Long> insertedExerciseAbstractOperationId = new MediatorLiveData<>();
-//    private static MediatorLiveData<Long> insertedExerciseAbstractNicknameId = new MediatorLiveData<>();
-
+    private ExecutorService executor;
 
     // Amazing clear explanation about LiveData - don't use AsyncTask with livedata. livedata should
     // only be used to view the data, not manipulate it:
@@ -53,6 +49,8 @@ public class ExerciseAbstractRepository {
 //        allNicknames = exerciseAbstractDao.getAllExerciseAbstractNicknames();
 //        allOperations = exerciseAbstractDao.getAllExerciseAbstractOperations();
 //        allInfoValues = exerciseAbstractDao.getAllExerciseAbstractInfoValues();
+
+        this.executor = Executors.newSingleThreadExecutor();
     }
 
     //-----ExerciseAbstracts-----
@@ -204,9 +202,31 @@ public class ExerciseAbstractRepository {
             return nicknames;
     }
 
-    public MediatorLiveData<Long> getInsertedExerciseAbstractId() {
-        return insertedExerciseAbstractId;
+    public ExerciseAbstractNickname getExerciseAbstractNickname(int op_id, String nickname){
+        Future<ExerciseAbstractNickname> future = executor.submit(new Callable<ExerciseAbstractNickname>() {
+            @Override
+            public ExerciseAbstractNickname call() throws Exception {
+                return exerciseAbstractDao.getExerciseAbstractNickname(op_id, nickname);
+            }
+        });
+
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+//        ExerciseAbstractNickname exerciseAbstractNickname = new ExerciseAbstractNickname();
+//        try {
+//            exerciseAbstractNickname = new GetExerciseAbstractNicknameAsyncTask(exerciseAbstractDao).execute(op_id, nickname).get();
+//        } catch (InterruptedException | ExecutionException e) {
+//            e.printStackTrace();
+//        }
+//        return exerciseAbstractNickname;
     }
+
+
     public int getExerciseAbstractId(ExerciseAbstract exerciseAbstract){
         int id = 0;
         try {
@@ -250,9 +270,7 @@ public class ExerciseAbstractRepository {
             return null;
         }
 
-        protected void onPostExecute(Long id) {
-            insertedExerciseAbstractId.setValue(this.insertedEAid);
-        }
+
     }
     private static class UpdateExerciseAbstractAsyncTask extends AsyncTask<ExerciseAbstract, Void, Void>{
         private ExerciseAbstractDao exerciseAbstractDao;
@@ -425,6 +443,8 @@ public class ExerciseAbstractRepository {
         }
     }
 
+//    private static class GetExerciseAbstractNicknameAsyncTask extends
+
     private static class InsertExerciseAbstractOperationAsyncTask extends AsyncTask<ExerciseAbstractOperation, Void, Long>{
         private ExerciseAbstractOperationDao exerciseAbstractOperationDao;
         private ExerciseAbstractNicknameDao exerciseAbstractNicknameDao;
@@ -472,9 +492,6 @@ public class ExerciseAbstractRepository {
             return null;
         }
 
-        protected void onPostExecute(Long id) {
-//            insertedExerciseAbstractNicknameId.setValue(id);
-        }
     }
 
     private static class GetExerciseAbstractIdAsyncTask extends AsyncTask<ExerciseAbstract, Integer, Integer>{

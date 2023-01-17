@@ -65,6 +65,7 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
     private String getExerciseAbstractInfoValueValue(int id_value){return repository.getExerciseAbstractInfoValueValue(id_value);}
     private String getExerciseAbstractOperationOperation(int id_operation){return repository.getExerciseAbstractOperationOperation(id_operation);}
     private String getExerciseAbstractNicknameNickname(int id_nickname){return repository.getExerciseAbstractNicknameNickname(id_nickname);}
+    public ExerciseAbstractNickname getExerciseAbstractNickname(int op_id, String nickname){ return repository.getExerciseAbstractNickname(op_id, nickname);}
     public List<String> getExerciseAbstractInfoValueValueByHeader(String info_header_name){return repository.getExerciseAbstractInfoValueValueByHeader(info_header_name);}
     public List<String> getExerciseAbstractOperationByMuscleId(int id_muscle){return repository.getExerciseAbstractOperationByMuscleId(id_muscle);}
     public List<String> getExerciseAbstractNicknameByOperationId(int id_operation){return repository.getExerciseAbstractNicknameByOperationId(id_operation);}
@@ -79,7 +80,6 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
     // 1. how can i get the id of a recent inserted row in room database
     // 2. how can i get this id when using a ViewModel, and not the Dao directly?
     // 3. im using a "Repository" class to manage the Dao from the ViewModel. how can i access the MediatorLiveData object that way?
-    public LiveData<Long> getInsertedExerciseAbstractId() { return repository.getInsertedExerciseAbstractId(); }
     public int getExerciseAbstractId(ExerciseAbstract exerciseAbstract){ return repository.getExerciseAbstractId(exerciseAbstract); }
 
 /*    public List<ExerciseAbstractInfo> getExerciseAbstractsInfo(int id){ return repository.getExerciseAbstractsInfo(id); }
