@@ -16,9 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
@@ -56,8 +54,9 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
 
     // new
     private static final String TAG = "AddEditExerciseAbsActivity";
-    private ExerciseAbstract currentExerciseAbstract = new ExerciseAbstract();
-    int sourceWorkoutID;
+//    private ExerciseAbstract currentExerciseAbstract = new ExerciseAbstract();
+    int workoutID;
+    int exerciseAbstractID;
     private TextInputEditText textInputEditText_exName;
     private AutoCompleteTextView autoCompleteTextView_Operation;
     private AutoCompleteTextView autoCompleteTextView_Nickname;
@@ -150,14 +149,14 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_WORKOUT_ID) && (intent.hasExtra(EXTRA_EXERCISEABS_ID))){
             setTitle("Edit exercise");
-            // Todo: set all relevant items and views
             // New
             // Handle workout id
-            sourceWorkoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
+            workoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
+            exerciseAbstractID = intent.getIntExtra(EXTRA_EXERCISEABS_ID, -1);
 
             // Handle exerciseAbstract
-            currentExerciseAbstract = exerciseAbstractViewModel.getExerciseAbsFromId(
-                    intent.getIntExtra(EXTRA_EXERCISEABS_ID, -1));
+            ExerciseAbstract currentExerciseAbstract = exerciseAbstractViewModel.getExerciseAbsFromId(
+                                                            exerciseAbstractID);
 
             setExerciseAbstractToView(currentExerciseAbstract);
             operationAdapter.notifyDataSetChanged();
@@ -165,16 +164,10 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             setExerciseabsNameEditText();
 
 
-
-            //Old
-//            editTextExerciseAbsName.setText(intent.getStringExtra(EXTRA_EXERCISEABS_NAME));
-//            editTextExerciseAbsDescription.setText(intent.getStringExtra(EXTRA_EXERCISEABS_DESCRIPTION));
-//            spinnerMuscleGroup.setSelection(spinnerValues.indexOf(intent.getStringExtra(EXTRA_EXERCISEABS_MUSCLE)));
-//            sourceWorkoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
-
         } else if (intent.hasExtra(EXTRA_WORKOUT_ID)) {
             setTitle("Add new exercise");
-            sourceWorkoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
+            workoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
+            exerciseAbstractID = 0;
         }else{
             setResult(RESULT_CANCELED,intent);
             finish();
@@ -327,46 +320,48 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
         //  the Exercise is deleted, and the EA stay in database with no pointer. need to understand
         //  what i did with the order of id of each object, and the order of saving/deleting...
         // this means old exerciseAbstract to edit, and not a new one:
-        int tempEditedEAId = currentExerciseAbstract.getId();
+//        int exerciseAbstractID = currentExerciseAbstract.getId();
 
         // Set global "currentExerciseAbstract" string using view's values:
         // This line deletes the old id that was inside, therefor, back it up and insert back as
         //   finishing loading view to object
-        currentExerciseAbstract = constructExerciseAbstractStringsFromView();
+        ExerciseAbstract currentExerciseAbstract = constructExerciseAbstractStringsFromView();
         currentExerciseAbstract = exerciseAbstractViewModel.ExerciseAbstractStringsToIds(currentExerciseAbstract);
 
         // INIT to be INSERTED exercise:
         Exercise exercise = new Exercise();
-        exercise.setId_workout(sourceWorkoutID);
+        exercise.setId_workout(workoutID);
         exercise.setComment("");
 
-        // Check if EA already exists in database. if so, get its id:
-        int exerciseAbstractId = exerciseAbstractViewModel.getExerciseAbstractId(currentExerciseAbstract);
-        currentExerciseAbstract.setId(exerciseAbstractId);
+        // If EA already exists in database, get its id:
+        currentExerciseAbstract.setId(exerciseAbstractViewModel.getExerciseAbstractId(currentExerciseAbstract));
 
-
+        // ------ This if/else is handling the ExerciseAbstract ------
         // Check if the new EA already exists in exerciseAbstract_table in DB:
-        if (exerciseAbstractId != 0){ // if it exists in DB
+        if (currentExerciseAbstract.getId() != 0){ // if it exists in DB
             // use the already exist one, don't create and insert a new EA:
-            exercise.setId_exerciseabs(exerciseAbstractId);
-            Log.d(TAG, "ExerciseAbstract already exist in DB with id = " + exerciseAbstractId);
+            exercise.setId_exerciseabs(currentExerciseAbstract.getId());
+            Log.d(TAG, "ExerciseAbstract already exist in DB with id = " + currentExerciseAbstract.getId());
         }
         else{ // if it doesn't exists in DB
             // insert it to DB:
             exerciseAbstractViewModel.insert(currentExerciseAbstract);
             int insertedExerciseAbstractId = exerciseAbstractViewModel.getExerciseAbstractId(currentExerciseAbstract);
             currentExerciseAbstract.setId(insertedExerciseAbstractId);
-            Log.d(TAG, "New ExerciseAbstract have been inserted to DB with id = " + insertedExerciseAbstractId);
-            exercise.setId_exerciseabs(insertedExerciseAbstractId);
+            Log.d(TAG, "New ExerciseAbstract have been inserted to DB with id = " + currentExerciseAbstract.getId());
+            exercise.setId_exerciseabs(currentExerciseAbstract.getId());
         }
 
+        // Now i have a full EA with a valid id. new one or one obtained from DB.
+        // And a full Exercise object with all fields except id.
 
-
+        // ------ This if/else is handling the add/edit Exercise ------
         // We are on "new exercise" activity:
-        if (tempEditedEAId == 0) {
-            // Check if exercise not exists in DB already:
+        if (exerciseAbstractID == 0) {
+            // Check if exercise exist in current workout already:
             Exercise exercise1 = exerciseViewModel.getExerciseForWorkout(
-                    exerciseAbstractId, sourceWorkoutID);
+                    currentExerciseAbstract.getId(), workoutID);
+            // if doesn't exist in current workout:
             if (exercise1 == null) {
                 // Insert new exercise to DB:
                 exerciseViewModel.insert(exercise);
@@ -378,19 +373,30 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             }
         }
         // We are on "edit exercise" activity:
+        // Conclusion: if im editing an EA, i need to check if its old version is used in any other
+        //  exercise in DB. if so, leave it be. if not, delete it so if wont stay up in DB with no parent.
         else{
-            // Insert edited Exercise id to the to be UPDATED exercise and update it:
-            exercise.setId(tempEditedEAId);
+            // get edited Exercise:
+            Exercise exercise1 = exerciseViewModel.getExerciseForWorkout(
+                    exerciseAbstractID, workoutID);
+
+            // insert its id to the new exercise with the updated/relevant EA we just created:
+            exercise.setId((exercise1.getId()));
+
+            // UPDATED exercise with new/old EA for that workout:
             exerciseViewModel.update(exercise);
             Log.d(TAG, "Updated Exercise to DB with an updated ExerciseAbstract");
 
             // now try to delete the old exerciseAbstract that we started editing in the first place.
-            // if some other Exercise is linked to it, the "try" statement will fail, and nothing happens:
+            // if some other Exercise is linked to it, it will still be deleted, so i must check it before:
             try {
-                exerciseAbstractViewModel.delete(exerciseAbstractViewModel.getExerciseAbsFromId(tempEditedEAId));
-                Log.d(TAG, "Deleted old unlinked ExerciseAbstract id: " + tempEditedEAId);
+                List<Exercise> exerciseList = exerciseViewModel.getExercisesForEA(exerciseAbstractID);
+                if (exerciseList.isEmpty()) {
+                    exerciseAbstractViewModel.delete(exerciseAbstractViewModel.getExerciseAbsFromId(exerciseAbstractID));
+                    Log.d(TAG, "Deleted old unlinked ExerciseAbstract id: " + exerciseAbstractID);
+                }
             } finally {
-                Log.d(TAG, "Could not delete old ExerciseAbstract because it is linked in db. id = " + tempEditedEAId);
+                Log.d(TAG, "Could not delete old ExerciseAbstract because it is linked in db. id = " + exerciseAbstractID);
             }
         }
 

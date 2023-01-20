@@ -33,18 +33,16 @@ import static java.lang.Math.toIntExact;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
-
 // Another tutorial i found online:
 // https://blog.devgenius.io/implementing-room-database-bc9e4deb6600
 
-@Database(version = 13,entities = {Routine.class, Workout.class, Exercise.class,
+@Database(version = 14,entities = {Routine.class, Workout.class, Exercise.class,
         ExerciseAbstract.class, ExerciseAbstractInfoValue.class, ExerciseAbstractInfo.class,
         ExerciseAbstractOperation.class, ExerciseAbstractNickname.class,
         Set.class})
 @TypeConverters({Converters.class})
 
-public abstract class RoutineDatabase extends RoomDatabase {
+public abstract class TrainingManagerDatabase extends RoomDatabase {
 
     //DAO's Declarations
     public abstract RoutineDao routineDao();
@@ -59,16 +57,16 @@ public abstract class RoutineDatabase extends RoomDatabase {
     public abstract ExerciseAbstractNicknameDao exerciseAbstractNicknameDao();
 
     // Prevention of opening the same database to RAM twice.
-    private static final String DATABASE_NAME = "routines_database.db";
-    private static volatile RoutineDatabase INSTANCE;
+    private static final String DATABASE_NAME = "training_manager_database.db";
+    private static volatile TrainingManagerDatabase INSTANCE;
 
-    public static synchronized RoutineDatabase getInstance(Context context) {
+    public static synchronized TrainingManagerDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             //https://github.com/daolq3012/AssetSQLiteOpenHelper
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                    RoutineDatabase.class, DATABASE_NAME)
+                    TrainingManagerDatabase.class, DATABASE_NAME)
                     .openHelperFactory(new AssetSQLiteOpenHelperFactory())
-                    .fallbackToDestructiveMigration() // this destroys current db each time app is launched for the first time
+//                    .fallbackToDestructiveMigration() // this destroys current db each time app is launched for the first time
                     .addCallback(roomCallback)
                     .build();
         }
@@ -101,7 +99,7 @@ public abstract class RoutineDatabase extends RoomDatabase {
         private ExerciseAbstractNicknameDao exerciseAbstractNicknameDao;
 
 
-        private PopulateDbAsyncTask(RoutineDatabase db) {
+        private PopulateDbAsyncTask(TrainingManagerDatabase db) {
             routineDao = db.routineDao();
             workoutDao = db.workoutDao();
             exerciseDao = db.exerciseDao();

@@ -4,14 +4,11 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractNicknameDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractOperationDao;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
-import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractInfo;
-import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractInfoValue;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractNickname;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractOperation;
 
@@ -22,9 +19,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-
-import com.google.android.play.core.tasks.OnSuccessListener;
-import com.google.android.play.core.tasks.Task;
 //import kotlinx.coroutines.scheduling.Task;
 
 public class ExerciseAbstractRepository {
@@ -40,7 +34,7 @@ public class ExerciseAbstractRepository {
     //https://stackoverflow.com/questions/51601046/should-i-make-asynctask-member-of-livedata-or-repository-class-as-replacement
 
     public ExerciseAbstractRepository(Application application){
-        RoutineDatabase database = RoutineDatabase.getInstance(application);
+        TrainingManagerDatabase database = TrainingManagerDatabase.getInstance(application);
         exerciseAbstractDao = database.exerciseAbstractDao();
         exerciseAbstractOperationDao = database.exerciseAbstractOperationDao();
         exerciseAbstractNicknameDao = database.exerciseAbstractNicknameDao();
@@ -209,7 +203,6 @@ public class ExerciseAbstractRepository {
                 return exerciseAbstractDao.getExerciseAbstractNickname(op_id, nickname);
             }
         });
-
         try {
             return future.get();
         } catch (InterruptedException | ExecutionException e) {
@@ -217,13 +210,6 @@ public class ExerciseAbstractRepository {
             return null;
         }
 
-//        ExerciseAbstractNickname exerciseAbstractNickname = new ExerciseAbstractNickname();
-//        try {
-//            exerciseAbstractNickname = new GetExerciseAbstractNicknameAsyncTask(exerciseAbstractDao).execute(op_id, nickname).get();
-//        } catch (InterruptedException | ExecutionException e) {
-//            e.printStackTrace();
-//        }
-//        return exerciseAbstractNickname;
     }
 
 

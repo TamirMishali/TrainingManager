@@ -6,10 +6,8 @@ import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 
 import com.example.tamirmishali.trainingmanager.Database.DAOs.RoutineDao;
-import com.example.tamirmishali.trainingmanager.Database.DAOs.WorkoutDao;
 import com.example.tamirmishali.trainingmanager.Routine.Routine;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -20,7 +18,7 @@ public class RoutineRepository {
 //    private LiveData<List<Workout>> allWorkouts;
 
     public RoutineRepository(Application application){
-        RoutineDatabase database = RoutineDatabase.getInstance(application);
+        TrainingManagerDatabase database = TrainingManagerDatabase.getInstance(application);
         routineDao = database.routineDao();
  //       workoutDao = database.workoutDao();
         allRoutines = routineDao.getAllRoutines();

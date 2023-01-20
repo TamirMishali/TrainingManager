@@ -11,17 +11,25 @@ import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ExerciseRepository {
     private ExerciseDao  exerciseDao;
     private LiveData<List<Exercise>> allExercises;
     private static Exercise exercise = new Exercise();
 
+    private ExecutorService executor;
+
     public ExerciseRepository(Application application){
-        RoutineDatabase database = RoutineDatabase.getInstance(application);
+        TrainingManagerDatabase database = TrainingManagerDatabase.getInstance(application);
         exerciseDao = database.exerciseDao();
         allExercises = exerciseDao.getAllExercises();
+
+        this.executor = Executors.newSingleThreadExecutor();
     }
 
     //-----Exercises-----
@@ -63,6 +71,21 @@ public class ExerciseRepository {
             e.printStackTrace();
         }
         return exercises;
+    }
+    public List<Exercise> getExercisesForEA(int EA_ID){
+        Future<List<Exercise>> future = executor.submit(new Callable<List<Exercise>>() {
+            @Override
+            public List<Exercise> call() throws Exception {
+                return exerciseDao.getExercisesForEA(EA_ID);
+            }
+        });
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     //Exercise - AsyncTasks

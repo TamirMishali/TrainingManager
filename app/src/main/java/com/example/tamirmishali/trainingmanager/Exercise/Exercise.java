@@ -13,6 +13,7 @@ import com.example.tamirmishali.trainingmanager.Workout.Workout;
 import java.util.List;
 
 import static androidx.room.ForeignKey.CASCADE;
+import static androidx.room.ForeignKey.NO_ACTION;
 
 @Entity(tableName = "exercise_table",
         foreignKeys = {
@@ -20,7 +21,7 @@ import static androidx.room.ForeignKey.CASCADE;
                 entity = ExerciseAbstract.class,
                 parentColumns = "id_exerciseabs",
                 childColumns = "id_exerciseabs",
-                onDelete = CASCADE
+                onDelete = NO_ACTION
         ),
         @ForeignKey(
                 entity = Workout.class,

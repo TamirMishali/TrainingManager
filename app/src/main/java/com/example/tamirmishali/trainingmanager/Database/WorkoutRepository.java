@@ -10,7 +10,6 @@ import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.SetDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.WorkoutDao;
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
-import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class WorkoutRepository {
     private LiveData<List<Workout>> allWorkouts;
 
     public WorkoutRepository(Application application){
-        RoutineDatabase database = RoutineDatabase.getInstance(application);
+        TrainingManagerDatabase database = TrainingManagerDatabase.getInstance(application);
         workoutDao = database.workoutDao();
         exerciseDao = database.exerciseDao();
         exerciseAbstractDao = database.exerciseAbstractDao();

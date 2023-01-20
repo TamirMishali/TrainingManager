@@ -18,7 +18,7 @@ public class SetRepository {
     //private static Set set = new Set();
 
     public SetRepository(Application application){
-        RoutineDatabase database = RoutineDatabase.getInstance(application);
+        TrainingManagerDatabase database = TrainingManagerDatabase.getInstance(application);
         setDao = database.setDao();
         allSets = setDao.getAllSets();
     }

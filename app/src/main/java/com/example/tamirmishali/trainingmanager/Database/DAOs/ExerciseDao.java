@@ -39,6 +39,9 @@ public interface ExerciseDao {
     @Query("SELECT * FROM exercise_table WHERE id_workout=:id_workout")
     List<Exercise> getExercisesForWorkout(final int id_workout);
 
+    @Query("SELECT * FROM exercise_table WHERE id_exerciseabs=:EA_ID")
+    List<Exercise> getExercisesForEA(final int EA_ID);
+
 /*    SELECT exerciseabs_table.id_exerciseabs, eaiv1.value as muscle, exerciseabs_operation.operation ,exerciseabs_nickname.nickname,
 eaiv2.value as load_type, eaiv3.value as position, eaiv4.value as angle ,eaiv5.value as grip_width ,eaiv6.value as thumbs_direction ,eaiv7.value as separate_sides
 FROM exerciseabs_table

@@ -38,6 +38,7 @@ public class ExerciseViewModel extends AndroidViewModel {
     public Exercise getExerciseForWorkout(int idExerciseAbstract, int workoutId) {
         return repository.getExerciseForWorkout(idExerciseAbstract,workoutId);
     }
+    public List<Exercise> getExercisesForEA(int EA_id) { return repository.getExercisesForEA(EA_id); }
     public LiveData<List<Exercise>> getAllExercises(){
         return allExercises;
     }
