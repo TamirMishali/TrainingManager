@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+// ToDo (23.01.2023):
+//  add a checkbox in each routine row to choose the default routine. only one can be marked at all times.
+
 public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineHolder> {
 
     private List<Routine> routines = new ArrayList<>();

@@ -127,16 +127,21 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
                 if (routineViewModel.getFirstRoutine() == null) {
                     Toast.makeText(MainActivity.this, "No Routines!", Toast.LENGTH_SHORT).show();
                 } else {
+                    // LastWorkout is the most recent workout with date!=null from the most recent routine.
                     Workout workout = workoutViewModel.getLastWorkout();
                     List<Set> sets = new ArrayList<>();
-                    if (workout == null)
+                    // if last workout is null, it means that there are only abstract workouts in DB for most recent routine.
+                    if (workout == null) {
+                        // open dialog to chose what workout you want to start:
                         open_dialog(v);
-                    else
+                        return;
+                    }
+                    else // get all sets that are not filled from last workout
                         sets = setViewModel.getUnfilledSetsForWorkout(workout.getId());
-                    if (sets.isEmpty() || sets == null) { //last workout filled properly
+                    if (sets.isEmpty()) { // if last workout filled properly - there are no unfinished sets
                         //Open Dialog of relevant workouts and their dates
                         open_dialog(v);
-                    } else {//missing data in sets of last workout
+                    } else { // if missing data in sets of last workout
                         Intent intent = new Intent(v.getContext(), WorkoutNow.class);
                         intent.putExtra(WorkoutNow.EXTRA_WORKOUT_ID, workout.getId());
                         intent.setAction(ACTION_FINISH_WORKOUT);

@@ -139,6 +139,7 @@ public class WorkoutNow extends AppCompatActivity {
         expListView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
 
 
+
 /*        // ListView on child click listener
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
@@ -231,45 +232,59 @@ public class WorkoutNow extends AppCompatActivity {
 
     private Workout constructNewWorkout(Workout prevWorkout) {
         Workout newWorkout;
-        //insert workout
+
+        // create and insert workout
         Workout workout = new Workout(prevWorkout.getId_routine(), prevWorkout.getName(), false);
         workoutViewModel.insert(workout);
+
+        // get most recent workout with routine_id and workoutName:
         newWorkout = workoutViewModel.getNewestWorkout(workout.getId_routine(), workout.getName());
 
-
-        //insert exercises as like in abstract
+        // --- Insert exercises like they show in abstract workout to new workout ---
+        // Get Exercises from abstract workout
         List<Exercise> exercisesList;
         exercisesList = exerciseViewModel.getExercisesForWorkout(
                 workoutViewModel.getAbstractWorkoutFromPractical(newWorkout.getId_routine(), newWorkout.getName()).getId());
 
         Iterator<Exercise> iteratorCurrentExercise = exercisesList.iterator();
-        //Exercise exercise;
+
         while (iteratorCurrentExercise.hasNext()) {
+            // get Exercise from iterator (already has workout_id and exerciseAbs_id of prevWorkout)
             Exercise exercise = new Exercise(iteratorCurrentExercise.next());
             //exercise.setId(0); not necessary  cuz in constructor already
+            // Change the workout_id to current workout and insert to DB:
             exercise.setId_workout(newWorkout.getId());
             exerciseViewModel.insert(exercise);
         }
+
+        // get all inserted Exercises and assign them to current workout (now with valid id in DB)
         newWorkout.setExercises(exerciseViewModel.getExercisesForWorkout(newWorkout.getId()));
+
+        // for each Exercise in workout, set its ExerciseAbstract object using Exercise.getId_exerciseabs
         for(int i=0; i<newWorkout.getExercises().size(); i++){
             newWorkout.getExercises().get(i).setExerciseAbstract(
                     exerciseAbstractViewModel.getExerciseAbsFromId(newWorkout.getExercises().get(i).getId_exerciseabs())
             );
         }
 
-        //sets
-        //find each exercise in prev workout and if there are sets there,
-        //take the amount and create that number of sets in current exercise
-        //if not exist, don't create. let the adapter do it
+        // To this point, i have a workout object, with a list of Exercises and each Exercise
+        //  holds an ExerciseAbstract object
+
+        // --- Sets ---
+        // find each Exercise in prev workout and if there are sets there,
+        // take the amount and create that number of sets in current Exercise
+        // if not exist, don't create. let the adapter do it
         iteratorCurrentExercise = newWorkout.getExercises().iterator();
         Iterator<Exercise> prevIterator;
         int setsNo;
         Exercise prevExercise;
-        //find same ExerciseAbs in both currentWorkout and prevWorkout
-        //don't forget that currentExercise contains the exercise from absWorkout
+
+        // find same ExerciseAbs in both currentWorkout and prevWorkout
+        // don't forget that currentExercise contains the Exercise from absWorkout
         while(iteratorCurrentExercise.hasNext()) {
             Exercise currentExercise = iteratorCurrentExercise.next();
             Boolean foundFlag = Boolean.FALSE;
+
             //iterate over all exercises in prevWorkout and search for currentExercise
             prevIterator = prevWorkout.getExercises().iterator();
 
@@ -278,21 +293,16 @@ public class WorkoutNow extends AppCompatActivity {
 
                 //if exists, create the same number of sets like prevExercise
                 if(currentExercise.getId_exerciseabs() == prevExercise.getId_exerciseabs()){
-                    setsNo = prevExercise.getSets().size();//setViewModel.getSetsForExercise(prevExercise.getId()).size();
-
-/*                    //no sets at all, its cuz abs workout
-                    //put one set in it so it can start
-                    if (setsNo == 0){
-                        setsNo = 1;
-                    }*/
+                    setsNo = prevExercise.getSets().size();
 
                     for(int i=0 ; i<setsNo ; i++){
                         Set set = new Set(currentExercise.getId(),-1.0,-1);
                         setViewModel.insert(set);
                     }
 
+                    // get all the Sets that were just inserted to DB:
                     List<Set> setList = setViewModel.getSetsForExercise(currentExercise.getId());
-                    if (!setList.isEmpty() || setList != null)
+                    if (!setList.isEmpty())
                         currentExercise.setSets(setList);
                         //currentSetsListDataChild.put(exerciseAbstractViewModel.getExerciseAbsFromId(currentExercise.getId_exerciseabs()).getName(),setList);
 
@@ -303,9 +313,14 @@ public class WorkoutNow extends AppCompatActivity {
                 }
             }
 
-            //if exercise from abs was not found in prev, i still want to make it
-            //it probably created from a change in mid routine.
-            //create one set of it.
+            // Part Tamir:
+            // If exercise from abs was not found in prev, i still want to make it
+            // It probably created from a change in mid routine.
+            // Create one Set of it:
+
+            // Present Tamir:
+            // What part Tamir wrote does not make sense.
+            // All i do here is assign an empty Set list:
             if (foundFlag == Boolean.FALSE){
 /*                Set set = new Set(currentExercise.getId(),-1.0,-1);
                 setViewModel.insert(set);*/

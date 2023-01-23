@@ -10,6 +10,7 @@ import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstrac
 import com.example.tamirmishali.trainingmanager.Set.Set;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static androidx.room.ForeignKey.CASCADE;
@@ -48,7 +49,7 @@ public class Exercise {
     ExerciseAbstract exerciseAbstract;
 
     @Ignore
-    List<Set> sets;
+    List<Set> sets = new ArrayList<>();
 
 
 /*    @ColumnInfo(name = "data")
