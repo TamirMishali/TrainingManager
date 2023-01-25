@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,9 +53,6 @@ import java.util.Objects;
 
 // Todo (22.01.2023):
 //  - (HIGH) Add 'i' icon for additional information of EA in header row, near the '+' sign.
-//  - (HIGH) Change colors in 'WorkoutNow" of routine, workout, date and plus sign to grew/red.
-//  - (HIGH) change the background of 'delete' and 'duplicate arrow' signs to match parent,
-//  or just make it go away and leave only the icon with no background
 //  - (MEDIUM) Rearrange the EA fields in a logical way that the probability of a pair of fields to be empty
 //  are in a same line and then vanish the line
 //  - (LOW) if there is no previous set data, keep it empty, not 'N/A'.
@@ -159,7 +157,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
     }
 
 
-
     @Override
     public List<Set> getChild(int groupPosition, int childPosition) {
         List<Set> objectList = new ArrayList<>();
@@ -171,40 +168,35 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
         return objectList;
     }
 
-
     @Override
     public long getChildId(int groupPosition, int childPosition) {
         return childPosition;
     }
 
-
-    //https://stackoverflow.com/questions/10120212/how-to-determine-if-an-input-in-edittext-is-an-integer
-    public Boolean validSetData(String repsWeight){
-        Boolean valid = Boolean.FALSE;
-
-        try {
-            Double repsI = Double.parseDouble(repsWeight);
-            Log.i("",repsWeight+" is a number");
-            valid = Boolean.TRUE;
-        } catch (NumberFormatException e) {
-            Log.i("",repsWeight+" is not a number");
-        }
-
-        return valid;
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        // This part was not correct but no error was invoked.
+        //  This caused no sets to be presented even tho they where in listData objects and in DB.
+        Integer EA_id = this._listDataHeader.get(groupPosition);
+        List<Set> sets = this._listDataChildCurrent.get(EA_id);
+        if (sets == null)
+            sets = new ArrayList<Set>();
+        return sets.size();
     }
 
+    @Override
+    public Object getGroup(int groupPosition) {
+        return this._listDataHeader.get(groupPosition);
+    }
 
-    public String numToStrView(double num) {
-        String strView;
+    @Override
+    public int getGroupCount() {
+        return this._listDataHeader.size();
+    }
 
-        if(num == -2.0)
-            strView = "N/A";
-        else if (num == -1.0)
-            strView = "";
-        else
-            strView = Double.toString(num);
-
-        return strView.replace(".0","");
+    @Override
+    public long getGroupId(int groupPosition) {
+        return groupPosition;
     }
 
 
@@ -338,43 +330,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
         return convertView;
     }
 
-    @Override
-    public int getChildrenCount(int groupPosition) {
-        // This part was not correct but no error was invoked.
-        //  This caused no sets to be presented even tho they where in listData objects and in DB.
-        Integer EA_id = this._listDataHeader.get(groupPosition);
-        List<Set> sets = this._listDataChildCurrent.get(EA_id);
-        if (sets == null)
-            sets = new ArrayList<Set>();
-        return sets.size();
-    }
-
-    @Override
-    public Object getGroup(int groupPosition) {
-        return this._listDataHeader.get(groupPosition);
-    }
-
-    @Override
-    public int getGroupCount() {
-        return this._listDataHeader.size();
-    }
-
-    @Override
-    public long getGroupId(int groupPosition) {
-        return groupPosition;
-    }
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
-//        Exercise exercise = (Exercise) getGroup(groupPosition);
-//        String headerTitle = exercise.getExerciseAbstract().generateExerciseAbstractName();
 
         Integer EA_id = (Integer) getGroup(groupPosition);
         ExerciseAbstract exerciseAbstract = exerciseAbstractViewModel.getExerciseAbsFromId(EA_id);
         String headerTitle = exerciseAbstract.generateExerciseAbstractName();
 
-//        final String headerTitle = (String) getGroup(groupPosition);
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -382,13 +346,39 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
         }
 
 
-        TextView lblListHeader = convertView
-                .findViewById(R.id.lblListHeader);
+        TextView lblListHeader = convertView.findViewById(R.id.lblListHeader);
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
 
-        ImageButton addImageButton = convertView.
-                findViewById(R.id.add_button_group_item);
+
+        // insert ExerciseAbstract extended information to extended_ea_info elements:
+        TextView ea_load_type = convertView.findViewById(R.id.text_view_exerciseabs_load_type_value);
+        ea_load_type.setText(exerciseAbstract.getLoad_type());
+
+        TextView ea_separate_sides = convertView.findViewById(R.id.text_view_exerciseabs_separate_hands_value);
+        ea_separate_sides.setText(exerciseAbstract.getSeparate_sides());
+
+        TextView ea_position = convertView.findViewById(R.id.text_view_exerciseabs_position_value);
+        ea_position.setText(exerciseAbstract.getPosition());
+
+        TextView ea_angle = convertView.findViewById(R.id.text_view_exerciseabs_angle_value);
+        ea_angle.setText(exerciseAbstract.getAngle());
+
+        TextView ea_grip_width = convertView.findViewById(R.id.text_view_exerciseabs_grip_width_value);
+        ea_grip_width.setText(exerciseAbstract.getGrip_width());
+
+        TextView ea_thumbs_dir = convertView.findViewById(R.id.text_view_exerciseabs_thumbs_direction_value);
+        ea_thumbs_dir.setText(exerciseAbstract.getThumbs_direction());
+
+        // if parent/header is extended, show the extended information in this layout:
+        LinearLayout extendedEAInfo = convertView.findViewById(R.id.extended_ea_info);
+        if (isExpanded)
+            extendedEAInfo.setVisibility(View.VISIBLE);
+        else
+            extendedEAInfo.setVisibility(View.GONE);
+
+
+        ImageButton addImageButton = convertView.findViewById(R.id.add_button_group_item);
         addImageButton.setFocusable(Boolean.FALSE);
         addImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -423,42 +413,25 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
         return convertView;
     }
 
-
-    private Exercise getExerciseFromName(String exerciseName, List<Exercise> exerciseList) {
-        Exercise exercise = new Exercise();
-        for(int i=0; i<exerciseList.size();i++){
-            if(exerciseName == exerciseList.get(i).getExerciseAbstract().generateExerciseAbstractName()) return exerciseList.get(i);
-        }
-        return exercise;
-    }
-
     @Override
     public boolean hasStableIds() {
         return false;
     }
+
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
 
-    private List<String> getExNames(List<Exercise> exercises) {
-        List<String> headers = new ArrayList<>();
-        for(int i=0; i<exercises.size(); i++){
-            headers.add(exercises.get(i).getExerciseAbstract().generateExerciseAbstractName());
-        }
-        return headers;
-    }
 
+    // My Functions:
 
-    //@NonNull//this is a marker, does nothing but telling it can never be null
     private Boolean isExerciseInExerciseList(Exercise exercise, List<Exercise> exerciseList){
         Iterator<Exercise> iterator = exerciseList.iterator();
-        //Exercise currentExercise;
 
         while (iterator.hasNext()) {
-            //currentExercise = iterator.next();
-            if (exercise.getId_exerciseabs() == iterator.next().getId_exerciseabs()/*currentExercise.getId_exerciseabs()*/)
+            if (exercise.getId_exerciseabs() == iterator.next().getId_exerciseabs())
                 return true;
         }
         return false;
@@ -485,6 +458,35 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
             EAs_IDs.add(exercise.getId_exerciseabs());
         }
         return EAs_IDs;
+    }
+
+    //https://stackoverflow.com/questions/10120212/how-to-determine-if-an-input-in-edittext-is-an-integer
+    public Boolean validSetData(String repsWeight){
+        Boolean valid = Boolean.FALSE;
+
+        try {
+            Double repsI = Double.parseDouble(repsWeight);
+            Log.i("",repsWeight+" is a number");
+            valid = Boolean.TRUE;
+        } catch (NumberFormatException e) {
+            Log.i("",repsWeight+" is not a number");
+        }
+
+        return valid;
+    }
+
+
+    public String numToStrView(double num) {
+        String strView;
+
+        if(num == -2.0)
+            strView = "N/A";
+        else if (num == -1.0)
+            strView = "";
+        else
+            strView = Double.toString(num);
+
+        return strView.replace(".0","");
     }
 
 }

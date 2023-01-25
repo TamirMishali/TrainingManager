@@ -64,7 +64,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/plus_one/baseline_plus_one_24.xml" />
+                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/info/baseline_info_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -75,7 +75,7 @@
                         <option name="values">
                           <map>
                             <entry key="color" value="ff0000" />
-                            <entry key="outputName" value="icon_plus_one" />
+                            <entry key="outputName" value="ic_info_group" />
                             <entry key="sourceFile" value="C:\Tamir\Projects\TrainingManager" />
                           </map>
                         </option>

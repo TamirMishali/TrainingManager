@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractViewModel;
 import com.example.tamirmishali.trainingmanager.Routine.RoutineViewModel;
 import com.example.tamirmishali.trainingmanager.Set.Set;
@@ -46,7 +47,8 @@ public class WorkoutNow extends AppCompatActivity {
     private ExerciseViewModel exerciseViewModel;
     private ExerciseAbstractViewModel exerciseAbstractViewModel;
     private SetViewModel setViewModel;
-    private LinearLayout parentLinearLayout;
+//    private LinearLayout parentLinearLayout;
+    private LinearLayout extendedEAInfo;
     private Workout currentWorkout;
     private Workout prevWorkout;
     private int sourceWorkoutID;
@@ -63,7 +65,8 @@ public class WorkoutNow extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.workoutnow_layout);
 
-        parentLinearLayout = findViewById(R.id.parent_linear_layout);
+//        parentLinearLayout = findViewById(R.id.parent_linear_layout);
+
         TextView textViewRoutineName = findViewById(R.id.workoutnow_current_routine);
         TextView textViewWorkoutName = findViewById(R.id.workoutnow_current_workout);
         TextView textViewWorkoutDate = findViewById(R.id.workoutnow_workout_date);
@@ -142,7 +145,6 @@ public class WorkoutNow extends AppCompatActivity {
 
         expListView.expandGroup(0);
         // todo (25.01.2023): find the command that makes the keyboard go under all header children, and not only under the one getting focused.
-
 
 
 /*        // ListView on child click listener
@@ -251,6 +253,8 @@ public class WorkoutNow extends AppCompatActivity {
 
         Iterator<Exercise> iteratorCurrentExercise = exercisesList.iterator();
 
+        // iterate over the list of exercises from the abstract workout and create new exercise with
+        // the new workout id and save to DB:
         while (iteratorCurrentExercise.hasNext()) {
             // get Exercise from iterator (already has workout_id and exerciseAbs_id of prevWorkout)
             Exercise exercise = new Exercise(iteratorCurrentExercise.next());
@@ -265,13 +269,17 @@ public class WorkoutNow extends AppCompatActivity {
 
         // for each Exercise in workout, set its ExerciseAbstract object using Exercise.getId_exerciseabs
         for(int i=0; i<newWorkout.getExercises().size(); i++){
-            newWorkout.getExercises().get(i).setExerciseAbstract(
-                    exerciseAbstractViewModel.getExerciseAbsFromId(newWorkout.getExercises().get(i).getId_exerciseabs())
-            );
+            // get exercise abstract
+            ExerciseAbstract exerciseAbstract = exerciseAbstractViewModel.getExerciseAbsFromId(
+                    newWorkout.getExercises().get(i).getId_exerciseabs());
+            // fill its String fields
+            exerciseAbstract = exerciseAbstractViewModel.ExerciseAbstractIdsToStrings(exerciseAbstract);
+            // assign it to Exercise in newWorkout
+            newWorkout.getExercises().get(i).setExerciseAbstract(exerciseAbstract);
         }
 
         // To this point, i have a workout object, with a list of Exercises and each Exercise
-        //  holds an ExerciseAbstract object
+        //  holds an ExerciseAbstract object with all the Strings.
 
         // --- Sets ---
         // find each Exercise in prev workout and if there are sets there,
@@ -337,33 +345,6 @@ public class WorkoutNow extends AppCompatActivity {
     }
 
 
-
-/*    private void prepareListDataPrev() {
-        exerciseListHeader = new ArrayList<>();
-        prevSetsListDataChild = new HashMap<>();
-        Iterator<Exercise> iterator = currentWorkout.getExercises().iterator();
-        String exerciseName;// = new String();
-        List<Set> childList;
-        Exercise exercise;
-
-        //Constructing exercise names for adapter
-        while (iterator.hasNext()) {
-            exercise = iterator.next();
-            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs()).getName();
-            exerciseListHeader.add(exerciseName);
-
-            if (isExerciseInExerciseList(exercise,prevExercises)){//(currentExercise with prevExerciseList)
-                childList = setViewModel.getSetsForExercise(exercise.getId());
-                prevSetsListDataChild.put(exerciseName, childList);
-            }
-            //else, the exercise will be there but with no sets
-            //this will happen if exercise list changed for abs workout
-            //from the last practical workout made
-
-        }
-    }*/
-
-
     @NonNull//this is a marker, does nothing but telling is can never be null
     private Boolean isExerciseInExerciseList(Exercise exercise, List<Exercise> exerciseList){
         Iterator<Exercise> iterator = exerciseList.iterator();
@@ -378,81 +359,5 @@ public class WorkoutNow extends AppCompatActivity {
     }
 }
 
-
-
-
-/*    private void prepareListData2() {
-        exerciseListHeader = new ArrayList<String>();
-        prevSetsListDataChild = new HashMap<String, List<String>>();
-        Iterator<Exercise> iterator = currentExercises.iterator();
-        String exerciseName;
-        List<String> childList = new ArrayList<String>();
-        while(iterator.hasNext()) {
-            //System.out.println(iterator.next());
-            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(iterator.next().getId_exerciseabs()).getName();
-            exerciseListHeader.add(exerciseName);
-            childList = new ArrayList<String>();
-            for(int i = 0; i < 3; i++){
-                childList.add("Hello");
-            }
-            prevSetsListDataChild.put(exerciseName,childList);
-        }
-    }*/
-
-//--------------------New too
-/*private void prepareListData() {
-    exerciseListHeader = new ArrayList<String>();
-    prevSetsListDataChild = new HashMap<String, List<String>>();
-
-    // Adding child data
-    exerciseListHeader.add("Top 250");
-    exerciseListHeader.add("Now Showing");
-    exerciseListHeader.add("Coming Soon..");
-
-    // Adding child data
-    List<String> top250 = new ArrayList<String>();
-    top250.add("The Shawshank Redemption");
-    top250.add("The Godfather");
-    top250.add("The Godfather: Part II");
-    top250.add("Pulp Fiction");
-    top250.add("The Good, the Bad and the Ugly");
-    top250.add("The Dark Knight");
-    top250.add("12 Angry Men");
-
-    List<String> nowShowing = new ArrayList<String>();
-    nowShowing.add("The Conjuring");
-    nowShowing.add("Despicable Me 2");
-    nowShowing.add("Turbo");
-    nowShowing.add("Grown Ups 2");
-    nowShowing.add("Red 2");
-    nowShowing.add("The Wolverine");
-
-    List<String> comingSoon = new ArrayList<String>();
-    comingSoon.add("2 Guns");
-    comingSoon.add("The Smurfs 2");
-    comingSoon.add("The Spectacular Now");
-    comingSoon.add("The Canyons");
-    comingSoon.add("Europa Report");
-
-    prevSetsListDataChild.put(exerciseListHeader.get(0), top250); // Header, Child data
-    prevSetsListDataChild.put(exerciseListHeader.get(1), nowShowing);
-    prevSetsListDataChild.put(exerciseListHeader.get(2), comingSoon);
-}*/
-
-/*
-
-    public void onAddField(View v) {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View rowView = inflater.inflate(R.layout.field, null);
-        // Add the new row before the add field button.
-        parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
-    }
-
-    public void onDelete(View v) {
-        parentLinearLayout.removeView((View) v.getParent());
-    }
-    //expandable ListView
-    //https://www.journaldev.com/9942/android-expandablelistview-example-tutorial
-*/
 
 

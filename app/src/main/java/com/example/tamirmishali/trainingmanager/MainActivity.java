@@ -54,8 +54,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 /*TODO
+ * - (HIGH) change 'HISTORY' and "Edit Workout" to be more eye friendly and not like shit.
  * - (MEDIUM) Deep change in DB 2: add the option to do super sets/drop sets
- * - (MEDIUM) change 'HISTORY' and "Edit Workout" to be more eye friendly and not like shit.
  * - (LOW) make the expandableListView group color red in general but green when all sets are inserted.
 * */
 
