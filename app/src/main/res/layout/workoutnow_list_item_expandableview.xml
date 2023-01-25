@@ -9,9 +9,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_delete"
-        android:background="@color/colorDefault"
         android:layout_gravity="center"
-        android:paddingStart="8dp"/>
+        android:paddingHorizontal="3dp"
+        android:paddingVertical="3dp"/>
 
     <TextView
         android:id="@+id/lblListItemEditextPrevWeight"
@@ -36,9 +36,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_arrow_forward"
-        android:background="@color/colorDefault"
         android:layout_gravity="center"
-        android:paddingHorizontal="8dp"
+        android:paddingHorizontal="3dp"
+        android:paddingVertical="3dp"
     />
 
     <EditText

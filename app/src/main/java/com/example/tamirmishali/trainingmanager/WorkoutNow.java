@@ -140,6 +140,7 @@ public class WorkoutNow extends AppCompatActivity {
         // https://stackoverflow.com/questions/18632084/expandablelistview-child-items-edittext-cant-keep-focus
         expListView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
 
+        expListView.expandGroup(0);
         // todo (25.01.2023): find the command that makes the keyboard go under all header children, and not only under the one getting focused.
 
 

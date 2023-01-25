@@ -17,18 +17,19 @@
         android:paddingStart="30dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:textColor="#000000"
-        android:textSize="17dp" />
+        android:textSize="17sp"
+        />
 
     <ImageButton
         android:id="@+id/add_button_group_item"
         android:layout_width="30dp"
         android:layout_height="fill_parent"
         android:layout_centerInParent="true"
-        android:background="@color/groupColor"
+        android:background="@color/red"
         android:focusable="false"
         android:src="@drawable/ic_add_group"
-        android:layout_gravity="center_horizontal|end"/>
+        android:layout_gravity="center_horizontal|end"
+        android:contentDescription="Add new set" />
 
 <!--</LinearLayout>-->
 </androidx.cardview.widget.CardView>

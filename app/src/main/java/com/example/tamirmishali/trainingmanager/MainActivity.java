@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -53,11 +54,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 /*TODO
- * - (LOW) make the expandableListView group color red in general but green when all sets are inserted.
  * - (MEDIUM) Deep change in DB 2: add the option to do super sets/drop sets
+ * - (MEDIUM) change 'HISTORY' and "Edit Workout" to be more eye friendly and not like shit.
+ * - (LOW) make the expandableListView group color red in general but green when all sets are inserted.
 * */
 
-public class MainActivity extends AppCompatActivity /*implements WorkoutNow_DialogListViewAdapter.CustomDialogListener*/{
+public class MainActivity extends AppCompatActivity {
     public static final int EDIT_LAST_WORKOUT = 1;
     public static final int GET_DB_PATH_REQUEST_CODE = 2;
     protected static final String ACTION_FINISH_WORKOUT = "finish_workout";
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
         System.loadLibrary("native-lib");
     }
 
+    // todo (25.01.2023): (LOW) why there is a liveData object in main activity? remove it.
     LiveData<List<Routine>> routines;
 
     private RoutineViewModel routineViewModel;
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity /*implements WorkoutNow_Dial
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_main_new);
