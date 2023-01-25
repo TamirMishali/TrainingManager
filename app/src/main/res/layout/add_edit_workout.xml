@@ -14,7 +14,8 @@
         android:fontFamily="@font/alegreya_black"
         android:text="Workout Name:"
         android:textAppearance="@style/Base.Widget.AppCompat.Spinner.Underlined"
-        android:textSize="25dp"
+        android:textSize="25sp"
+        android:textColor="@color/lightGrey"
         android:textStyle="bold" />
 
     <EditText
@@ -22,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="A,B,C,etc..."
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:inputType="textCapSentences"
         android:gravity="center" />
 
@@ -33,7 +34,8 @@
         android:fontFamily="@font/alegreya_black"
         android:text="Date"
         android:textAppearance="@style/Base.Widget.AppCompat.Spinner.Underlined"
-        android:textSize="25dp"
+        android:textColor="@color/lightGrey"
+        android:textSize="25sp"
         android:textStyle="bold" />
 
     <TextView
@@ -43,7 +45,7 @@
         android:gravity="center"
         android:inputType="textMultiLine"
         android:text="Select Date"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="@android:color/black"/>
 
 

@@ -73,9 +73,6 @@ public interface ExerciseAbstractDao {
 
 
     // NEW:
-    // TODO: Understand if i must add new tables DAO's so the auto implemented
-    //  code will be created or maybe there might be another way to avoid it - IDK
-
     // ------------------ exerciseabs_info_value ----------------------
     @Query("select * from exerciseabs_info_value")
     LiveData<List<ExerciseAbstractInfoValue>> getAllExerciseAbstractInfoValues();

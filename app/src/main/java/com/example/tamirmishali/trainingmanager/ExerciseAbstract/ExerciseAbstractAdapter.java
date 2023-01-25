@@ -36,20 +36,6 @@ public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstra
     public void onBindViewHolder(@NonNull ExerciseAbstractHolder holder, final int position) {
         ExerciseAbstract currentExerciseAbstract = exerciseAbstracts.get(position);
 
-        // TODO: 24/12/2022: Uncomment new section after DB change and exerciseabs class adaptation.
-//        // old
-//        holder.textViewExerciseAbstract.setText(currentExerciseAbstract.getName());
-//        holder.textViewExerciseAbstractDescription.setText(currentExerciseAbstract.getDescription());
-//        holder.textViewExerciseAbstractMuscleGroup.setText(currentExerciseAbstract.getMuscleGroup());
-
-
-
-//        // new
-//        String sepHands="No";
-//        if (currentExerciseAbstract.getSeparateHands()){
-//            sepHands="Yes";
-//        }
-//
         holder.text_view_exerciseabs_name.setText(currentExerciseAbstract.generateExerciseAbstractName());
         holder.text_view_exerciseabs_muscle_value.setText(currentExerciseAbstract.getMuscle());
         holder.text_view_exerciseabs_operation_value.setText(currentExerciseAbstract.getOperation());
@@ -60,20 +46,6 @@ public class ExerciseAbstractAdapter extends RecyclerView.Adapter<ExerciseAbstra
         holder.text_view_exerciseabs_angle_value.setText(currentExerciseAbstract.getAngle());
         holder.text_view_exerciseabs_grip_width_value.setText(currentExerciseAbstract.getGrip_width());
         holder.text_view_exerciseabs_thumbs_direction_value.setText(currentExerciseAbstract.getThumbs_direction());
-
-
-
-        // Temporary until DB change is complete
-//        holder.text_view_exerciseabs_name.setText("ExerciseAbs name");
-//        holder.text_view_exerciseabs_muscle_value.setText("ExerciseAbs name");
-//        holder.text_view_exerciseabs_operation_value.setText("ExerciseAbs operation");
-//        holder.text_view_exerciseabs_nickname_value.setText("ExerciseAbs nickname");
-//        holder.text_view_exerciseabs_load_type_value.setText("ExerciseAbs load type");
-//        holder.text_view_exerciseabs_separate_hands_value.setText("No");
-//        holder.text_view_exerciseabs_position_value.setText("ExerciseAbs position");
-//        holder.text_view_exerciseabs_angle_value.setText("ExerciseAbs angle");
-//        holder.text_view_exerciseabs_grip_width_value.setText("ExerciseAbs grip width");
-//        holder.text_view_exerciseabs_thumbs_direction_value.setText("ExerciseAbs thumbs dir");
 
         holder.itemView.setTag(holder);
     }

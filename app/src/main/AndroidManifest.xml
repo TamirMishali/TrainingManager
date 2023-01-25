@@ -21,18 +21,19 @@
         <activity android:name=".Routine.AddEditRoutineActivity"
             android:parentActivityName=".Routine.ShowRoutines"
             android:launchMode="singleTop"/>
-        <activity android:name=".Workout.ShowRoutineWorkouts"></activity>
-        <activity android:name=".Workout.AddEditWorkoutActivity"
-            android:parentActivityName=".Workout.ShowRoutineWorkouts"></activity>
-        <activity android:name=".ExerciseAbstract.ShowWorkoutAbstractExercises"></activity>
-        <activity android:name=".ExerciseAbstract.ShowAllAbstractExercises"></activity>
+        <activity android:name=".Workout.ShowRoutineWorkouts" />
+        <activity
+            android:name=".Workout.AddEditWorkoutActivity"
+            android:parentActivityName=".Workout.ShowRoutineWorkouts" />
+        <activity android:name=".ExerciseAbstract.ShowWorkoutAbstractExercises" />
         <activity android:name=".ExerciseAbstract.AddEditExerciseAbsActivity"
-            android:parentActivityName=".ExerciseAbstract.ShowAllAbstractExercises"></activity>
-        <activity android:name=".WorkoutNow"
-            android:windowSoftInputMode="adjustPan"></activity>
-        <activity android:name=".History.History"></activity>
-        <activity android:name=".History.ViewPracticalWorkouts"></activity>
-        <activity android:name=".History.ViewOldWorkout"></activity>
+            android:parentActivityName=".ExerciseAbstract.ShowWorkoutAbstractExercises"/>
+        <activity
+            android:name=".WorkoutNow"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".History.History" />
+        <activity android:name=".History.ViewPracticalWorkouts" />
+        <activity android:name=".History.ViewOldWorkout" />
 
         <meta-data
             android:name="preloaded_fonts"

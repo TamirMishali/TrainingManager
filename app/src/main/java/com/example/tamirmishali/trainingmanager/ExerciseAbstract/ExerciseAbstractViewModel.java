@@ -88,7 +88,7 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
     public List<ExerciseAbstractNickname> getExerciseAbstractsOperationNicknames(int id){return repository.getExerciseAbstractsOperationNicknames(id);}*/
 
 
-    // Todo: Conclusions: LiveData is not meant to be iterated, only used for observation.
+    // Conclusions: LiveData is not meant to be iterated, only used for observation.
     public ExerciseAbstract ExerciseAbstractIdsToStrings(@NonNull ExerciseAbstract exerciseAbstract){
 
         // Start with mandatory id's: Muscle and Operation:

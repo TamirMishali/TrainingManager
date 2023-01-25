@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey;
 
 import java.util.Comparator;
 
-// todo: add under all Classes the @Ignore thing above all constructors that are not the main constructors.
+// todo: (LOW) add under all Classes the @Ignore thing above all constructors that are not the main constructors.
 //  use only the constructor with id in it.
 
 @Entity(tableName = "exerciseabs_table",
@@ -312,7 +312,7 @@ public class ExerciseAbstract{
         else{
             name = this.nickname + " " + this.operation;
         }
-        return name;
+        return name.strip();
     }
 
     //https://beginnersbook.com/2013/12/java-arraylist-of-object-sort-example-comparable-and-comparator/

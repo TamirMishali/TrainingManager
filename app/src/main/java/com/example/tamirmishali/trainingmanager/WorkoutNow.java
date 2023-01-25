@@ -79,12 +79,13 @@ public class WorkoutNow extends AppCompatActivity {
         //Get workout ID for viewing the relevant workout
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_WORKOUT_ID)){
-            String callingClassName = getCallingActivity().getShortClassName();
+            String callingClassName = getCallingActivity().getClassName(); //.getShortClassName();
+            Log.d(TAG, "Class name= " + callingClassName);
             sourceWorkoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
 
             //New Workout that was picked from the list of workouts in current routine or id
             // of unfinished workout to reload.
-            if(callingClassName.equals(".MainActivity") && intent.getAction()==null){
+            if(callingClassName.equals("com.example.tamirmishali.trainingmanager.MainActivity") && intent.getAction()==null){
                 prevWorkout = workoutViewModel.getWorkout(sourceWorkoutID);
                 prevWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(prevWorkout.getId())));
                 currentWorkout = constructNewWorkout(prevWorkout); // create workout
@@ -92,7 +93,7 @@ public class WorkoutNow extends AppCompatActivity {
             }
 
             //Existing Workout - finished workout from history
-            else if(callingClassName.equals(".History.ViewPracticalWorkouts") || intent.getAction()==ACTION_FINISH_WORKOUT){
+            else if(callingClassName.equals("com.example.tamirmishali.trainingmanager.History.ViewPracticalWorkouts") || intent.getAction()==ACTION_FINISH_WORKOUT){
                 currentWorkout = workoutViewModel.getWorkout(sourceWorkoutID);
                 currentWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(currentWorkout.getId())));
 
@@ -109,6 +110,7 @@ public class WorkoutNow extends AppCompatActivity {
         else{
             setResult(RESULT_CANCELED,intent);
             finish();
+            return;
         }
 
         // Insert names of routine, workout and date at the top of the screen
@@ -138,6 +140,8 @@ public class WorkoutNow extends AppCompatActivity {
         // https://stackoverflow.com/questions/18632084/expandablelistview-child-items-edittext-cant-keep-focus
         expListView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
 
+        // todo (25.01.2023): find the command that makes the keyboard go under all header children, and not only under the one getting focused.
+
 
 
 /*        // ListView on child click listener
@@ -146,7 +150,6 @@ public class WorkoutNow extends AppCompatActivity {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
-                // TODO Auto-generated method stub
                 *//*Toast.makeText(
                         getApplicationContext(),
                         exerciseListHeader.get(groupPosition)
@@ -162,7 +165,6 @@ public class WorkoutNow extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // TODO Auto-generated method stub
         super.onBackPressed();
         finish();
     }

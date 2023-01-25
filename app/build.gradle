@@ -7,11 +7,11 @@ android {
     }
     compileSdkVersion 33
     defaultConfig {
-        applicationId "com.example.tamirmishali.trainingmanager"
+        applicationId "com.example.tamirmishali.trainingmanager.test"
         minSdkVersion 24
         targetSdkVersion 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         externalNativeBuild {
             cmake {
@@ -41,6 +41,10 @@ android {
         }
     }
     namespace 'com.example.tamirmishali.trainingmanager'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
 }
 
 dependencies {

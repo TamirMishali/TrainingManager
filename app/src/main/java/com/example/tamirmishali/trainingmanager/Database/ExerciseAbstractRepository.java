@@ -432,37 +432,18 @@ public class ExerciseAbstractRepository {
 //    private static class GetExerciseAbstractNicknameAsyncTask extends
 
     private static class InsertExerciseAbstractOperationAsyncTask extends AsyncTask<ExerciseAbstractOperation, Void, Long>{
-        private ExerciseAbstractOperationDao exerciseAbstractOperationDao;
-        private ExerciseAbstractNicknameDao exerciseAbstractNicknameDao;
-        private ExerciseAbstractNickname exerciseAbstractNickname;
+        private final ExerciseAbstractOperationDao exerciseAbstractOperationDao;
 
         private InsertExerciseAbstractOperationAsyncTask(ExerciseAbstractOperationDao exerciseAbstractOperationDao){
             this.exerciseAbstractOperationDao = exerciseAbstractOperationDao;
-//            this.exerciseAbstractNicknameDao = exerciseAbstractNicknameDao;
         }
 
         @Override
         protected Long doInBackground(ExerciseAbstractOperation... exerciseAbstractOperations) {
-            ExerciseAbstractOperation exerciseAbstractOperation = exerciseAbstractOperations[0];
-//
-//            if (exerciseAbstractOperation.getExerciseAbstractNickname() != null){
-//                this.exerciseAbstractNickname = exerciseAbstractOperation.getExerciseAbstractNickname();
-//            }
-
-            exerciseAbstractOperationDao.insert(exerciseAbstractOperation);
+            exerciseAbstractOperationDao.insert(exerciseAbstractOperations[0]);
             return null;
         }
 
-        protected void onPostExecute(Long id) {
-//            insertedExerciseAbstractOperationId.setValue(id);
-//            // instead on waiting on the activity for the insertedExerciseAbstractOperationId to
-//            // be updated, i can execute the insertion here:
-//            // WRONG - i don't have access to Nickname string.
-//            if (this.exerciseAbstractNickname != null){
-//                // TODO: 05.01.23: understand how can i execute insertion of nickname from here when i don't have dao
-//                new InsertExerciseAbstractNicknameAsyncTask(exerciseAbstractNicknameDao).execute(exerciseAbstractNickname);
-//            }
-        }
     }
 
     private static class InsertExerciseAbstractNicknameAsyncTask extends AsyncTask<ExerciseAbstractNickname, Void, Long>{

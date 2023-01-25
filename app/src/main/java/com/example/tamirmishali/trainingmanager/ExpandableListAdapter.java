@@ -51,7 +51,14 @@ import java.util.Objects;
 //3. delete set logic
 
 // Todo (22.01.2023):
-//  Understand why child is not opened
+//  - (HIGH) Add 'i' icon for additional information of EA in header row, near the '+' sign.
+//  - (HIGH) Change colors in 'WorkoutNow" of routine, workout, date and plus sign to grew/red.
+//  - (HIGH) change the background of 'delete' and 'duplicate arrow' signs to match parent,
+//  or just make it go away and leave only the icon with no background
+//  - (MEDIUM) Rearrange the EA fields in a logical way that the probability of a pair of fields to be empty
+//  are in a same line and then vanish the line
+//  - (LOW) if there is no previous set data, keep it empty, not 'N/A'.
+//
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter{
 

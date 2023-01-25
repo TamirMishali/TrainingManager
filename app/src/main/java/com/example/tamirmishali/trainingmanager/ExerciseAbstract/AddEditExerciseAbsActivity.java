@@ -27,24 +27,15 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
 import java.util.List;
 
-        /*TODO 26.12.2022:
-            * add in the exerciseabs "save" button the following logics:
-              - Operation name: check if inserted operation_name exists for the following muscle.
-                if not, add it to the SQL table.
-              - Nickname: same as operation_name.
-            * if "main_muscle" is null/empty/whatever, make all other views unreachable.
-            * add a small 'i' button for information near operation_name to view all possible operations.
-            * In the far future:
-                - add a "plus" button near each field (except sep_hands) to add
-                  new attributes to the sql table.
-                - add menu buttons for deleting "operation_name"s, "nickname"s (not all, but from a list)
-                - add menu button for editing the load_type, position, angle etc...
-            * Not sure about it but if needed:
-              add an observer over ExerciseAbstract Nickname/Operation/InfoValue to activity and use
-              The "LifeCycle" option in order to kill the liveData object from keep updating even
-              after activity closed. The observer
-              https://developer.android.com/topic/libraries/architecture/livedata#observe_livedata_objects
-            */
+/*TODO 26.12.2022:
+    - (LOW) if "main_muscle" is null/empty/whatever, make all other views unreachable.
+    - (LOW) add a small 'i' button for information near operation_name to view all possible operations.
+    - In the far future:
+        - (MEDIUM) add a "plus" button near each field (except sep_hands) to add
+          new attributes to the sql table.
+        - (MEDIUM) add menu buttons for deleting "operation_name"s, "nickname"s (not all, but from a list)
+        - (LOW) add menu button for editing the load_type, position, angle etc...
+    */
 
 public class AddEditExerciseAbsActivity extends AppCompatActivity {
     public static final String EXTRA_EXERCISEABS_ID =
@@ -75,15 +66,6 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
     private List<String> operationValues = new ArrayList<>();
     private List<String> nicknameValues = new ArrayList<>();
 
-    // todo: in order to query again the load_type, position, etc according to usage frequency, ill
-    //  need to define their arraylist<String> here in the class global variables.
-
-    // old
-//    private EditText editTextExerciseAbsName;
-//    private EditText editTextExerciseAbsDescription;
-//    private EditText editTextExerciseAbsMuscle;
-//    private Spinner spinnerMuscleGroup;
-//    private ExerciseAbstractViewModel exerciseAbstractViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +131,7 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_WORKOUT_ID) && (intent.hasExtra(EXTRA_EXERCISEABS_ID))){
             setTitle("Edit exercise");
-            // New
+
             // Handle workout id
             workoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
             exerciseAbstractID = intent.getIntExtra(EXTRA_EXERCISEABS_ID, -1);
@@ -168,6 +150,7 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             setTitle("Add new exercise");
             workoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
             exerciseAbstractID = 0;
+            autoCompleteTextView_SeparateHands.setText("No");
         }else{
             setResult(RESULT_CANCELED,intent);
             finish();
@@ -285,7 +268,7 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
                 String.valueOf(current_muscle_id),
                 opName);
 
-        if (current_operation_id == -1) {
+        if (current_operation_id == 0) {
             ExerciseAbstractOperation exerciseAbstractOperation = new ExerciseAbstractOperation(current_muscle_id, opName);
             exerciseAbstractViewModel.insertOperation(exerciseAbstractOperation);
             Log.d(TAG, "Insertion of new operation: " + opName);
@@ -315,10 +298,6 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
 
         }
 
-
-        // todo: (17.01.23) i have zero concentration. The problem is that after editing an EA,
-        //  the Exercise is deleted, and the EA stay in database with no pointer. need to understand
-        //  what i did with the order of id of each object, and the order of saving/deleting...
         // this means old exerciseAbstract to edit, and not a new one:
 //        int exerciseAbstractID = currentExerciseAbstract.getId();
 
@@ -459,7 +438,7 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
                         autoCompleteTextView_Operation.getText().toString();
             }
         }
-        textInputEditText_exName.setText(exerciseAbstractNameTitle);
+        textInputEditText_exName.setText(exerciseAbstractNameTitle.strip());
     }
 
 

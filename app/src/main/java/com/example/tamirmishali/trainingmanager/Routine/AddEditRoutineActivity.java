@@ -36,7 +36,7 @@ public class AddEditRoutineActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_routine);
+        setContentView(R.layout.add_edit_routine);
 
         editTextRoutineName = findViewById(R.id.edit_text_routine_name);
         mDisplayDate = findViewById(R.id.text_view_routine_date);

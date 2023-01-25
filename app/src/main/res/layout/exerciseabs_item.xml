@@ -141,7 +141,7 @@
                     android:id="@+id/text_view_exerciseabs_separate_hands_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Separate hands: "/>
+                    android:text="Separate sides: "/>
 
                 <TextView
                     android:id="@+id/text_view_exerciseabs_separate_hands_value"
