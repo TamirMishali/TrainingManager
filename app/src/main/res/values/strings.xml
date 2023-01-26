@@ -9,6 +9,11 @@
     <string name="delete_set_dialog">Are you sure you want to delete current set?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="const_continue_current_workout">Continue workout:</string>
+
+<!--    Main Activity   -->
+    <string name="const_continue_current_workout">Continue workout</string>
     <string name="const_Start_new_workout_now">"Start new workout now!</string>
+    <string name="edit_workouts">Edit Workouts</string>
+    <string name="workout_history">Workout History</string>
+
 </resources>

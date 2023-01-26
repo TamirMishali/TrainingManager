@@ -47,7 +47,7 @@
                 android:layout_height="fill_parent"
                 android:background="@color/red"
                 android:focusable="false"
-                android:src="@drawable/ic_add_group"
+                android:src="@drawable/ic_workout_now_add_group"
                 android:layout_gravity="center_horizontal|end"
                 android:contentDescription="Add new set" />
 

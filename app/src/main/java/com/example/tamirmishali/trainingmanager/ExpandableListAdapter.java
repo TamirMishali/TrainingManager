@@ -56,6 +56,7 @@ import java.util.Objects;
 //  - (MEDIUM) Rearrange the EA fields in a logical way that the probability of a pair of fields to be empty
 //  are in a same line and then vanish the line
 //  - (LOW) if there is no previous set data, keep it empty, not 'N/A'.
+//  - (HIGH) look at back workout, where the Header is cut in the middle (i printed screen)
 //
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter{

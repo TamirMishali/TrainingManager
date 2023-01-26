@@ -60,7 +60,7 @@ public class AddEditWorkoutActivity extends AppCompatActivity {
 
         }
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_general_close);
 
 
         mDisplayDate.setOnClickListener(new View.OnClickListener() {

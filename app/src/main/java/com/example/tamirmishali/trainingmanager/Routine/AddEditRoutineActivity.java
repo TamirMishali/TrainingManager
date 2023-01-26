@@ -54,7 +54,7 @@ public class AddEditRoutineActivity extends AppCompatActivity {
             mDisplayDate.setText(new java.sql.Date(calendar.getTime().getTime()).toString());
         }
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_general_close);
 
         mDisplayDate.setOnClickListener(new View.OnClickListener() {
             @Override

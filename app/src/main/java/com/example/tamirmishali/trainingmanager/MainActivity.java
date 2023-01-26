@@ -16,15 +16,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
-import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractViewModel;
 import com.example.tamirmishali.trainingmanager.History.History;
 import com.example.tamirmishali.trainingmanager.Routine.ShowRoutines;
 import com.example.tamirmishali.trainingmanager.Routine.Routine;
@@ -54,7 +53,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 /*TODO
- * - (HIGH) change 'HISTORY' and "Edit Workout" to be more eye friendly and not like shit.
+ * - (HIGH) change 'HISTORY' and "Edit Workout" to be more eye friendly and not like shit + remove title from mainActivity
+ * - (MEDIUM) change in "Edit Workouts": 
+    - routine item has "empty for now" hardcoded string
+    - change "show workouts for routine activity" title to "Workouts of " + routine_name
+    - same for "show exercises for workout activity" + fix the 3 dots option on the top right to "delete all exercises"
  * - (MEDIUM) Deep change in DB 2: add the option to do super sets/drop sets
  * - (LOW) make the expandableListView group color red in general but green when all sets are inserted.
 * */
@@ -84,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
-        setContentView(R.layout.activity_main_new);
+        setContentView(R.layout.activity_main);
 
         // new AndroidX thing:
         // https://stackoverflow.com/questions/57534730/as-viewmodelproviders-of-is-deprecated-how-should-i-create-object-of-viewmode
@@ -93,13 +96,19 @@ public class MainActivity extends AppCompatActivity {
         exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
         setViewModel = new ViewModelProvider(this).get(SetViewModel.class);
 
-
-//        ImageButton button_WorkoutNow = findViewById(R.id.imageButton_WorkoutNowActivity);
+        // WorkoutNow
         LinearLayout button_WorkoutNow = findViewById(R.id.linearLayout_workout_now);
-        TextView textView = findViewById(R.id.linearLayout_workout_now_tv);
+//        TextView textView = findViewById(R.id.linearLayout_workout_now_tv);
 
-        ImageButton button_History = findViewById(R.id.imageButton_History);
-        ImageButton button_EditWorkout = findViewById(R.id.imageButton_EditActivity);
+        // History
+        LinearLayout button_History = findViewById(R.id.linearLayout_history);
+        TextView historyTextView = findViewById(R.id.linearLayout_history_tv);
+        historyTextView.setPaintFlags(historyTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        // EditWorkouts
+        LinearLayout button_EditWorkout = findViewById(R.id.linearLayout_edit_workouts);
+        TextView editWorkoutsTextView = findViewById(R.id.linearLayout_edit_workouts_tv);
+        editWorkoutsTextView.setPaintFlags(historyTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         // Update textview to "start new workout" or "continue prev workout":
         update_text_workout_now_layout();
@@ -255,14 +264,14 @@ public class MainActivity extends AppCompatActivity {
 
             case "new_workout":
                 textView.setText(getString(R.string.const_Start_new_workout_now));
-                imageView.setImageResource(R.drawable.ic_new_text_image);
+                imageView.setImageResource(R.drawable.ic_main_activity_new_workout);
                 textView_info.setVisibility(View.GONE);
                 imageView.setVisibility(View.VISIBLE);
                 break;
 
             case "continue_workout":
                 textView.setText(getString(R.string.const_continue_current_workout));
-                imageView.setImageResource(R.drawable.ic_edit_pencil);
+                imageView.setImageResource(R.drawable.ic_main_activity_edit_pencil);
 
                 // Construct Bold routine and workout and their normal information
                 // Bold "Routine: ", and then add non-bold routine name + new line
@@ -290,18 +299,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void open_dialog(View v){
+        // get all last practical workouts using the most updated routine:
         List<Workout> lastPracticalWorkouts;
         lastPracticalWorkouts = workoutViewModel.getWorkoutsForDialog(workoutViewModel.getNewestRoutineId());
+
+        // build dialog and its view and show it:
         AlertDialog.Builder builder= new AlertDialog.Builder(this);
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View row = inflater.inflate(R.layout.workoutnow_custom_listview,null);
+        View row = inflater.inflate(R.layout.workoutnow_select_workout_listview,null);
         final ListView listView = (ListView)row.findViewById((R.id.workoutnow_listview));
         WorkoutNow_DialogListViewAdapter workoutNow_dialogListViewAdapter = new WorkoutNow_DialogListViewAdapter(this,lastPracticalWorkouts);
         listView.setAdapter(workoutNow_dialogListViewAdapter);
 
         builder.setView(row);
-
-
         final AlertDialog dialog = builder.create();
         dialog.show();
 
@@ -309,17 +319,29 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                dialog.dismiss();
-                dialog.cancel();
-                if (dialog.isShowing()){
+                // get selected workout id
+                Workout selectedWorkout = finalLastPracticalWorkouts.get(position);
+
+                // make sure the abstract Workout of the selected Workout has exercises in it:
+                Workout abstractWorkoutOfSelectedWorkout = workoutViewModel.getAbstractWorkoutFromPractical(
+                        workoutViewModel.getNewestRoutineId(),
+                        selectedWorkout.getWorkoutName());
+                List<Exercise> exerciseList = (exerciseViewModel.getExercisesForWorkout(abstractWorkoutOfSelectedWorkout.getId()));
+
+                if (exerciseList.isEmpty()){
+                    Toast.makeText(MainActivity.this,"Selected workout has no exercises",Toast.LENGTH_SHORT).show();
+                }
+                else {
                     dialog.dismiss();
                     dialog.cancel();
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                        dialog.cancel();
+                    }
+                    Intent intent = new Intent(MainActivity.this, WorkoutNow.class);
+                    intent.putExtra(WorkoutNow.EXTRA_WORKOUT_ID, selectedWorkout.getId());
+                    startActivityForResult(intent, EDIT_LAST_WORKOUT);
                 }
-                int workoutId = finalLastPracticalWorkouts.get(position).getId();
-                Intent intent = new Intent(MainActivity.this, WorkoutNow.class);
-                intent.putExtra(WorkoutNow.EXTRA_WORKOUT_ID,workoutId);
-                startActivityForResult(intent, EDIT_LAST_WORKOUT);
-
             }
         });
 
