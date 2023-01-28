@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*TODO 26.12.2022:
+    - (MEDIUM) make operation and nickname autoCompleteTextViews show the options with zero chars written.
     - (LOW) if "main_muscle" is null/empty/whatever, make all other views unreachable.
     - (LOW) add a small 'i' button for information near operation_name to view all possible operations.
     - In the far future:
@@ -150,8 +151,10 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             setTitle("Add new exercise");
             workoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
             exerciseAbstractID = 0;
-            autoCompleteTextView_SeparateHands.setText("No");
+            // todo: (MEDIUM) fix the default value. with the comment out code, it makes "No" the only option.
+//            autoCompleteTextView_SeparateHands.setText("No");
         }else{
+            // todo: (MEDIUM) make the cancelation go back to list of exercises, and not list of Workouts.
             setResult(RESULT_CANCELED,intent);
             finish();
         }

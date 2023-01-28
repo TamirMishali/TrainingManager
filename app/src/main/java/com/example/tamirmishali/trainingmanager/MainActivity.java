@@ -53,13 +53,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 /*TODO
- * - (HIGH) change 'HISTORY' and "Edit Workout" to be more eye friendly and not like shit + remove title from mainActivity
  * - (MEDIUM) change in "Edit Workouts": 
     - routine item has "empty for now" hardcoded string
     - change "show workouts for routine activity" title to "Workouts of " + routine_name
     - same for "show exercises for workout activity" + fix the 3 dots option on the top right to "delete all exercises"
  * - (MEDIUM) Deep change in DB 2: add the option to do super sets/drop sets
  * - (LOW) make the expandableListView group color red in general but green when all sets are inserted.
+ * - (LOW) add a rolling dumbbell falling and rolling on main screen when opening the app
 * */
 
 public class MainActivity extends AppCompatActivity {

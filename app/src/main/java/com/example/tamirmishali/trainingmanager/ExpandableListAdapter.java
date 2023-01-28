@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -216,6 +217,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
 /*        TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.lblListItemEditextPrevReps);*/
+        ImageView completedExercise = null;
+        if (parent != null)
+            completedExercise = (ImageView) parent.findViewById((R.id.completed_exercise_group_item));
 
         final EditText editTextWeight = (EditText) convertView
                 .findViewById(R.id.lblListItemEditextNowWeight);
@@ -276,23 +280,55 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
         });
 
         //https://stackoverflow.com/questions/10627137/how-can-i-know-when-an-edittext-loses-focus
+        ImageView finalCompletedExercise = completedExercise;
         editTextWeight.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    if (validSetData(editTextWeight.getText().toString())){
-
-                        //save set
-                        //this returns relevant set
-                        //if delete set while edit text has focus on gui, then code can't obtain
-                        //set cuz it doesn't exists. it was just deleted and then the onFocusChanged
-                        //flag gets up.
-                        if (childPosition < _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).size()){
-                            Set editedSet =_listDataChildCurrent.get(_listDataHeader.get(groupPosition)).get(childPosition);
-                            editedSet.setWeight(Double.parseDouble(editTextWeight.getText().toString()));
-                            setViewModel.update(editedSet);
-                        }
+                    String weightStr = editTextWeight.getText().toString();
+                    double weightVal;
+                    // if weight data is legit: not empty and valid double, convert string from view to double
+                    // otherwise, insert the default number -1.0 and set weight view to be empty
+                    if (!weightStr.isEmpty() && validSetData(weightStr))
+                        weightVal = Double.parseDouble(weightStr);
+                    else{
+                        weightVal = -1.0;
+                        editTextWeight.setText("");
                     }
+
+                    // Update set data in DB:
+                    // the next if is responsible to avoid the scenario where a Set has been deleted
+                    // and then trying to access it in the HashMap object after losing focus:
+                    if (childPosition < _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).size()){
+                        Set editedSet =_listDataChildCurrent.get(_listDataHeader.get(groupPosition)).get(childPosition);
+                        editedSet.setWeight(weightVal);
+                        setViewModel.update(editedSet);
+//                        _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).set(childPosition, editedSet);
+                    }
+                    // Check if all sets are full:
+                    setCompletedExerciseImageView(finalCompletedExercise, _listDataChildCurrent.get(_listDataHeader.get(groupPosition)));
+
+//                    // if display Set weight is empty, update data in db to be -1.0 like default
+//                    if (editTextWeight.getText().toString().isEmpty()){
+//                        if (childPosition < _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).size()){
+//                            Set editedSet =_listDataChildCurrent.get(_listDataHeader.get(groupPosition)).get(childPosition);
+//                            editedSet.setWeight(-1.0);
+//                            setViewModel.update(editedSet);
+//                        }
+//                    }
+//                    else if (validSetData(editTextWeight.getText().toString())){
+//
+//                        //save set
+//                        //this returns relevant set
+//                        //if delete set while edit text has focus on gui, then code can't obtain
+//                        //set cuz it doesn't exists. it was just deleted and then the onFocusChanged
+//                        //flag gets up.
+//                        if (childPosition < _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).size()){
+//                            Set editedSet =_listDataChildCurrent.get(_listDataHeader.get(groupPosition)).get(childPosition);
+//                            editedSet.setWeight(Double.parseDouble(editTextWeight.getText().toString()));
+//                            setViewModel.update(editedSet);
+//                        }
+//                    }
                 }
                 else{
                     editTextWeight.setSelectAllOnFocus(true);
@@ -300,23 +336,49 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
             }
         });
 
+        ImageView finalCompletedExercise1 = completedExercise;
         editTextReps.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    if (validSetData(editTextReps.getText().toString())){
-
-                        //save set
-                        //this returns relevant set
-                        if (childPosition < _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).size()) {
-                            Set editedSet = _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).get(childPosition);
-                            editedSet.setReps(Integer.parseInt(editTextReps.getText().toString()));
-                            setViewModel.update(editedSet);
-                        }
-                    }
+                    String repStr = editTextReps.getText().toString();
+                    int repVal;
+                    // if rep data is legit: not empty, convert string from view to int.
+                    // otherwise, insert the default number -1 and set rep view to be empty
+                    if (!repStr.isEmpty() && validSetData(repStr))
+                        repVal = Integer.parseInt(repStr);
                     else{
-                        editTextReps.setSelectAllOnFocus(true);
+                        repVal = -1;
+                        editTextReps.setText("");
                     }
+
+                    // Update set data in DB:
+                    // the next if is responsible to avoid the scenario where a Set has been deleted
+                    // and then trying to access it in the HashMap object after losing focus:
+                    if (childPosition < _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).size()){
+                        Set editedSet =_listDataChildCurrent.get(_listDataHeader.get(groupPosition)).get(childPosition);
+                        editedSet.setReps(repVal);
+                        setViewModel.update(editedSet);
+//                        _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).set(childPosition, editedSet);
+                    }
+                    // Check if all sets are full:
+                    setCompletedExerciseImageView(finalCompletedExercise1, _listDataChildCurrent.get(_listDataHeader.get(groupPosition)));
+
+
+
+//                    if (validSetData(editTextReps.getText().toString())){
+//
+//                        //save set
+//                        //this returns relevant set
+//                        if (childPosition < _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).size()) {
+//                            Set editedSet = _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).get(childPosition);
+//                            editedSet.setReps(Integer.parseInt(editTextReps.getText().toString()));
+//                            setViewModel.update(editedSet);
+//                        }
+//                    }
+//                    else{
+//                        editTextReps.setSelectAllOnFocus(true);
+//                    }
                 }
             }
         });
@@ -379,6 +441,27 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
             extendedEAInfo.setVisibility(View.GONE);
 
 
+        // Show user if all exercise sets are full:
+        ImageView completedExercise = convertView.findViewById(R.id.completed_exercise_group_item);
+
+        // Im not sure what is best, to get sets from DB or going over ExpandableList HashMap that might be null.
+//        Exercise exercise = exerciseViewModel.getExerciseForWorkout(EA_id, currentWorkout.getId());
+//        exercise.setSets(setViewModel.getSetsForExercise(exercise.getId()));
+//        if (areAllSetsFilled(exercise.getSets()))
+//            completedExercise.setVisibility(View.VISIBLE);
+//        else
+//            completedExercise.setVisibility(View.GONE);
+
+        if (_listDataChildCurrent != null && _listDataChildCurrent.get(EA_id) != null){
+            setCompletedExerciseImageView(completedExercise, _listDataChildCurrent.get(EA_id));
+//            if (areAllSetsFilled(_listDataChildCurrent.get(EA_id)))
+//                completedExercise.setVisibility(View.VISIBLE);
+//            else
+//                completedExercise.setVisibility(View.GONE);
+        }
+
+
+
         ImageButton addImageButton = convertView.findViewById(R.id.add_button_group_item);
         addImageButton.setFocusable(Boolean.FALSE);
         addImageButton.setOnClickListener(new View.OnClickListener() {
@@ -426,16 +509,36 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
     }
 
 
+
+
+
+
     // My Functions:
 
     private Boolean isExerciseInExerciseList(Exercise exercise, List<Exercise> exerciseList){
-        Iterator<Exercise> iterator = exerciseList.iterator();
-
-        while (iterator.hasNext()) {
-            if (exercise.getId_exerciseabs() == iterator.next().getId_exerciseabs())
+        for (Exercise exercise_i : exerciseList) {
+            if (exercise.getId_exerciseabs() == exercise_i.getId_exerciseabs())
                 return true;
         }
         return false;
+    }
+
+    void setCompletedExerciseImageView(ImageView imageView, List<Set> setList){
+        if (imageView == null)
+            return;
+        if (areAllSetsFilled(setList))
+            imageView.setVisibility(View.VISIBLE);
+        else
+            imageView.setVisibility((View.GONE));
+
+    }
+
+    private Boolean areAllSetsFilled(List<Set> setList){
+        for (Set set_i : setList) {
+            if (set_i.getReps() < 0 || set_i.getWeight() < 0)
+                return false;
+        }
+        return true;
     }
 
     private int indexOfExerciseInExerciseList(Exercise exercise, List<Exercise> exerciseList){

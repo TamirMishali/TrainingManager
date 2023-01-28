@@ -19,12 +19,21 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
+            <ImageView
+                android:id="@+id/completed_exercise_group_item"
+                android:layout_width="30dp"
+                android:layout_height="fill_parent"
+                android:layout_marginEnd="3dp"
+                android:focusable="false"
+                android:src="@drawable/ic_workout_now_completed_exercise_check"
+                android:layout_gravity="center_horizontal|end"
+                android:visibility="gone"/>
+
             <TextView
                 android:id="@+id/lblListHeader"
                 android:layout_width="380dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:textSize="17sp"
