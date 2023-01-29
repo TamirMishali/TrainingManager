@@ -217,9 +217,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
 /*        TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.lblListItemEditextPrevReps);*/
-        ImageView completedExercise = null;
-        if (parent != null)
-            completedExercise = (ImageView) parent.findViewById((R.id.completed_exercise_group_item));
+//        ImageView completedExercise = null;
+//        if (parent != null)
+//            completedExercise = (ImageView) parent.findViewById((R.id.completed_exercise_group_item));
 
         final EditText editTextWeight = (EditText) convertView
                 .findViewById(R.id.lblListItemEditextNowWeight);
@@ -280,7 +280,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
         });
 
         //https://stackoverflow.com/questions/10627137/how-can-i-know-when-an-edittext-loses-focus
-        ImageView finalCompletedExercise = completedExercise;
+//        ImageView finalCompletedExercise = completedExercise;
         editTextWeight.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -306,7 +306,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 //                        _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).set(childPosition, editedSet);
                     }
                     // Check if all sets are full:
-                    setCompletedExerciseImageView(finalCompletedExercise, _listDataChildCurrent.get(_listDataHeader.get(groupPosition)));
+//                    ImageView completedExercise = null;
+//                    if (parent != null)
+//                        completedExercise = (ImageView) parent.findViewById((R.id.completed_exercise_group_item));
+//                    setCompletedExerciseImageView(completedExercise, _listDataChildCurrent.get(_listDataHeader.get(groupPosition)));
 
 //                    // if display Set weight is empty, update data in db to be -1.0 like default
 //                    if (editTextWeight.getText().toString().isEmpty()){
@@ -336,7 +339,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
             }
         });
 
-        ImageView finalCompletedExercise1 = completedExercise;
+//        ImageView finalCompletedExercise1 = completedExercise;
         editTextReps.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -362,7 +365,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 //                        _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).set(childPosition, editedSet);
                     }
                     // Check if all sets are full:
-                    setCompletedExerciseImageView(finalCompletedExercise1, _listDataChildCurrent.get(_listDataHeader.get(groupPosition)));
+//                    ImageView completedExercise = null;
+//                    if (parent != null)
+//                        completedExercise = (ImageView) parent.findViewById((R.id.completed_exercise_group_item));
+//                    setCompletedExerciseImageView(completedExercise, _listDataChildCurrent.get(_listDataHeader.get(groupPosition)));
 
 
 
@@ -417,9 +423,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
         // insert ExerciseAbstract extended information to extended_ea_info elements:
         TextView ea_load_type = convertView.findViewById(R.id.text_view_exerciseabs_load_type_value);
         ea_load_type.setText(exerciseAbstract.getLoad_type());
+//        ea_load_type.setSelected(true); // Failed attempt for scrolling text
 
         TextView ea_separate_sides = convertView.findViewById(R.id.text_view_exerciseabs_separate_hands_value);
-        ea_separate_sides.setText(exerciseAbstract.getSeparate_sides());
+        if (exerciseAbstract.getSeparate_sides().isEmpty()){
+            convertView.findViewById(R.id.text_view_exerciseabs_separate_hands_title).setVisibility(View.GONE);
+            ea_separate_sides.setVisibility(View.GONE);
+        }
+        else
+            ea_separate_sides.setText(exerciseAbstract.getSeparate_sides());
 
         TextView ea_position = convertView.findViewById(R.id.text_view_exerciseabs_position_value);
         ea_position.setText(exerciseAbstract.getPosition());
@@ -453,11 +465,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 //            completedExercise.setVisibility(View.GONE);
 
         if (_listDataChildCurrent != null && _listDataChildCurrent.get(EA_id) != null){
-            setCompletedExerciseImageView(completedExercise, _listDataChildCurrent.get(EA_id));
-//            if (areAllSetsFilled(_listDataChildCurrent.get(EA_id)))
-//                completedExercise.setVisibility(View.VISIBLE);
-//            else
-//                completedExercise.setVisibility(View.GONE);
+//            setCompletedExerciseImageView(completedExercise, _listDataChildCurrent.get(EA_id));
+            // Basically, there is a function in Exercise that do the same, it just doesn't feel
+            // right to use it that way, so the same function is written here too.
+            if (areAllSetsFilled(_listDataChildCurrent.get(EA_id)) && !_listDataChildCurrent.get(EA_id).isEmpty())
+                completedExercise.setVisibility(View.VISIBLE);
+            else
+                completedExercise.setVisibility(View.GONE);
         }
 
 

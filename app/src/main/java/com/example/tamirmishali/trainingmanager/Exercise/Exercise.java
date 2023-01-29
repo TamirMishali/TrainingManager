@@ -123,4 +123,42 @@ public class Exercise {
         this.sets = sets;
     }
 
+
+    // Custom functions:
+
+    /**
+     * Check if weight and reps values in each Set are filled and valid.
+     * If one of them is smaller than zero, return false.
+     * This is due to a rule that -1 means unfilled value
+     * value = -2 means N/A value but this is for view only.
+     *
+     * @return      Boolean. true for filled properly, false otherwise.
+     * @see         Set
+     */
+    public Boolean areAllSetsFilled(){
+        for (Set set_i : this.sets) {
+            if (set_i.getReps() < 0 || set_i.getWeight() < 0)
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * Check if weight and reps values in each Set are filled and valid.
+     * If one of them is smaller than zero, return false.
+     * This is due to a rule that -1 means unfilled value
+     * value = -2 means N/A value but this is for view only.
+     *
+     * @param       setList is an external List of Sets
+     * @return      Boolean. true for filled properly, false otherwise.
+     * @see         Set
+     */
+    public Boolean areAllSetsFilled(List<Set> setList){
+        for (Set set_i : setList) {
+            if (set_i.getReps() < 0 || set_i.getWeight() < 0)
+                return false;
+        }
+        return true;
+    }
+
 }

@@ -30,7 +30,7 @@
             android:parentActivityName=".ExerciseAbstract.ShowWorkoutAbstractExercises"/>
         <activity
             android:name=".WorkoutNow"
-            android:windowSoftInputMode="adjustPan"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"/>
         <activity android:name=".History.History" />
         <activity android:name=".History.ViewPracticalWorkouts" />

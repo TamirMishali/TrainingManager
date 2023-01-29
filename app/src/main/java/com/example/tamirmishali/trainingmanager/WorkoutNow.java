@@ -1,5 +1,6 @@
 package com.example.tamirmishali.trainingmanager;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,8 +48,6 @@ public class WorkoutNow extends AppCompatActivity {
     private ExerciseViewModel exerciseViewModel;
     private ExerciseAbstractViewModel exerciseAbstractViewModel;
     private SetViewModel setViewModel;
-//    private LinearLayout parentLinearLayout;
-    private LinearLayout extendedEAInfo;
     private Workout currentWorkout;
     private Workout prevWorkout;
     private int sourceWorkoutID;
@@ -60,12 +59,11 @@ public class WorkoutNow extends AppCompatActivity {
 
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.workoutnow_layout);
-
-//        parentLinearLayout = findViewById(R.id.parent_linear_layout);
 
         TextView textViewRoutineName = findViewById(R.id.workoutnow_current_routine);
         TextView textViewWorkoutName = findViewById(R.id.workoutnow_current_workout);
@@ -118,8 +116,7 @@ public class WorkoutNow extends AppCompatActivity {
 
         // Insert names of routine, workout and date at the top of the screen
         try {
-            textViewRoutineName.setText("Routine: " +
-                    routineViewModel.getRoutine(currentWorkout.getId_routine()).getRoutineName());
+            textViewRoutineName.setText("Routine: " + routineViewModel.getRoutine(currentWorkout.getId_routine()).getRoutineName());
             textViewWorkoutName.setText("Workout: " + currentWorkout.getWorkoutName());
 
             //https://stackabuse.com/how-to-get-current-date-and-time-in-java/
@@ -133,7 +130,7 @@ public class WorkoutNow extends AppCompatActivity {
 
 
         // get the listview
-        expListView = (ExpandableListView) findViewById(R.id.lvExp);
+        expListView = findViewById(R.id.lvExp);
 
         listAdapter = new ExpandableListAdapter(this, currentWorkout, prevWorkout,
                 setViewModel,exerciseViewModel,exerciseAbstractViewModel);
@@ -143,27 +140,12 @@ public class WorkoutNow extends AppCompatActivity {
         // https://stackoverflow.com/questions/18632084/expandablelistview-child-items-edittext-cant-keep-focus
         expListView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
 
-        expListView.expandGroup(0);
-        // todo (25.01.2023): find the command that makes the keyboard go under all header children, and not only under the one getting focused.
+        if (!currentWorkout.getExercises().get(0).areAllSetsFilled())
+            expListView.expandGroup(0);
 
+        // found the command that makes the keyboard go as closest to be under all header children:
+        // https://developer.android.com/develop/ui/views/touch-and-input/keyboard-input/visibility
 
-/*        // ListView on child click listener
-        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-                *//*Toast.makeText(
-                        getApplicationContext(),
-                        exerciseListHeader.get(groupPosition)
-                                + " : "
-                                + prevSetsListDataChild.get(
-                                exerciseListHeader.get(groupPosition)).get(
-                                childPosition), Toast.LENGTH_SHORT)
-                        .show();*//*
-                return false;
-            }
-        });*/
     }
 
     @Override
@@ -188,52 +170,6 @@ public class WorkoutNow extends AppCompatActivity {
 
     }
 
-    //if exercise from last Workout exists in the next workout, then add it
-    private HashMap<String, List<Set>> getPrevSetsListDataChild(List<Exercise> exerciseList, List<String> exerciseTitles){
-        if(exerciseList == null || exerciseList.isEmpty())
-            return null;
-
-        //DEBUG and try to understand what happens when there are no sets
-        //if it returns null or empty list
-
-
-        HashMap<String, List<Set>> result = new HashMap<>();
-
-        Iterator<Exercise> iterator = exerciseList.iterator();
-        String exerciseName;
-        Exercise exercise;
-
-        while (iterator.hasNext()) {
-            exercise = iterator.next();
-            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs()).generateExerciseAbstractName();
-            if (exerciseTitles.contains(exerciseName)){
-                result.put(exerciseName,setViewModel.getSetsForExercise(exercise.getId()));
-            }
-        }
-
-        return result;
-    }
-
-    //takes the data from the abstract Workout
-    private List<String> prepareListHeader(List<Exercise> exerciseList){
-        if(exerciseList == null || exerciseList.isEmpty()){
-            Log.d(TAG,"Current exercise list is empty or null");
-            return null;
-        }
-        List<String> listHeader = new ArrayList<>();
-
-        Iterator<Exercise> iterator = exerciseList.iterator();
-        String exerciseName;
-        Exercise exercise;
-
-        //Constructing exercise names for adapter
-        while (iterator.hasNext()) {
-            exercise = iterator.next();
-            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs()).generateExerciseAbstractName();
-            listHeader.add(exerciseName);
-        }
-        return listHeader;
-    }
 
     private Workout constructNewWorkout(Workout prevWorkout) {
         Workout newWorkout;
@@ -294,7 +230,7 @@ public class WorkoutNow extends AppCompatActivity {
         // don't forget that currentExercise contains the Exercise from absWorkout
         while(iteratorCurrentExercise.hasNext()) {
             Exercise currentExercise = iteratorCurrentExercise.next();
-            Boolean foundFlag = Boolean.FALSE;
+            boolean foundFlag = Boolean.FALSE;
 
             //iterate over all exercises in prevWorkout and search for currentExercise
             prevIterator = prevWorkout.getExercises().iterator();
@@ -315,11 +251,9 @@ public class WorkoutNow extends AppCompatActivity {
                     List<Set> setList = setViewModel.getSetsForExercise(currentExercise.getId());
                     if (!setList.isEmpty())
                         currentExercise.setSets(setList);
-                        //currentSetsListDataChild.put(exerciseAbstractViewModel.getExerciseAbsFromId(currentExercise.getId_exerciseabs()).getName(),setList);
 
                     foundFlag = Boolean.TRUE;
-                    /*else
-                        currentSetsListDataChild.put(exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId()).getName(),null);*/
+
                     break;
                 }
             }
@@ -344,19 +278,6 @@ public class WorkoutNow extends AppCompatActivity {
         return newWorkout;
     }
 
-
-    @NonNull//this is a marker, does nothing but telling is can never be null
-    private Boolean isExerciseInExerciseList(Exercise exercise, List<Exercise> exerciseList){
-        Iterator<Exercise> iterator = exerciseList.iterator();
-        //Exercise currentExercise;
-
-        while (iterator.hasNext()) {
-            //currentExercise = iterator.next();
-            if (exercise.getId_exerciseabs() == iterator.next().getId_exerciseabs()/*currentExercise.getId_exerciseabs()*/)
-                return true;
-        }
-        return false;
-    }
 }
 
 
