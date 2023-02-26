@@ -59,7 +59,7 @@ public class ShowRoutineWorkouts extends AppCompatActivity {
         }
 
         //Title
-        setTitle(sourceRoutineName);
+        setTitle("Workouts of: " + sourceRoutineName);
 
 
 
@@ -67,7 +67,7 @@ public class ShowRoutineWorkouts extends AppCompatActivity {
 
 
 
-        //Floating Plus button decleration
+        //Floating Plus button declaration
         FloatingActionButton buttonAddWorkout = findViewById(R.id.button_add_workout);
         buttonAddWorkout.setOnClickListener(new View.OnClickListener() {
             @Override

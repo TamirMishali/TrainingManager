@@ -58,7 +58,7 @@ public class ViewPracticalWorkouts extends AppCompatActivity {
         //Title
         setTitle(sourceRoutineName);
 
-/*        //Floating Plus button decleration
+/*        //Floating Plus button declaration
         FloatingActionButton buttonAddWorkout = findViewById(R.id.button_add_workout);
         buttonAddWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,11 +72,11 @@ public class ViewPracticalWorkouts extends AppCompatActivity {
         final RecyclerView recyclerView = findViewById(R.id.recycler_view_workout);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //WorkoutAdapter Decleration
+        //WorkoutAdapter Declaration
         final WorkoutAdapter adapter = new WorkoutAdapter();
         recyclerView.setAdapter(adapter);
 
-        //WorkoutViewModel Decleration
+        //WorkoutViewModel Declaration
         workoutViewModel = new ViewModelProvider(this).get(WorkoutViewModel.class);
         workoutViewModel.getPracticalWorkoutsForRoutineLiveData(sourceRoutineID).observe(this, new Observer<List<Workout>>() {
             @Override

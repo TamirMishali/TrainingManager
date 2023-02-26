@@ -17,8 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-// ToDo (23.01.2023):
-//  add a checkbox in each routine row to choose the default routine. only one can be marked at all times.
+// ToDo (MEDIUM) add a checkbox in each routine row to choose the default routine. only one can be marked at all times.
 
 public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineHolder> {
 
@@ -47,7 +46,8 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineH
         Date d = new Date(currentRoutine.getRoutineDate().getTime());
         holder.textViewroutinedate.setText(formatter.format(d));
 
-        holder.textViewDescription.setText("empty for now");
+        // todo: (LOW) change description to "# Workouts"
+        holder.textViewDescription.setText("");
         holder.itemView.setTag(holder);
     }
 

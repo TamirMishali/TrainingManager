@@ -42,9 +42,9 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
     public void delete(ExerciseAbstract exerciseabstract){
         repository.delete(exerciseabstract);
     }
-    public void deleteAllExerciseAbstracts(){
-        repository.deleteAllExerciseAbstracts();
-    }
+//    public void deleteAllExerciseAbstracts(int workout_id){
+//        repository.deleteAllExerciseAbstracts(workout_id);
+//    }
     public LiveData<List<ExerciseAbstract>> getAllExerciseAbstracts(){
         return allExerciseAbstracts;
     }

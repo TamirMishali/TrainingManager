@@ -1,5 +1,7 @@
 package com.example.tamirmishali.trainingmanager;
 
+import static android.view.View.FOCUS_RIGHT;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -53,11 +56,9 @@ import java.util.Objects;
 //3. delete set logic
 
 // Todo (22.01.2023):
-//  - (HIGH) Add 'i' icon for additional information of EA in header row, near the '+' sign.
 //  - (MEDIUM) Rearrange the EA fields in a logical way that the probability of a pair of fields to be empty
 //  are in a same line and then vanish the line
 //  - (LOW) if there is no previous set data, keep it empty, not 'N/A'.
-//  - (HIGH) look at back workout, where the Header is cut in the middle (i printed screen)
 //
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter{
@@ -275,7 +276,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
                 destDuplicatedSet.setReps(srcDuplicatedSet.getReps());
                 setViewModel.update(destDuplicatedSet);
                 notifyDataSetChanged();
-
+                Log.d(TAG, "duplicateSetImageButton.onClick triggered");
             }
         });
 
@@ -285,6 +286,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
+                    Log.d(TAG, "editTextWeight.setOnFocusChangeListener lost focus." +
+                            "\ngroupPosition=" + String.valueOf(groupPosition) +
+                            "\nchildPosition=" + String.valueOf(childPosition));
                     String weightStr = editTextWeight.getText().toString();
                     double weightVal;
                     // if weight data is legit: not empty and valid double, convert string from view to double
@@ -305,37 +309,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
                         setViewModel.update(editedSet);
 //                        _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).set(childPosition, editedSet);
                     }
-                    // Check if all sets are full:
-//                    ImageView completedExercise = null;
-//                    if (parent != null)
-//                        completedExercise = (ImageView) parent.findViewById((R.id.completed_exercise_group_item));
-//                    setCompletedExerciseImageView(completedExercise, _listDataChildCurrent.get(_listDataHeader.get(groupPosition)));
 
-//                    // if display Set weight is empty, update data in db to be -1.0 like default
-//                    if (editTextWeight.getText().toString().isEmpty()){
-//                        if (childPosition < _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).size()){
-//                            Set editedSet =_listDataChildCurrent.get(_listDataHeader.get(groupPosition)).get(childPosition);
-//                            editedSet.setWeight(-1.0);
-//                            setViewModel.update(editedSet);
-//                        }
-//                    }
-//                    else if (validSetData(editTextWeight.getText().toString())){
-//
-//                        //save set
-//                        //this returns relevant set
-//                        //if delete set while edit text has focus on gui, then code can't obtain
-//                        //set cuz it doesn't exists. it was just deleted and then the onFocusChanged
-//                        //flag gets up.
-//                        if (childPosition < _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).size()){
-//                            Set editedSet =_listDataChildCurrent.get(_listDataHeader.get(groupPosition)).get(childPosition);
-//                            editedSet.setWeight(Double.parseDouble(editTextWeight.getText().toString()));
-//                            setViewModel.update(editedSet);
-//                        }
-//                    }
                 }
-                else{
-                    editTextWeight.setSelectAllOnFocus(true);
-                }
+//                else{
+//                    editTextWeight.setSelectAllOnFocus(true);
+//                }
             }
         });
 
@@ -344,6 +322,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
+                    Log.d(TAG, "editTextReps.setOnFocusChangeListener lost focus." +
+                            "\ngroupPosition=" + String.valueOf(groupPosition) +
+                            "\nchildPosition=" + String.valueOf(childPosition));
                     String repStr = editTextReps.getText().toString();
                     int repVal;
                     // if rep data is legit: not empty, convert string from view to int.

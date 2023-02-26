@@ -49,11 +49,11 @@ public class ShowRoutines extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler_view_routine);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //RoutineAdapter Decleration
+        //RoutineAdapter Declaration
         final RoutineAdapter adapter = new RoutineAdapter();
         recyclerView.setAdapter(adapter);
 
-        //RoutineViewModel Decleration
+        //RoutineViewModel Declaration
         routineViewModel = new ViewModelProvider(this).get(RoutineViewModel.class);
         routineViewModel.getAllRoutines().observe(this, new Observer<List<Routine>>() {
             @Override
@@ -112,8 +112,8 @@ public class ShowRoutines extends AppCompatActivity {
             @Override
             public void onItemClick(Routine routine) {
                 Intent intent = new Intent(ShowRoutines.this, ShowRoutineWorkouts.class); //EditWorkouts
-                intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID,routine.getUid());
-                intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_NAME,routine.getRoutineName());
+                intent.putExtra(ShowRoutineWorkouts.EXTRA_ROUTINE_ID,routine.getUid());
+                intent.putExtra(ShowRoutineWorkouts.EXTRA_ROUTINE_NAME,routine.getRoutineName());
                 startActivityForResult(intent, ADD_WORKOUTS_REQUEST);
             }
         });

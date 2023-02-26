@@ -31,8 +31,8 @@ public interface ExerciseAbstractDao {
     @Delete
     void delete(ExerciseAbstract exerciseAbstract);
 
-    @Query("DELETE FROM exerciseabs_table")
-    void deleteAllexerciseAbstracts();
+//    @Query("DELETE FROM exerciseabs_table where ")
+//    void deleteAllexerciseAbstracts(int workout_id);
 
     @Query("SELECT * from exerciseabs_table Order by id_muscle, id_operation")
     LiveData<List<ExerciseAbstract>> getAllExercisesAbstract();

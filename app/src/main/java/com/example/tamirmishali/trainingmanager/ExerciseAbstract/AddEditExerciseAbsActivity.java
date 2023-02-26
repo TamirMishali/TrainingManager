@@ -2,6 +2,7 @@ package com.example.tamirmishali.trainingmanager.ExerciseAbstract;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,9 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*TODO 26.12.2022:
-    - (MEDIUM) make operation and nickname autoCompleteTextViews show the options with zero chars written.
     - (LOW) if "main_muscle" is null/empty/whatever, make all other views unreachable.
-    - (LOW) add a small 'i' button for information near operation_name to view all possible operations.
     - In the far future:
         - (MEDIUM) add a "plus" button near each field (except sep_hands) to add
           new attributes to the sql table.
@@ -90,9 +89,12 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
 
         // Free text views:
         ArrayAdapter<String> operationAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item, operationValues);
+//        autoCompleteTextView_Operation.setThreshold(1);
         autoCompleteTextView_Operation.setAdapter(operationAdapter);
 
+
         ArrayAdapter<String> nicknameAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item, nicknameValues);
+//        autoCompleteTextView_Nickname.setThreshold(1);
         autoCompleteTextView_Nickname.setAdapter(nicknameAdapter);
 
 
@@ -121,9 +123,9 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
         ArrayAdapter<String> thumbsDirectionAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item, thumbsDirectionValues);
         autoCompleteTextView_ThumbsDirection.setAdapter(thumbsDirectionAdapter);
 
-        List<String> SeparateHandsValues = new ArrayList<>(exerciseAbstractViewModel.getExerciseAbstractInfoValueValueByHeader("separate_hands"));
-        ArrayAdapter<String> SeparateHandsAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item, SeparateHandsValues);
-        autoCompleteTextView_SeparateHands.setAdapter(SeparateHandsAdapter);
+        List<String> separateHandsValues = new ArrayList<>(exerciseAbstractViewModel.getExerciseAbstractInfoValueValueByHeader("separate_hands"));
+        ArrayAdapter<String> separateHandsAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item, separateHandsValues);
+        autoCompleteTextView_SeparateHands.setAdapter(separateHandsAdapter);
 
 
 
@@ -151,10 +153,12 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             setTitle("Add new exercise");
             workoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
             exerciseAbstractID = 0;
-            // todo: (MEDIUM) fix the default value. with the comment out code, it makes "No" the only option.
-//            autoCompleteTextView_SeparateHands.setText("No");
+            autoCompleteTextView_SeparateHands.setText("No");
+            // This make sure that the other options are shown on dropdown click:
+            separateHandsAdapter.getFilter().filter(null);
+
         }else{
-            // todo: (MEDIUM) make the cancelation go back to list of exercises, and not list of Workouts.
+            // todo: (HIGH) make the cancellation go back to list of exercises, and not list of Workouts.
             setResult(RESULT_CANCELED,intent);
             finish();
         }
@@ -168,13 +172,21 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
 //                Log.d(TAG, "autoCompleteTextView_Muscle.setOnItemClickListener Triggered");
 
                 int current_muscle_id = exerciseAbstractViewModel.getExerciseAbstractInfoValueId(adapterView.getItemAtPosition(position).toString());
-                operationValues = new ArrayList<>(exerciseAbstractViewModel.getExerciseAbstractOperationByMuscleId(current_muscle_id));
+                operationValues.clear();
+                operationValues.addAll(new ArrayList<>(exerciseAbstractViewModel.getExerciseAbstractOperationByMuscleId(current_muscle_id)));
                 operationAdapter.clear();
                 operationAdapter.addAll(operationValues);
                 operationAdapter.notifyDataSetChanged();
+
+                // This updates the completion inner arraylist of the input so when clicking on
+                // operation name small arrow, the list will be already defined and ready.
+                if(autoCompleteTextView_Operation.getText().toString().isEmpty())
+                    operationAdapter.getFilter().filter(null);
+
             }
         });
 
+        // Update Nickname options when Operation box loses focus.
         autoCompleteTextView_Operation.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -200,6 +212,11 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
                     nicknameAdapter.clear();
                     nicknameAdapter.addAll(nicknameValues);
                     nicknameAdapter.notifyDataSetChanged();
+
+                    // This updates the completion inner arraylist of the input so when clicking on
+                    // operation name small arrow, the list will be already defined and ready.
+                    if(autoCompleteTextView_Nickname.getText().toString().isEmpty())
+                        nicknameAdapter.getFilter().filter(null);
                 }
 
             }
@@ -226,6 +243,7 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 setExerciseabsNameEditText();
+
             }
 
             @Override
@@ -278,7 +296,6 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
         }
 
         // if nickname is not empty, get the new inserted operation id and insert nickname as well
-        // todo: (16.01.2023) i don't check if nickname exists in db before inserting new one. do it.
         if (!autoCompleteTextView_Nickname.getText().toString().isEmpty()){
             // Check if nickname exists for current exercise first
 

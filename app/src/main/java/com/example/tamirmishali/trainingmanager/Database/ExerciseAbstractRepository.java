@@ -57,9 +57,9 @@ public class ExerciseAbstractRepository {
     public void delete(ExerciseAbstract exerciseAbstract){
         new DeleteExerciseAbstractAsyncTask(exerciseAbstractDao).execute(exerciseAbstract);
     }
-    public void deleteAllExerciseAbstracts(){
-        new DeleteAllExerciseAbstractAsyncTask(exerciseAbstractDao).execute();
-    }
+//    public void deleteAllExerciseAbstracts(int workout_id){
+//        new DeleteAllExerciseAbstractAsyncTask(exerciseAbstractDao).execute(workout_id);
+//    }
     public LiveData<List<ExerciseAbstract>> getAllExerciseAbstracts(){
         return allExerciseAbstracts;
     }
@@ -284,19 +284,19 @@ public class ExerciseAbstractRepository {
             return null;
         }
     }
-    private static class DeleteAllExerciseAbstractAsyncTask extends AsyncTask<Void, Void, Void>{
-        private ExerciseAbstractDao exerciseAbstractDao;
-
-        private DeleteAllExerciseAbstractAsyncTask(ExerciseAbstractDao exerciseAbstractDao){
-            this.exerciseAbstractDao = exerciseAbstractDao;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            exerciseAbstractDao.deleteAllexerciseAbstracts();
-            return null;
-        }
-    }
+//    private static class DeleteAllExerciseAbstractAsyncTask extends AsyncTask<Integer, Integer, Void>{
+//        private ExerciseAbstractDao exerciseAbstractDao;
+//
+//        private DeleteAllExerciseAbstractAsyncTask(ExerciseAbstractDao exerciseAbstractDao){
+//            this.exerciseAbstractDao = exerciseAbstractDao;
+//        }
+//
+//        @Override
+//        protected Void doInBackground(Integer... values) {
+//            exerciseAbstractDao.deleteAllexerciseAbstracts(values[0]);
+//            return null;
+//        }
+//    }
 
     private static class GetExerciseAbsFromIdAsyncTask extends AsyncTask<Integer, Integer, ExerciseAbstract>{
         private ExerciseAbstractDao exerciseAbstractDao;

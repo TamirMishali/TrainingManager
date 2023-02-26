@@ -32,6 +32,7 @@ public class AddEditRoutineActivity extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private EditText editTextRoutineName;
 
+    // todo 26.02.2023: (HIGH) Change visual of this monstrosity :_(. addEditWorkout too.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

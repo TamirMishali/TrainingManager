@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".ExerciseAbstract.AddEditExerciseAbsActivity">
-<!--TODO: go to video and the activity that opens the new exercise layout -->
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -89,18 +89,29 @@
 <!-- Finish this in code using string arrays in this video
     https://www.youtube.com/watch?v=B9YBvqw7CTU&ab_channel=CodinginFlow
     -->
-
-    <AutoCompleteTextView
-        android:id="@+id/autoCompleteTextView_operationName"
+<!--    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
-        android:hint="Operation name"
-        android:completionThreshold="1">
+        android:hint="Operation name">
 
-    </AutoCompleteTextView>
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextView_operationName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="5dp" >
+
+        </AutoCompleteTextView>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
 
 
     <View
@@ -125,18 +136,26 @@
         android:gravity="center"
         />
 
-        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:hint="Nickname">
+
+        <AutoCompleteTextView
             android:id="@+id/autoCompleteTextView_Nickname"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:completionThreshold="1"
-            android:hint="Nickname">
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="5dp" >
 
-        </com.google.android.material.textfield.MaterialAutoCompleteTextView>
+        </AutoCompleteTextView>
 
+    </com.google.android.material.textfield.TextInputLayout>
 
     <!--Finish this part in code: add string arrays read from DB and insert them as options
     https://www.youtube.com/watch?v=741l_fPKL3Y&ab_channel=Stevdza-San
@@ -154,8 +173,9 @@
             android:id="@+id/autoCompleteTextView_LoadType"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="none"
             android:layout_weight="1">
+<!--            android:inputType="none"-->
+
 
         </AutoCompleteTextView>
 
@@ -278,7 +298,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
-        android:hint="Separate Sides? (Default is no)">
+        android:hint="Separate Sides?">
 
         <AutoCompleteTextView
             android:id="@+id/autoCompleteTextView_SeparateHands"

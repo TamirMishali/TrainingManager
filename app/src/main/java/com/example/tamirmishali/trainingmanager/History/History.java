@@ -37,11 +37,11 @@ public class History extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler_view_routine);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //RoutineAdapter Decleration
+        //RoutineAdapter Declaration
         final RoutineAdapter adapter = new RoutineAdapter();
         recyclerView.setAdapter(adapter);
 
-        //RoutineViewModel Decleration
+        //RoutineViewModel Declaration
         routineViewModel = new ViewModelProvider(this).get(RoutineViewModel.class);
         routineViewModel.getAllRoutines().observe(this, new Observer<List<Routine>>() {
             @Override

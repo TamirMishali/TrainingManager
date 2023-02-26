@@ -57,7 +57,7 @@ public class ShowWorkoutAbstractExercises extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editexerciseabs_layout);
 
-        //Get workout ID for saving the exerciseabstract
+        //Get workout ID for saving the exerciseAbstract
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_WORKOUT_ID)) {
             sourceWorkoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
@@ -68,7 +68,7 @@ public class ShowWorkoutAbstractExercises extends AppCompatActivity {
         }
 
         //Title
-        setTitle(sourceWorkoutName);
+        setTitle("Exercises of: " + sourceWorkoutName);
 
         //Floating Plus button declaration
         FloatingActionButton buttonAddWorkout = findViewById(R.id.button_add_exerciseabs);
@@ -234,23 +234,23 @@ public class ShowWorkoutAbstractExercises extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.editworkout_menu,menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.delete_all_exerciseabstract:
-                exerciseabstractViewModel.deleteAllExerciseAbstracts();
-                Toast.makeText(this, "All exercises deleted", Toast.LENGTH_SHORT).show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu){
+//        MenuInflater menuInflater = getMenuInflater();
+//        menuInflater.inflate(R.menu.editworkout_menu,menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.delete_all_exerciseabstract:
+//                exerciseabstractViewModel.deleteAllExerciseAbstracts(sourceWorkoutID);
+//                Toast.makeText(this, "All exercises deleted", Toast.LENGTH_SHORT).show();
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 
 }

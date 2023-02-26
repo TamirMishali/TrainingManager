@@ -53,12 +53,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 /*TODO
- * - (MEDIUM) change in "Edit Workouts": 
-    - routine item has "empty for now" hardcoded string
-    - change "show workouts for routine activity" title to "Workouts of " + routine_name
-    - same for "show exercises for workout activity" + fix the 3 dots option on the top right to "delete all exercises"
  * - (MEDIUM) Deep change in DB 2: add the option to do super sets/drop sets
- * - (LOW) make the expandableListView group color red in general but green when all sets are inserted.
  * - (LOW) add a rolling dumbbell falling and rolling on main screen when opening the app
 * */
 
@@ -74,8 +69,9 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("native-lib");
     }
 
-    // todo (25.01.2023): (LOW) why there is a liveData object in main activity? remove it.
-    LiveData<List<Routine>> routines;
+    // was a to_do. if there is no problem with all the commenting, remove all "routine" lines in
+    // code (25.01.2023): (LOW) why there is a liveData object in main activity? remove it.
+//    LiveData<List<Routine>> routines;
 
     private RoutineViewModel routineViewModel;
     private WorkoutViewModel workoutViewModel;
@@ -200,22 +196,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private Boolean dataValidation() {
-        //check for existing routines
-        routines = routineViewModel.getAllRoutines();
-        if (routines.getValue().isEmpty()) {
-            Toast.makeText(this,"No routines",Toast.LENGTH_SHORT).show();
-            return Boolean.FALSE;
-        }
-
-        //check for existing workouts
-
-
-        //check for at least one exercise exists in workout
-        //check for full sets fields
-
-        return Boolean.TRUE;
-    }
+//    private Boolean dataValidation() {
+//        //check for existing routines
+//        routines = routineViewModel.getAllRoutines();
+//        if (routines.getValue().isEmpty()) {
+//            Toast.makeText(this,"No routines",Toast.LENGTH_SHORT).show();
+//            return Boolean.FALSE;
+//        }
+//
+//        //check for existing workouts
+//
+//
+//        //check for at least one exercise exists in workout
+//        //check for full sets fields
+//
+//        return Boolean.TRUE;
+//    }
 
     public void update_text_workout_now_layout(){
         // Some tests to see what to write in the workout now button
