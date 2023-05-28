@@ -57,7 +57,7 @@ public abstract class TrainingManagerDatabase extends RoomDatabase {
     public abstract ExerciseAbstractNicknameDao exerciseAbstractNicknameDao();
 
     // Prevention of opening the same database to RAM twice.
-    private static final String DATABASE_NAME = "training_manager_database.db";
+    private static final String DATABASE_NAME = "training_manager_database_28-05-2023.db";
     private static volatile TrainingManagerDatabase INSTANCE;
 
     public static synchronized TrainingManagerDatabase getInstance(Context context) {

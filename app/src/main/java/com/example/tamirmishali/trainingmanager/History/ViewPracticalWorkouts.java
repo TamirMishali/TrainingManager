@@ -56,7 +56,7 @@ public class ViewPracticalWorkouts extends AppCompatActivity {
         }
 
         //Title
-        setTitle(sourceRoutineName);
+        setTitle(sourceRoutineName + "workout history:");
 
 /*        //Floating Plus button declaration
         FloatingActionButton buttonAddWorkout = findViewById(R.id.button_add_workout);

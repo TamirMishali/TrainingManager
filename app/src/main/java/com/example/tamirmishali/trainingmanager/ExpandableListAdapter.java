@@ -272,11 +272,21 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
             public void onClick(View v) {
                 Set destDuplicatedSet = _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).get(childPosition);
                 Set srcDuplicatedSet = _listDataChildPrev.get(_listDataHeader.get(groupPosition)).get(childPosition);
+                Log.d(TAG, "duplicateSetImageButton.onClick 1 Start. current weight is " + destDuplicatedSet.getWeight() + ".\nParent has focus=" + parent.hasFocus());
+//                parent.requestFocus();
+                //v.requestFocus();
+//                Log.d(TAG, "duplicateSetImageButton.onClick 2 Parent request focus. \nHas focus=" + parent.hasFocus());
                 destDuplicatedSet.setWeight(srcDuplicatedSet.getWeight());
+//                Log.d(TAG, "duplicateSetImageButton.onClick 3 Duplicated weight");
                 destDuplicatedSet.setReps(srcDuplicatedSet.getReps());
+//                Log.d(TAG, "duplicateSetImageButton.onClick 4 Duplicated reps");
                 setViewModel.update(destDuplicatedSet);
+//                Log.d(TAG, "duplicateSetImageButton.onClick 5 Save set to DB");
                 notifyDataSetChanged();
-                Log.d(TAG, "duplicateSetImageButton.onClick triggered");
+//                Log.d(TAG, "duplicateSetImageButton.onClick 6 notifyDataSetChanged triggered");
+                //parent.requestFocus();
+                //editTextWeight.clearFocus();
+//                Log.d(TAG, "duplicateSetImageButton.onClick 7 Cleared focus triggered");
             }
         });
 
@@ -297,7 +307,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
                         weightVal = Double.parseDouble(weightStr);
                     else{
                         weightVal = -1.0;
-                        editTextWeight.setText("");
+                        // That caused the problem that i was unable to insert new data to weight and reps
+                        //editTextWeight.setText("");
                     }
 
                     // Update set data in DB:
@@ -333,7 +344,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
                         repVal = Integer.parseInt(repStr);
                     else{
                         repVal = -1;
-                        editTextReps.setText("");
+                        // That caused the problem that i was unable to insert new data to weight and reps
+                        //editTextReps.setText("");
                     }
 
                     // Update set data in DB:
@@ -345,36 +357,46 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
                         setViewModel.update(editedSet);
 //                        _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).set(childPosition, editedSet);
                     }
-                    // Check if all sets are full:
-//                    ImageView completedExercise = null;
-//                    if (parent != null)
-//                        completedExercise = (ImageView) parent.findViewById((R.id.completed_exercise_group_item));
-//                    setCompletedExerciseImageView(completedExercise, _listDataChildCurrent.get(_listDataHeader.get(groupPosition)));
 
-
-
-//                    if (validSetData(editTextReps.getText().toString())){
-//
-//                        //save set
-//                        //this returns relevant set
-//                        if (childPosition < _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).size()) {
-//                            Set editedSet = _listDataChildCurrent.get(_listDataHeader.get(groupPosition)).get(childPosition);
-//                            editedSet.setReps(Integer.parseInt(editTextReps.getText().toString()));
-//                            setViewModel.update(editedSet);
-//                        }
-//                    }
-//                    else{
-//                        editTextReps.setSelectAllOnFocus(true);
-//                    }
+                }
+                else if (hasFocus) {
+                    editTextWeight.clearFocus(); // Clear focus from lblListItemEditextNowWeight
                 }
             }
         });
+
+
+/*        txtListChildWeight.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    Log.d(TAG, "txtListChildWeight.setOnFocusChangeListener lost focus." +
+                            "\ngroupPosition=" + String.valueOf(groupPosition) +
+                            "\nchildPosition=" + String.valueOf(childPosition));
+
+                }
+            }
+        });
+
+        txtListChildReps.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    Log.d(TAG, "txtListChildReps.setOnFocusChangeListener lost focus." +
+                            "\ngroupPosition=" + String.valueOf(groupPosition) +
+                            "\nchildPosition=" + String.valueOf(childPosition));
+
+                }
+            }
+        });*/
 
         txtListChildWeight.setText(numToStrView(childSet.get(0).getWeight()));
         txtListChildReps.setText(numToStrView((double)childSet.get(0).getReps()));
 
         editTextWeight.setText(numToStrView(childSet.get(1).getWeight()));
         editTextReps.setText(numToStrView((double)childSet.get(1).getReps()));
+
+        // Log.d(TAG, "insert Set data into TextViews.");
 
 
         return convertView;

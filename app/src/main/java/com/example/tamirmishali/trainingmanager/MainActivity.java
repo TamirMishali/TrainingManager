@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int GET_DB_PATH_REQUEST_CODE = 2;
     protected static final String ACTION_FINISH_WORKOUT = "finish_workout";
 
-    protected static String DATABASE_NAME = "routines_database";
+    protected static String DATABASE_NAME = "training_manager_database";
 
     // Used to load the 'native-lib' library on application startup.
     static {
@@ -364,7 +364,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             File DirectoryName = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             File dbFile = new File(this.getDatabasePath(DATABASE_NAME).getAbsolutePath());
-            FileInputStream fis = new FileInputStream(dbFile);
+            Log.d("MainActivity.exportDB()", "database absolut file path is:\n " + String.valueOf(dbFile));
+            FileInputStream fis = new FileInputStream(dbFile + ".db");
 
             String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
 

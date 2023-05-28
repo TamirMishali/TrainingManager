@@ -140,11 +140,23 @@ public class WorkoutNow extends AppCompatActivity {
         // https://stackoverflow.com/questions/18632084/expandablelistview-child-items-edittext-cant-keep-focus
         expListView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
 
-        if (!currentWorkout.getExercises().get(0).areAllSetsFilled())
-            expListView.expandGroup(0);
+        if (!currentWorkout.getExercises().get(0).areAllSetsFilled()) {
+            int count = listAdapter.getGroupCount();
+            for (int i = 0; i < count; i++)
+                expListView.expandGroup(i);
+            // expListView.expandGroup(0);
+        }
 
         // found the command that makes the keyboard go as closest to be under all header children:
         // https://developer.android.com/develop/ui/views/touch-and-input/keyboard-input/visibility
+
+        // Try to change the focus to the ExpandableListView so when i click an element inside it,
+        //  it will already be focused, and the focus jumps inside it will be less noticable.
+        //  current state: when clicking the "Reps" EditText, the focus changes to the
+        //  ExpandableListView first, then to the relevant child, and then to the first element in
+        //  the child's linear layout, which is the "Weight" EditText. I believe that if the
+        //  ExpandableListView element is programmatically focused first, it will solve it.
+        expListView.requestFocus();
 
     }
 

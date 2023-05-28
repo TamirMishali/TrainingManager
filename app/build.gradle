@@ -7,8 +7,8 @@ android {
     }
     compileSdkVersion 33
     defaultConfig {
-        applicationId "com.example.tamirmishali.trainingmanager.test" //don't forget to change this back on master branch
-        minSdkVersion 24
+        applicationId "com.example.tamirmishali.trainingmanager.test"
+        minSdk 27//don't forget to change this back on master branch
         targetSdkVersion 33
         versionCode 2
         versionName "2.0"
