@@ -29,7 +29,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 import java.util.ListIterator;
 
-// todo - (LOW) change colors of text in EA item
+// todo:
+//  - (LOW) change colors of text in EA item
+//  - (HIGH) add number of sets and reps range
 
 // This class is showing exerciseAbstracts for a specific workout
 // For reaching the list of all exercisesAbstracts, there is a button "buttonAddWorkout"

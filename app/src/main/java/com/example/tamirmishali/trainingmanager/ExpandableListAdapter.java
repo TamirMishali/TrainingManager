@@ -135,7 +135,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
                 // get Exercise Sets
                 prevExercise = prevWorkout.getExercises().get(prevExercise_index);
-                prevSets = setViewModel.getSetsForExercise(prevExercise.getId());
+                prevSets = prevExercise.getSets();//setViewModel.getSetsForExercise(prevExercise.getId());
             }
             else{
                 prevExercise= new Exercise();

@@ -29,7 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*TODO 26.12.2022:
-    - (LOW) if "main_muscle" is null/empty/whatever, make all other views unreachable.
+    - (HIGH)   add in db and frontend order of EAs.
+    - (MEDIUM) fix: when editing an EA the fields in comboboxes are not full.
+    - (LOW)    if "main_muscle" is null/empty/whatever, make all other views unreachable.
     - In the far future:
         - (MEDIUM) add a "plus" button near each field (except sep_hands) to add
           new attributes to the sql table.

@@ -36,6 +36,8 @@ import androidx.annotation.NonNull;
 // Another tutorial i found online:
 // https://blog.devgenius.io/implementing-room-database-bc9e4deb6600
 
+// ToDo: fix DB backup that only backup up to 27.02.23. even when the date is 10.09.23
+
 @Database(version = 14,entities = {Routine.class, Workout.class, Exercise.class,
         ExerciseAbstract.class, ExerciseAbstractInfoValue.class, ExerciseAbstractInfo.class,
         ExerciseAbstractOperation.class, ExerciseAbstractNickname.class,
@@ -57,7 +59,7 @@ public abstract class TrainingManagerDatabase extends RoomDatabase {
     public abstract ExerciseAbstractNicknameDao exerciseAbstractNicknameDao();
 
     // Prevention of opening the same database to RAM twice.
-    private static final String DATABASE_NAME = "training_manager_database_28-05-2023.db";
+    private static final String DATABASE_NAME = "training_manager_database_23-07-2023.db";
     private static volatile TrainingManagerDatabase INSTANCE;
 
     public static synchronized TrainingManagerDatabase getInstance(Context context) {

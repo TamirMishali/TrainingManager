@@ -88,7 +88,21 @@ public class ExerciseRepository {
 
     }
 
-    //Exercise - AsyncTasks
+    public Exercise getMostRecentExerciseFromAllWorkoutsInRoutine(int routineId, int workoutId, int exerciseAbstractId){
+        try {
+            exercise = new GetMostRecentExerciseFromAllWorkoutsInRoutineAsyncTask(exerciseDao).execute(routineId, workoutId, exerciseAbstractId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return exercise;
+    }
+
+
+    // ---------------------------------------------------------------------------------------------
+    // ------------------------------- Exercise - AsyncTasks ---------------------------------------
+    // ---------------------------------------------------------------------------------------------
     private static class InsertExerciseAsyncTask extends AsyncTask<Exercise, Void, Void>{
         private ExerciseDao exerciseDao;
 
@@ -164,6 +178,20 @@ public class ExerciseRepository {
         }
         protected List<Exercise> doInBackground(Integer... values) {
             return exerciseDao.getExercisesForWorkout(values[0]);
+        }
+
+    }
+
+    private static class GetMostRecentExerciseFromAllWorkoutsInRoutineAsyncTask extends AsyncTask<Integer, Integer, Exercise>{
+        private ExerciseDao exerciseDao;
+
+        private GetMostRecentExerciseFromAllWorkoutsInRoutineAsyncTask(ExerciseDao exerciseDao){
+            this.exerciseDao = exerciseDao;
+        }
+
+        @Override
+        protected Exercise doInBackground(Integer... values) {
+            return exerciseDao.getMostRecentExerciseFromAllWorkoutsInRoutine(values[0],values[1], values[2]);
         }
 
     }
