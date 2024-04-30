@@ -78,5 +78,5 @@ For any question, im available:
 tamirmishali@gmail.com
 
 ## Authors
-- [@octokatherine](https://www.github.com/TamirMishali)
+- [@tamirmishali](https://www.github.com/TamirMishali)
 
