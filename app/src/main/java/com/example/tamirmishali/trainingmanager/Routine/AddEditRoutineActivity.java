@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +13,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tamirmishali.trainingmanager.R;
 
@@ -31,11 +32,12 @@ public class AddEditRoutineActivity extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private EditText editTextRoutineName;
 
+    // todo 26.02.2023: (HIGH) Change visual of this monstrosity :_(. addEditWorkout too.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_routine);
+        setContentView(R.layout.add_edit_routine);
 
         editTextRoutineName = findViewById(R.id.edit_text_routine_name);
         mDisplayDate = findViewById(R.id.text_view_routine_date);
@@ -53,7 +55,7 @@ public class AddEditRoutineActivity extends AppCompatActivity {
             mDisplayDate.setText(new java.sql.Date(calendar.getTime().getTime()).toString());
         }
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_general_close);
 
         mDisplayDate.setOnClickListener(new View.OnClickListener() {
             @Override

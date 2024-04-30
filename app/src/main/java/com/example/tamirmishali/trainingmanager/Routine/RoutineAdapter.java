@@ -1,12 +1,13 @@
 package com.example.tamirmishali.trainingmanager.Routine;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tamirmishali.trainingmanager.R;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
@@ -15,6 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+// ToDo (MEDIUM) add a checkbox in each routine row to choose the default routine. only one can be marked at all times.
 
 public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineHolder> {
 
@@ -43,7 +46,8 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineH
         Date d = new Date(currentRoutine.getRoutineDate().getTime());
         holder.textViewroutinedate.setText(formatter.format(d));
 
-        holder.textViewDescription.setText("empty for now");
+        // todo: (LOW) change description to "# Workouts"
+        holder.textViewDescription.setText("");
         holder.itemView.setTag(holder);
     }
 

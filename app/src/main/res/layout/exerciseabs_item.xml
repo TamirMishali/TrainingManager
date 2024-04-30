@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginEnd="8dp"
     android:layout_marginStart="8dp"
-    android:layout_marginTop="8dp">
+    android:layout_marginTop="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="8dp"
+    android:background="@color/groupColor">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -12,7 +16,7 @@
         android:padding="8dp">
 
         <TextView
-            android:id="@+id/text_view_exerciseabs_text"
+            android:id="@+id/text_view_exerciseabs_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Exerciseabs Name"
@@ -22,25 +26,240 @@
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@+id/text_view_exerciseabs_musclegroup"/>
 
-
-        <TextView
-            android:id="@+id/text_view_exerciseabs_description"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/text_view_exerciseabs_text"
-            android:text="Description"
-            android:layout_toStartOf="@+id/text_view_exerciseabs_musclegroup"
-            android:layout_alignParentStart="true" />
+            android:orientation="vertical"
+            android:layout_below="@id/text_view_exerciseabs_name"
+            android:layout_marginTop="8dp">
+
+<!--        Muscle      -->
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal">-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/text_view_exerciseabs_muscle_title"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Muscle: " />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/text_view_exerciseabs_muscle_value"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:text="Muscle1" />-->
+
+<!--            </LinearLayout>-->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+<!--        OPERATION NAME      -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/text_view_exerciseabs_operation_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Operation: " />
+
+                <TextView
+                    android:id="@+id/text_view_exerciseabs_operation_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="Operation1" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+<!--        NICKNAME      -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/text_view_exerciseabs_nickname_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nickname: "/>
+
+                <TextView
+                    android:id="@+id/text_view_exerciseabs_nickname_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="Nickname1" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+<!--        LOAD TYPE-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/text_view_exerciseabs_load_type_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Load type: " />
+
+                <TextView
+                    android:id="@+id/text_view_exerciseabs_load_type_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textColor="@color/black"
+                    android:text="Load type1" />
+
+                <TextView
+                    android:id="@+id/text_view_exerciseabs_separate_hands_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Separate sides: "/>
+
+                <TextView
+                    android:id="@+id/text_view_exerciseabs_separate_hands_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textColor="@color/black"
+                    android:text="yes"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+<!--        Position and Angle-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/text_view_exerciseabs_position_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Position: "/>
+
+                <TextView
+                    android:id="@+id/text_view_exerciseabs_position_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:text="Position1"/>
+
+                <TextView
+                    android:id="@+id/text_view_exerciseabs_angle_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Angle: "/>
+
+                <TextView
+                    android:id="@+id/text_view_exerciseabs_angle_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textColor="@color/black"
+                    android:text="angle1"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+
+<!--            Grip Width          -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/text_view_exerciseabs_grip_width_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Grip width: " />
+
+                <TextView
+                    android:id="@+id/text_view_exerciseabs_grip_width_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:text="Grip width1" />
+
+                <TextView
+                    android:id="@+id/text_view_exerciseabs_thumbs_direction_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thumbs direction: "/>
+
+                <TextView
+                    android:id="@+id/text_view_exerciseabs_thumbs_direction_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:text="Inwards"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/text_view_exerciseabs_musclegroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="19dp"
             android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignBaseline="@+id/text_view_exerciseabs_name"
             android:text="Muscle Group"/>
 
 
     </RelativeLayout>
 
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

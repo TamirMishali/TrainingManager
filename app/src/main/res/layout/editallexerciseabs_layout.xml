@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ExerciseAbstract.AddExerciseAbstractToWorkoutActivity">
+    tools:context=".ExerciseAbstract.AddEditExerciseAbsActivity">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_allexerciseabs"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/exerciseabs_item"
-        >
+        tools:listitem="@layout/exerciseabs_item">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 
-    </android.support.v7.widget.RecyclerView>
-
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:contentDescription="add exercise"
         android:id="@+id/button_add_allexerciseabs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="32dp"
-        android:src="@drawable/ic_add" />
+        android:src="@drawable/ic_general_add" />
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

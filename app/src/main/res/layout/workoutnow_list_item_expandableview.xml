@@ -8,10 +8,10 @@
         android:id="@+id/delete_button_list_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_delete"
-        android:background="@color/colorDefault"
+        android:src="@drawable/ic_workout_now_delete_set"
         android:layout_gravity="center"
-        android:paddingStart="8dp"/>
+        android:paddingHorizontal="3dp"
+        android:paddingVertical="3dp"/>
 
     <TextView
         android:id="@+id/lblListItemEditextPrevWeight"
@@ -35,10 +35,10 @@
         android:id="@+id/arrow_forward_button_duplicate_set"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_arrow_forward"
-        android:background="@color/colorDefault"
+        android:src="@drawable/ic_workout_now_duplicate_arrow"
         android:layout_gravity="center"
-        android:paddingHorizontal="8dp"
+        android:paddingHorizontal="3dp"
+        android:paddingVertical="3dp"
     />
 
     <EditText

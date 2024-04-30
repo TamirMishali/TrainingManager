@@ -1,14 +1,14 @@
 package com.example.tamirmishali.trainingmanager.Database.DAOs;
 
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Update;
 
-import com.example.tamirmishali.trainingmanager.Routine.Routine;
+import androidx.lifecycle.LiveData;
+
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 
 import java.util.List;
@@ -33,10 +33,10 @@ public interface WorkoutDao {
     @Query("SELECT * FROM workout_table WHERE (id_routine=:id_routine and date is NULL)")
     LiveData<List<Workout>> getWorkoutsForRoutine(final int id_routine);
 
-    @Query("select EA.muscleGroup " +
+/*    @Query("select EA.muscleGroup " +
             "from exerciseabs_table EA inner join exercise_table E ON EA.id_exerciseabs  = E.id_exerciseabs " +
             "where E.id_workout IN (:workoutId)")
-    List<String> getMusselsInWorkout(final int workoutId);
+    List<String> getMusselsInWorkout(final int workoutId);*/
 
     @Query("select * from( " +
             "   select * from workout_table " +

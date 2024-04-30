@@ -1,11 +1,8 @@
 package com.example.tamirmishali.trainingmanager;
 
-import android.arch.lifecycle.ViewModelProviders;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
+import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractViewModel;
 import com.example.tamirmishali.trainingmanager.Routine.RoutineViewModel;
 import com.example.tamirmishali.trainingmanager.Set.Set;
@@ -34,6 +32,11 @@ import java.util.List;
 
 import static com.example.tamirmishali.trainingmanager.MainActivity.ACTION_FINISH_WORKOUT;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 public class WorkoutNow extends AppCompatActivity {
 
     public static final  String EXTRA_WORKOUT_ID =
@@ -45,9 +48,9 @@ public class WorkoutNow extends AppCompatActivity {
     private ExerciseViewModel exerciseViewModel;
     private ExerciseAbstractViewModel exerciseAbstractViewModel;
     private SetViewModel setViewModel;
-    private LinearLayout parentLinearLayout;
     private Workout currentWorkout;
     private Workout prevWorkout;
+    private Workout refWorkout;
     private int sourceWorkoutID;
 
     private static final String TAG = WorkoutNow.class.getName();
@@ -57,43 +60,50 @@ public class WorkoutNow extends AppCompatActivity {
 
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.workoutnow_layout);
 
-        parentLinearLayout = findViewById(R.id.parent_linear_layout);
         TextView textViewRoutineName = findViewById(R.id.workoutnow_current_routine);
         TextView textViewWorkoutName = findViewById(R.id.workoutnow_current_workout);
         TextView textViewWorkoutDate = findViewById(R.id.workoutnow_workout_date);
 
-        workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
-        exerciseAbstractViewModel = ViewModelProviders.of(this).get(ExerciseAbstractViewModel.class);
-        routineViewModel = ViewModelProviders.of(this).get(RoutineViewModel.class);
-        exerciseViewModel = ViewModelProviders.of(this).get(ExerciseViewModel.class);
-        setViewModel = ViewModelProviders.of(this).get(SetViewModel.class);
+        workoutViewModel = new ViewModelProvider(this).get(WorkoutViewModel.class);
+        exerciseAbstractViewModel = new ViewModelProvider(this).get(ExerciseAbstractViewModel.class);
+        routineViewModel = new ViewModelProvider(this).get(RoutineViewModel.class);
+        exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
+        setViewModel = new ViewModelProvider(this).get(SetViewModel.class);
 
 
 
         //Get workout ID for viewing the relevant workout
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_WORKOUT_ID)){
-            String callingClassName = getCallingActivity().getShortClassName();
+            String callingClassName = getCallingActivity().getClassName(); //.getShortClassName();
+            Log.d(TAG, "Class name= " + callingClassName);
             sourceWorkoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
 
             //New Workout that was picked from the list of workouts in current routine or id
             // of unfinished workout to reload.
-            if(callingClassName.equals(".MainActivity") && intent.getAction()==null){
+            if(callingClassName.equals("com.example.tamirmishali.trainingmanager.MainActivity") && intent.getAction()==null){ //.toString().equals(ACTION_FINISH_WORKOUT)){
+                // ToDo: create prevWorkout such as it is not literally the previous workout, but it
+                //  contains the exercises that are in currentWorkout, but filled with the most
+                //  recent Set reps and weight data:
                 prevWorkout = workoutViewModel.getWorkout(sourceWorkoutID);
-                prevWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(prevWorkout.getId())));
-                currentWorkout = constructNewWorkout(prevWorkout); // create workout
+                prevWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(prevWorkout.getId()), true));
+
+                // Create reference workout and new empty workout with the right number of Sets:
+                currentWorkout = constructNewWorkout(prevWorkout);
+                refWorkout = constructRefWorkout(prevWorkout, currentWorkout);
 
             }
 
             //Existing Workout - finished workout from history
-            else if(callingClassName.equals(".History.ViewPracticalWorkouts") || intent.getAction()==ACTION_FINISH_WORKOUT){
+            else if(callingClassName.equals("com.example.tamirmishali.trainingmanager.History.ViewPracticalWorkouts") || intent.getAction()==ACTION_FINISH_WORKOUT){
                 currentWorkout = workoutViewModel.getWorkout(sourceWorkoutID);
-                currentWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(currentWorkout.getId())));
+                currentWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(currentWorkout.getId()), true));
 
                 prevWorkout = workoutViewModel.getPrevWorkout(currentWorkout.getWorkoutName(), currentWorkout.getWorkoutDate());
                 if (prevWorkout == null){
@@ -101,19 +111,20 @@ public class WorkoutNow extends AppCompatActivity {
                             currentWorkout.getId_routine(),currentWorkout.getWorkoutName());
                 }
 
-                prevWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(prevWorkout.getId())));
+                prevWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(prevWorkout.getId()), true));
+                refWorkout = constructRefWorkout(prevWorkout, currentWorkout);
             }
         }
         //im on WorkoutNow Activity
         else{
             setResult(RESULT_CANCELED,intent);
             finish();
+            return;
         }
 
         // Insert names of routine, workout and date at the top of the screen
         try {
-            textViewRoutineName.setText("Routine: " +
-                    routineViewModel.getRoutine(currentWorkout.getId_routine()).getRoutineName());
+            textViewRoutineName.setText("Routine: " + routineViewModel.getRoutine(currentWorkout.getId_routine()).getRoutineName());
             textViewWorkoutName.setText("Workout: " + currentWorkout.getWorkoutName());
 
             //https://stackabuse.com/how-to-get-current-date-and-time-in-java/
@@ -127,9 +138,9 @@ public class WorkoutNow extends AppCompatActivity {
 
 
         // get the listview
-        expListView = (ExpandableListView) findViewById(R.id.lvExp);
+        expListView = findViewById(R.id.lvExp);
 
-        listAdapter = new ExpandableListAdapter(this, currentWorkout, prevWorkout,
+        listAdapter = new ExpandableListAdapter(this, currentWorkout, refWorkout,
                 setViewModel,exerciseViewModel,exerciseAbstractViewModel);
         // setting list adapter
         expListView.setAdapter(listAdapter);
@@ -137,138 +148,234 @@ public class WorkoutNow extends AppCompatActivity {
         // https://stackoverflow.com/questions/18632084/expandablelistview-child-items-edittext-cant-keep-focus
         expListView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
 
+        if (!currentWorkout.getExercises().get(0).areAllSetsFilled()) {
+            int count = listAdapter.getGroupCount();
+            for (int i = 0; i < count; i++)
+                expListView.expandGroup(i);
+            // expListView.expandGroup(0);
+        }
 
-/*        // ListView on child click listener
-        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+        // found the command that makes the keyboard go as closest to be under all header children:
+        // https://developer.android.com/develop/ui/views/touch-and-input/keyboard-input/visibility
 
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-                // TODO Auto-generated method stub
-                *//*Toast.makeText(
-                        getApplicationContext(),
-                        exerciseListHeader.get(groupPosition)
-                                + " : "
-                                + prevSetsListDataChild.get(
-                                exerciseListHeader.get(groupPosition)).get(
-                                childPosition), Toast.LENGTH_SHORT)
-                        .show();*//*
-                return false;
-            }
-        });*/
+        // Try to change the focus to the ExpandableListView so when i click an element inside it,
+        //  it will already be focused, and the focus jumps inside it will be less noticable.
+        //  current state: when clicking the "Reps" EditText, the focus changes to the
+        //  ExpandableListView first, then to the relevant child, and then to the first element in
+        //  the child's linear layout, which is the "Weight" EditText. I believe that if the
+        //  ExpandableListView element is programmatically focused first, it will solve it.
+        expListView.requestFocus();
+
     }
 
     @Override
     public void onBackPressed() {
-        // TODO Auto-generated method stub
         super.onBackPressed();
         finish();
     }
 
 
-    private List<Exercise> fillExerciseData(List<Exercise> exerciseList){
+    private List<Exercise> fillExerciseData(List<Exercise> exerciseList, Boolean fillSets){
         for(int i=0; i<exerciseList.size(); i++){
             Exercise exercise = exerciseList.get(i);
             exercise.setExerciseAbstract(exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs()));
-            exercise.setSets(setViewModel.getSetsForExercise(exercise.getId()));
 
-            if (exercise.getSets() == null){
-                List<Set> sets = new ArrayList<>();
-                exercise.setSets(sets);
+            if (fillSets) {
+                exercise.setSets(setViewModel.getSetsForExercise(exercise.getId()));
+                if (exercise.getSets() == null) {
+                    List<Set> sets = new ArrayList<>();
+                    exercise.setSets(sets);
+                }
             }
         }
         return exerciseList;
-
     }
 
-    //if exercise from last Workout exists in the next workout, then add it
-    private HashMap<String, List<Set>> getPrevSetsListDataChild(List<Exercise> exerciseList, List<String> exerciseTitles){
-        if(exerciseList == null || exerciseList.isEmpty())
-            return null;
-
-        //DEBUG and try to understand what happens when there are no sets
-        //if it returns null or empty list
 
 
-        HashMap<String, List<Set>> result = new HashMap<>();
+    // This Workout is just a reference Workout that contains the most updated Exercises (with Sets)
+    //   needed for Current workout. New Workout number of sets will be built
+    // This function retrieve all the Exercises that needs to be in currentWorkout, according to
+    // its Abstract Workout. then, each Exercise Sets data is retrieved according to last time
+    // this exercise was executed in the current routine.
+    private Workout constructRefWorkout(Workout prevWorkout, Workout newWorkout) {
 
-        Iterator<Exercise> iterator = exerciseList.iterator();
-        String exerciseName;
-        Exercise exercise;
+        // Get AbstractWorkout in order to obtain its exercises:
+        Workout absWorkout = workoutViewModel.getAbstractWorkoutFromPractical(prevWorkout.getId_routine(), prevWorkout.getWorkoutName());
+        // populate Workout Exercises:
+        absWorkout.setExercises(exerciseViewModel.getExercisesForWorkout(absWorkout.getId()));
+        // and populate each Exercise ExerciseAbstract data: (abstract Workout doesn't have Sets)
+        absWorkout.setExercises(fillExerciseData(absWorkout.getExercises(), false));
 
-        while (iterator.hasNext()) {
-            exercise = iterator.next();
-            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs()).getName();
-            if (exerciseTitles.contains(exerciseName)){
-                result.put(exerciseName,setViewModel.getSetsForExercise(exercise.getId()));
+        // Init a list of the most recent Exercises in the DB that correspond to the current workout
+        //  im starting right now:
+        List<Exercise> mostRecentExercises = new ArrayList<>();
+
+        // Get most updated absWorkout.exercise(i) record in DB from all workouts in a specific routine:
+        // explanation: if i do calves raises in 2 workouts, A and B, i want to get the most
+        //              recent data (reps and weights):
+        for(int i=0; i<absWorkout.getExercises().size(); i++){
+            // Exclude the one from current newWorkout cause we don't want it to reference itself.
+            Exercise mostRecentExercise = exerciseViewModel.getMostRecentExerciseFromAllWorkoutsInRoutine(
+                    absWorkout.getId_routine(),
+                    newWorkout.getId(),
+                    absWorkout.getExercises().get(i).getId_exerciseabs());
+
+            // if record exists in DB, fill its sets
+            if (mostRecentExercise != null){
+                mostRecentExercise.setSets(setViewModel.getSetsForExercise(mostRecentExercise.getId()));
+
+                // --- If N_Sets_ref and N_Sets_prev are different, i need to handle what happens in refWorkout:
+                // Ref = 4, prev = 2 => new = 2. => remove 2 first sets from Ref (leave last 2)
+                // Ref = 2, prev = 4 => new = 4. => fill 2 first sets with zeros in Ref
+                int N_sets_ref = mostRecentExercise.getSets().size();
+                int N_sets_prev = prevWorkout.getExercises().get(i).getSets().size();
+                List<Set> adaptedSets = new ArrayList<>();
+
+                if (N_sets_ref > N_sets_prev){
+                    adaptedSets = mostRecentExercise.getSets().subList(N_sets_ref-N_sets_prev, N_sets_ref);
+                }
+                else{
+                    // This is only for display, doesn't need any id's
+                    Set newSet = new Set(0, 0, -1, -1);
+
+                    // insert missing N_sets at the start of the array:
+                    for (int j=0; j<N_sets_prev-N_sets_ref; j++){
+                        adaptedSets.add(newSet);
+                    }
+                    // add the existing data to the end.
+                    adaptedSets.addAll(mostRecentExercise.getSets());
+                }
+                mostRecentExercise.setSets(adaptedSets);
+                mostRecentExercises.add(mostRecentExercise);
+
             }
+            // Todo: need to understand if the next commented section is actually needed
+//            // some old logic that i didn't want to understand. original code is commented below
+//            else {
+//                List<Set> setList = setViewModel.getSetsForExercise(currentExercise.getId());
+//                currentExercise.setSets(setList);
+//            }
         }
 
-        return result;
+        Workout refWorkout = new Workout(absWorkout.getId_routine(), absWorkout.getName(), false);
+        refWorkout.setExercises(mostRecentExercises);
+
+        return refWorkout;
     }
 
-    //takes the data from the abstract Workout
-    private List<String> prepareListHeader(List<Exercise> exerciseList){
-        if(exerciseList == null || exerciseList.isEmpty()){
-            Log.d(TAG,"Current exercise list is empty or null");
-            return null;
-        }
-        List<String> listHeader = new ArrayList<>();
 
-        Iterator<Exercise> iterator = exerciseList.iterator();
-        String exerciseName;
-        Exercise exercise;
-
-        //Constructing exercise names for adapter
-        while (iterator.hasNext()) {
-            exercise = iterator.next();
-            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs()).getName();
-            listHeader.add(exerciseName);
-        }
-        return listHeader;
-    }
-
+    // This function retrieve all the classes instances (Workout, Exercises, Sets) and insert them
+    //  into the DB. At the end of this process, we get a Workout filled with Exercises that are
+    //  defined in the Abstract Workout record, with the number of sets as done at the prev workout
+    //  this exercises was done.
     private Workout constructNewWorkout(Workout prevWorkout) {
         Workout newWorkout;
-        //insert workout
+
+        // create and insert workout
         Workout workout = new Workout(prevWorkout.getId_routine(), prevWorkout.getName(), false);
         workoutViewModel.insert(workout);
+
+        // get most recent workout with routine_id and workoutName:
         newWorkout = workoutViewModel.getNewestWorkout(workout.getId_routine(), workout.getName());
 
-
-        //insert exercises as like in abstract
+        // --- Insert exercises like they show in abstract workout to new workout ---
+        // Get Exercises from abstract workout:
+        //  1. get abstract Workout from practical workout: absWO
+        //  2. get exercises from abstract workout using absWO.id: exercisesList
         List<Exercise> exercisesList;
         exercisesList = exerciseViewModel.getExercisesForWorkout(
                 workoutViewModel.getAbstractWorkoutFromPractical(newWorkout.getId_routine(), newWorkout.getName()).getId());
 
         Iterator<Exercise> iteratorCurrentExercise = exercisesList.iterator();
-        //Exercise exercise;
+
+        // iterate over the list of exercises from the abstract workout and create new exercise with
+        // the new workout id and save to DB:
         while (iteratorCurrentExercise.hasNext()) {
+            // get Exercise from iterator (already has workout_id and exerciseAbs_id of prevWorkout)
             Exercise exercise = new Exercise(iteratorCurrentExercise.next());
             //exercise.setId(0); not necessary  cuz in constructor already
+            // Change the workout_id to current workout and insert to DB:
             exercise.setId_workout(newWorkout.getId());
             exerciseViewModel.insert(exercise);
         }
+
+        // get all inserted Exercises and assign them to current workout (now with valid id in DB)
         newWorkout.setExercises(exerciseViewModel.getExercisesForWorkout(newWorkout.getId()));
+
+
+        // --- Now, i have a new Workout that contains list of Exercises.
+        // ---  each Exercise assigned newWorkout's id and has ExerciseAbs id.
+
+        // for each Exercise in workout, set its ExerciseAbstract object using Exercise.getId_exerciseabs
+//        // New:
+//        newWorkout.setExercises(fillExerciseData(newWorkout.getExercises(), false));
+        // Old
         for(int i=0; i<newWorkout.getExercises().size(); i++){
-            newWorkout.getExercises().get(i).setExerciseAbstract(
-                    exerciseAbstractViewModel.getExerciseAbsFromId(newWorkout.getExercises().get(i).getId_exerciseabs())
-            );
+            // get exercise abstract
+            ExerciseAbstract exerciseAbstract = exerciseAbstractViewModel.getExerciseAbsFromId(
+                    newWorkout.getExercises().get(i).getId_exerciseabs());
+            // fill its String fields
+            exerciseAbstract = exerciseAbstractViewModel.ExerciseAbstractIdsToStrings(exerciseAbstract);
+            // assign it to Exercise in newWorkout
+            newWorkout.getExercises().get(i).setExerciseAbstract(exerciseAbstract);
         }
 
-        //sets
-        //find each exercise in prev workout and if there are sets there,
-        //take the amount and create that number of sets in current exercise
-        //if not exist, don't create. let the adapter do it
+        // --- To this point, i have a workout object, with a list of Exercises and each Exercise
+        // ---  holds an ExerciseAbstract object with all the Strings.
+
+        // --- Sets ---
+        // find each Exercise in prev workout and if there are sets there,
+        // take the amount and create that number of sets in current Exercise
+        // if not exist, don't create. let the adapter do it
         iteratorCurrentExercise = newWorkout.getExercises().iterator();
         Iterator<Exercise> prevIterator;
         int setsNo;
         Exercise prevExercise;
-        //find same ExerciseAbs in both currentWorkout and prevWorkout
-        //don't forget that currentExercise contains the exercise from absWorkout
+
+        // find same ExerciseAbs in both currentWorkout and prevWorkout
+        // don't forget that currentExercise contains the Exercise from absWorkout
         while(iteratorCurrentExercise.hasNext()) {
             Exercise currentExercise = iteratorCurrentExercise.next();
-            Boolean foundFlag = Boolean.FALSE;
+
+            // NOTE: I don't use the new code cause  i want the same number of Sets that was defined
+            //       at first place for a specific workout.
+
+//            // Get most updated exercise record in DB from all workouts in a specific routine:
+//            // explanation: if i do calves raises in 2 workouts, A and B, i want to get the most
+//            //              recent data (reps and weights):
+//            Exercise mostRecentExercise = exerciseViewModel.getMostRecentExerciseFromAllWorkoutsInRoutine(
+//                    currentWorkout.getId_routine(), currentExercise.getId_exerciseabs());
+//
+//
+//            if (mostRecentExercise != null){
+//                // Fill Set data:
+//                mostRecentExercise.setSets(setViewModel.getSetsForExercise(mostRecentExercise.getId()));
+//
+//                setsNo = mostRecentExercise.getSets().size();
+//
+//                // insert 'setsNo' of empty Sets to DB with currentExercise id
+//                for(int i=0 ; i<setsNo ; i++){
+//                    Set set = new Set(currentExercise.getId(),-1.0,-1);
+//                    setViewModel.insert(set);
+//                }
+//
+//                // get all the Sets that were just inserted to DB and populate currentExercise with them:
+//                List<Set> setList = setViewModel.getSetsForExercise(currentExercise.getId());
+//                if (!setList.isEmpty())
+//                    currentExercise.setSets(setList);
+//            }
+//
+//            // some old logic that i didn't want to understand. original code is commented below
+//            if (mostRecentExercise == null){
+//                List<Set> setList = setViewModel.getSetsForExercise(currentExercise.getId());
+//                currentExercise.setSets(setList);
+//            }
+
+
+            // Old Code for searching manually through data instead of running SQL query
+            boolean foundFlag = Boolean.FALSE;
+
             //iterate over all exercises in prevWorkout and search for currentExercise
             prevIterator = prevWorkout.getExercises().iterator();
 
@@ -277,163 +384,42 @@ public class WorkoutNow extends AppCompatActivity {
 
                 //if exists, create the same number of sets like prevExercise
                 if(currentExercise.getId_exerciseabs() == prevExercise.getId_exerciseabs()){
-                    setsNo = prevExercise.getSets().size();//setViewModel.getSetsForExercise(prevExercise.getId()).size();
-
-/*                    //no sets at all, its cuz abs workout
-                    //put one set in it so it can start
-                    if (setsNo == 0){
-                        setsNo = 1;
-                    }*/
+                    setsNo = prevExercise.getSets().size();
 
                     for(int i=0 ; i<setsNo ; i++){
                         Set set = new Set(currentExercise.getId(),-1.0,-1);
                         setViewModel.insert(set);
                     }
 
+                    // get all the Sets that were just inserted to DB:
                     List<Set> setList = setViewModel.getSetsForExercise(currentExercise.getId());
-                    if (!setList.isEmpty() || setList != null)
+                    if (!setList.isEmpty())
                         currentExercise.setSets(setList);
-                        //currentSetsListDataChild.put(exerciseAbstractViewModel.getExerciseAbsFromId(currentExercise.getId_exerciseabs()).getName(),setList);
 
                     foundFlag = Boolean.TRUE;
-                    /*else
-                        currentSetsListDataChild.put(exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId()).getName(),null);*/
+
                     break;
                 }
             }
 
-            //if exercise from abs was not found in prev, i still want to make it
-            //it probably created from a change in mid routine.
-            //create one set of it.
+            // Past Tamir:
+            // If exercise from abs was not found in prev, i still want to make it
+            // It probably created from a change in mid routine.
+            // Create one Set of it:
+
+            // Present Tamir:
+            // What past Tamir wrote does not make sense.
+            // All i do here is assign an empty Set list:
             if (foundFlag == Boolean.FALSE){
-/*                Set set = new Set(currentExercise.getId(),-1.0,-1);
-                setViewModel.insert(set);*/
                 List<Set> setList = setViewModel.getSetsForExercise(currentExercise.getId());
                 currentExercise.setSets(setList);
-                //currentSetsListDataChild.put(exerciseAbstractViewModel.getExerciseAbsFromId(currentExercise.getId_exerciseabs()).getName(),setList);
             }
         }
 
         return newWorkout;
     }
 
-
-
-/*    private void prepareListDataPrev() {
-        exerciseListHeader = new ArrayList<>();
-        prevSetsListDataChild = new HashMap<>();
-        Iterator<Exercise> iterator = currentWorkout.getExercises().iterator();
-        String exerciseName;// = new String();
-        List<Set> childList;
-        Exercise exercise;
-
-        //Constructing exercise names for adapter
-        while (iterator.hasNext()) {
-            exercise = iterator.next();
-            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs()).getName();
-            exerciseListHeader.add(exerciseName);
-
-            if (isExerciseInExerciseList(exercise,prevExercises)){//(currentExercise with prevExerciseList)
-                childList = setViewModel.getSetsForExercise(exercise.getId());
-                prevSetsListDataChild.put(exerciseName, childList);
-            }
-            //else, the exercise will be there but with no sets
-            //this will happen if exercise list changed for abs workout
-            //from the last practical workout made
-
-        }
-    }*/
-
-
-    @NonNull//this is a marker, does nothing but telling is can never be null
-    private Boolean isExerciseInExerciseList(Exercise exercise, List<Exercise> exerciseList){
-        Iterator<Exercise> iterator = exerciseList.iterator();
-        //Exercise currentExercise;
-
-        while (iterator.hasNext()) {
-            //currentExercise = iterator.next();
-            if (exercise.getId_exerciseabs() == iterator.next().getId_exerciseabs()/*currentExercise.getId_exerciseabs()*/)
-                return true;
-        }
-        return false;
-    }
 }
 
-
-
-
-/*    private void prepareListData2() {
-        exerciseListHeader = new ArrayList<String>();
-        prevSetsListDataChild = new HashMap<String, List<String>>();
-        Iterator<Exercise> iterator = currentExercises.iterator();
-        String exerciseName;
-        List<String> childList = new ArrayList<String>();
-        while(iterator.hasNext()) {
-            //System.out.println(iterator.next());
-            exerciseName = exerciseAbstractViewModel.getExerciseAbsFromId(iterator.next().getId_exerciseabs()).getName();
-            exerciseListHeader.add(exerciseName);
-            childList = new ArrayList<String>();
-            for(int i = 0; i < 3; i++){
-                childList.add("Hello");
-            }
-            prevSetsListDataChild.put(exerciseName,childList);
-        }
-    }*/
-
-//--------------------New too
-/*private void prepareListData() {
-    exerciseListHeader = new ArrayList<String>();
-    prevSetsListDataChild = new HashMap<String, List<String>>();
-
-    // Adding child data
-    exerciseListHeader.add("Top 250");
-    exerciseListHeader.add("Now Showing");
-    exerciseListHeader.add("Coming Soon..");
-
-    // Adding child data
-    List<String> top250 = new ArrayList<String>();
-    top250.add("The Shawshank Redemption");
-    top250.add("The Godfather");
-    top250.add("The Godfather: Part II");
-    top250.add("Pulp Fiction");
-    top250.add("The Good, the Bad and the Ugly");
-    top250.add("The Dark Knight");
-    top250.add("12 Angry Men");
-
-    List<String> nowShowing = new ArrayList<String>();
-    nowShowing.add("The Conjuring");
-    nowShowing.add("Despicable Me 2");
-    nowShowing.add("Turbo");
-    nowShowing.add("Grown Ups 2");
-    nowShowing.add("Red 2");
-    nowShowing.add("The Wolverine");
-
-    List<String> comingSoon = new ArrayList<String>();
-    comingSoon.add("2 Guns");
-    comingSoon.add("The Smurfs 2");
-    comingSoon.add("The Spectacular Now");
-    comingSoon.add("The Canyons");
-    comingSoon.add("Europa Report");
-
-    prevSetsListDataChild.put(exerciseListHeader.get(0), top250); // Header, Child data
-    prevSetsListDataChild.put(exerciseListHeader.get(1), nowShowing);
-    prevSetsListDataChild.put(exerciseListHeader.get(2), comingSoon);
-}*/
-
-/*
-
-    public void onAddField(View v) {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View rowView = inflater.inflate(R.layout.field, null);
-        // Add the new row before the add field button.
-        parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
-    }
-
-    public void onDelete(View v) {
-        parentLinearLayout.removeView((View) v.getParent());
-    }
-    //expandable ListView
-    //https://www.journaldev.com/9942/android-expandablelistview-example-tutorial
-*/
 
 

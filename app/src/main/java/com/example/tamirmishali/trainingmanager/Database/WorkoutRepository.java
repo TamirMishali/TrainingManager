@@ -1,15 +1,15 @@
 package com.example.tamirmishali.trainingmanager.Database;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
+
+import androidx.lifecycle.LiveData;
 
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseAbstractDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.SetDao;
 import com.example.tamirmishali.trainingmanager.Database.DAOs.WorkoutDao;
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
-import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class WorkoutRepository {
     private LiveData<List<Workout>> allWorkouts;
 
     public WorkoutRepository(Application application){
-        RoutineDatabase database = RoutineDatabase.getInstance(application);
+        TrainingManagerDatabase database = TrainingManagerDatabase.getInstance(application);
         workoutDao = database.workoutDao();
         exerciseDao = database.exerciseDao();
         exerciseAbstractDao = database.exerciseAbstractDao();
@@ -58,17 +58,17 @@ public class WorkoutRepository {
         return workoutDao.getPracticalWorkoutsForRoutineLiveData(routineId);
     }
 
-    public List<String> getMusselsInWorkout(int workout_id){
-        List<String> mussles = new ArrayList<>();
-        try {
-            mussles = new GetMusselsInWorkoutAsyncTask(workoutDao).execute(workout_id).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return mussles;
-    }
+//    public List<String> getMusselsInWorkout(int workout_id){
+//        List<String> mussles = new ArrayList<>();
+//        try {
+//            mussles = new GetMusselsInWorkoutAsyncTask(workoutDao).execute(workout_id).get();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+//        return mussles;
+//    }
     public Workout getCurrentWorkout(){
         Workout workout = new Workout();
         try {
@@ -252,7 +252,7 @@ public class WorkoutRepository {
         }
     }
 
-    //https://stackoverflow.com/questions/6053602/what-arguments-are-passed-into-asynctaskarg1-arg2-arg3
+    /*//https://stackoverflow.com/questions/6053602/what-arguments-are-passed-into-asynctaskarg1-arg2-arg3
     private static class GetMusselsInWorkoutAsyncTask extends AsyncTask<Integer, Integer, List<String>>{
         private WorkoutDao workoutDao;
 
@@ -264,7 +264,7 @@ public class WorkoutRepository {
         protected List<String> doInBackground(Integer... values) {
             return workoutDao.getMusselsInWorkout(values[0]);
         }
-    }
+    }*/
 
     //https://stackoverflow.com/questions/6053602/what-arguments-are-passed-into-asynctaskarg1-arg2-arg3
     private static class GetCurrentWorkoutAsyncTask extends AsyncTask<Void, Void, Workout>{
@@ -445,8 +445,8 @@ public class WorkoutRepository {
         Exercise exercise;
         while (exerciseIterator.hasNext()) {
             exercise = exerciseIterator.next();
-            exercise.setExerciseAbstract(exerciseAbstractDao.getExerciseAbsFromId(exercise.getId_exerciseabs()));
-            exercise.setSets(setDao.getSetsForExercise(exercise.getId()));
+            exercise.setExerciseAbstract(exerciseAbstractDao.getExerciseAbsFromId((int)exercise.getId_exerciseabs()));
+            exercise.setSets(setDao.getSetsForExercise((int)exercise.getId()));
         }
         workout.setExercises(exercises);
 

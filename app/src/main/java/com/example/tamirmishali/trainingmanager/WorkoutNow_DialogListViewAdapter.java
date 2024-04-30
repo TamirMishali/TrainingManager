@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,7 +44,7 @@ public class WorkoutNow_DialogListViewAdapter extends BaseAdapter {
     public View getView(int i , View view, ViewGroup viewGroup){
 
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View row = inflater.inflate(R.layout.workoutnow_listview_item,viewGroup,false);
+        View row = inflater.inflate(R.layout.workoutnow_select_workout_listview_item,viewGroup,false);
         TextView textViewWorkoutName = (TextView)row.findViewById(R.id.workoutnow_listview_item_workout_name);
         TextView textViewWorkoutDate = (TextView)row.findViewById(R.id.workoutnow_listview_item_workout_date);
         Workout workout = workouts.get(i);

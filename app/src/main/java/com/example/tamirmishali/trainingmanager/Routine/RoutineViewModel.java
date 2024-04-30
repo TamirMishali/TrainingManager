@@ -1,9 +1,11 @@
 package com.example.tamirmishali.trainingmanager.Routine;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+
 import com.example.tamirmishali.trainingmanager.Database.RoutineRepository;
 
 import java.util.List;

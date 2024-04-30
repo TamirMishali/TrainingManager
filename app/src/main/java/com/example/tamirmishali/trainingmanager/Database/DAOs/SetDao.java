@@ -1,12 +1,14 @@
 package com.example.tamirmishali.trainingmanager.Database.DAOs;
 
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Update;
+
+import androidx.lifecycle.LiveData;
+
 import com.example.tamirmishali.trainingmanager.Set.Set;
 
 
@@ -36,7 +38,7 @@ public interface SetDao {
             "   SELECT id_exercise " +
             "   from exercise_table " +
             "   where id_workout=:workoutId)" +
-            "   and (reps = '-1')")
+            "    and ((reps = '-1') or (weight='-1.0'))")
     List<Set> getUnfilledSetsFromWorkout(int workoutId);
 
     @Query("SELECT * FROM set_table WHERE id_exercise=:id_exercise")

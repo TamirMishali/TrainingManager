@@ -1,25 +1,35 @@
 package com.example.tamirmishali.trainingmanager.Database;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
+
 import android.os.AsyncTask;
+
+import androidx.lifecycle.LiveData;
 
 import com.example.tamirmishali.trainingmanager.Database.DAOs.ExerciseDao;
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ExerciseRepository {
     private ExerciseDao  exerciseDao;
     private LiveData<List<Exercise>> allExercises;
     private static Exercise exercise = new Exercise();
 
+    private ExecutorService executor;
+
     public ExerciseRepository(Application application){
-        RoutineDatabase database = RoutineDatabase.getInstance(application);
+        TrainingManagerDatabase database = TrainingManagerDatabase.getInstance(application);
         exerciseDao = database.exerciseDao();
         allExercises = exerciseDao.getAllExercises();
+
+        this.executor = Executors.newSingleThreadExecutor();
     }
 
     //-----Exercises-----
@@ -62,8 +72,37 @@ public class ExerciseRepository {
         }
         return exercises;
     }
+    public List<Exercise> getExercisesForEA(int EA_ID){
+        Future<List<Exercise>> future = executor.submit(new Callable<List<Exercise>>() {
+            @Override
+            public List<Exercise> call() throws Exception {
+                return exerciseDao.getExercisesForEA(EA_ID);
+            }
+        });
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        }
 
-    //Exercise - AsyncTasks
+    }
+
+    public Exercise getMostRecentExerciseFromAllWorkoutsInRoutine(int routineId, int workoutId, int exerciseAbstractId){
+        try {
+            exercise = new GetMostRecentExerciseFromAllWorkoutsInRoutineAsyncTask(exerciseDao).execute(routineId, workoutId, exerciseAbstractId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return exercise;
+    }
+
+
+    // ---------------------------------------------------------------------------------------------
+    // ------------------------------- Exercise - AsyncTasks ---------------------------------------
+    // ---------------------------------------------------------------------------------------------
     private static class InsertExerciseAsyncTask extends AsyncTask<Exercise, Void, Void>{
         private ExerciseDao exerciseDao;
 
@@ -139,6 +178,20 @@ public class ExerciseRepository {
         }
         protected List<Exercise> doInBackground(Integer... values) {
             return exerciseDao.getExercisesForWorkout(values[0]);
+        }
+
+    }
+
+    private static class GetMostRecentExerciseFromAllWorkoutsInRoutineAsyncTask extends AsyncTask<Integer, Integer, Exercise>{
+        private ExerciseDao exerciseDao;
+
+        private GetMostRecentExerciseFromAllWorkoutsInRoutineAsyncTask(ExerciseDao exerciseDao){
+            this.exerciseDao = exerciseDao;
+        }
+
+        @Override
+        protected Exercise doInBackground(Integer... values) {
+            return exerciseDao.getMostRecentExerciseFromAllWorkoutsInRoutine(values[0],values[1], values[2]);
         }
 
     }

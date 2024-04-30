@@ -1,20 +1,22 @@
 package com.example.tamirmishali.trainingmanager.Workout;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Routine.Routine;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static android.arch.persistence.room.ForeignKey.CASCADE;
+import static androidx.room.ForeignKey.CASCADE;
+
+import androidx.annotation.NonNull;
 
 
 @Entity(tableName = "workout_table",
@@ -40,13 +42,14 @@ public class Workout {
     private java.sql.Date date;
 
     @Ignore
-    List<Exercise> exercises;
+    List<Exercise> exercises = new ArrayList<>();
 
     public Workout(){//-----------------------------------complete later
 
     }
 
     /*When Abstract workout, Date=null. if real workout Date=currentDate */
+    @Ignore
     public Workout(int id, int id_routine, String name, String date, boolean abstractWorkout) {
         this.id = id;
         this.id_routine = id_routine;
@@ -59,6 +62,7 @@ public class Workout {
         }
     }
 
+    @Ignore
     public Workout(int id, int id_routine, String name, boolean abstractWorkout) {
         this.id = id;
         this.id_routine = id_routine;
@@ -72,6 +76,7 @@ public class Workout {
     }
 
     /*When Abstract workout, Date=null. if real workout Date=currentDate */
+    @Ignore
     public Workout(int id_routine, String name, String date, boolean abstractWorkout) {
         this.id = 0;
         this.id_routine = id_routine;
@@ -92,6 +97,7 @@ public class Workout {
     }
 
 
+    @Ignore
     public Workout(int id_routine, String name, boolean abstractWorkout) {
         this.id = 0;
         this.id_routine = id_routine;

@@ -7,5 +7,8 @@
     <color name="nowColor">#36e236</color>
     <color name="groupColor">#63e963</color>
     <color name="colorDefault">#fafafa</color>
+    <color name="black">#000000</color>
+    <color name="lightGrey">#A0A0A0</color>
+    <color name="red">#FF0000</color>
 
 </resources>

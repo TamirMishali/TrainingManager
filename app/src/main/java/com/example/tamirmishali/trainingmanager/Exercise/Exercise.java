@@ -1,10 +1,10 @@
 package com.example.tamirmishali.trainingmanager.Exercise;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 import com.example.tamirmishali.trainingmanager.Set.Set;
@@ -13,7 +13,8 @@ import com.example.tamirmishali.trainingmanager.Workout.Workout;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.arch.persistence.room.ForeignKey.CASCADE;
+import static androidx.room.ForeignKey.CASCADE;
+import static androidx.room.ForeignKey.NO_ACTION;
 
 @Entity(tableName = "exercise_table",
         foreignKeys = {
@@ -21,7 +22,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
                 entity = ExerciseAbstract.class,
                 parentColumns = "id_exerciseabs",
                 childColumns = "id_exerciseabs",
-                onDelete = CASCADE
+                onDelete = NO_ACTION
         ),
         @ForeignKey(
                 entity = Workout.class,
@@ -48,7 +49,7 @@ public class Exercise {
     ExerciseAbstract exerciseAbstract;
 
     @Ignore
-    List<Set> sets;
+    List<Set> sets = new ArrayList<>();
 
 
 /*    @ColumnInfo(name = "data")
@@ -120,6 +121,44 @@ public class Exercise {
 
     public void setSets(List<Set> sets) {
         this.sets = sets;
+    }
+
+
+    // Custom functions:
+
+    /**
+     * Check if weight and reps values in each Set are filled and valid.
+     * If one of them is smaller than zero, return false.
+     * This is due to a rule that -1 means unfilled value
+     * value = -2 means N/A value but this is for view only.
+     *
+     * @return      Boolean. true for filled properly, false otherwise.
+     * @see         Set
+     */
+    public Boolean areAllSetsFilled(){
+        for (Set set_i : this.sets) {
+            if (set_i.getReps() < 0 || set_i.getWeight() < 0)
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * Check if weight and reps values in each Set are filled and valid.
+     * If one of them is smaller than zero, return false.
+     * This is due to a rule that -1 means unfilled value
+     * value = -2 means N/A value but this is for view only.
+     *
+     * @param       setList is an external List of Sets
+     * @return      Boolean. true for filled properly, false otherwise.
+     * @see         Set
+     */
+    public Boolean areAllSetsFilled(List<Set> setList){
+        for (Set set_i : setList) {
+            if (set_i.getReps() < 0 || set_i.getWeight() < 0)
+                return false;
+        }
+        return true;
     }
 
 }
