@@ -57,6 +57,14 @@ import androidx.appcompat.app.AppCompatActivity;
  * - (LOW) add a rolling dumbbell falling and rolling on main screen when opening the app
 * */
 
+/*TODO 08.02.2024
+ * - (HIGH) Make the option to change the order of exercises appearance.
+ * - (MEDIUM) When adding new exercise, open automatically the "Main muscle" scroll-down.
+ * - (MEDIUM) When inserting exercises to a new workout, add the option to insert number of sets.
+ * - (MEDIUM) Add attribute to exercise, "Contraction type": concentric, eccentric, static
+ * - (LOW) When choosing cables, add the option for the instrument that will be attached to is.
+ * */
+
 public class MainActivity extends AppCompatActivity {
     public static final int EDIT_LAST_WORKOUT = 1;
     public static final int GET_DB_PATH_REQUEST_CODE = 2;

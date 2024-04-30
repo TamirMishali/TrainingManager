@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 // todo:
-//  - (LOW) change colors of text in EA item
 //  - (HIGH) add number of sets and reps range
 
 // This class is showing exerciseAbstracts for a specific workout
