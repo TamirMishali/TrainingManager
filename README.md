@@ -32,7 +32,9 @@ The Training Manager App allows users to:
 
 1. **Creating a routine:**
 * Launch the app and navigate to the “Routines” section by clicking on "Edit Workouts":
-![alt text](https://github.com/TamirMishali/TrainingManager/blob/ex_db_change/Screenshots/2024-02-21/1-MainScreen.jpg?raw=true)
+
+<div align="center"><img src="https://github.com/TamirMishali/TrainingManager/blob/ex_db_change/Screenshots/2024-02-21/1-MainScreen.jpg?raw=true" width="300" /> </div>
+
 * Pick the desired routine. If there are no routines, add the first one by clicking the "+" sign.
 * Give your routine a name.
 
@@ -42,22 +44,26 @@ The Training Manager App allows users to:
 
 3. **Adding exercises to the workout:**
 * Each workout holds a list of exercises. To add an exercise, press the "+" sign ont he bottom right. This should lead you to the add/edit exercise window, where you can customize your exercise
-![alt text](https://github.com/TamirMishali/TrainingManager/blob/ex_db_change/Screenshots/2024-02-21/3-AddExercisesToWorkout-EditExScreen.jpg?raw=true)
+<div align="center"><img src="https://github.com/TamirMishali/TrainingManager/blob/ex_db_change/Screenshots/2024-02-21/3-AddExercisesToWorkout-EditExScreen.jpg?raw=true" width="300" /></div>
+
 * Choose the muscle group under "Main muscle".
 * Specify the operation name under "Operation name". If it was used before, you can pick it from the auto complete list.
 * If needed, choose a nickname that replaces the "Main muscle" text in the exercise final name. For example, "triceps extension" can be easly changed to "kickback extension" instead. 
 * Provide further specifications if needed such as load type, position, angle, etc.
 * Save.
 * This will add the exercise to the list of exercises for the chosen workout:
-![alt text](https://github.com/TamirMishali/TrainingManager/blob/ex_db_change/Screenshots/2024-02-21/3-AddExercisesToWorkout-ListOfEx.jpg?raw=true)
+<div align="center"><img src="https://github.com/TamirMishali/TrainingManager/blob/ex_db_change/Screenshots/2024-02-21/3-AddExercisesToWorkout-ListOfEx.jpg?raw=true" width="300" /></div>
+
 * To edit an exercies, long press it.
 
-4. ** Workout Now!**
+4. **Workout Now!**
 * After finishing setting up your routine, on the main app screen, press the first option "Start new workout now!".
 * The following will open a window with all workouts available in the most recent routine, sorted by date (oldest first):
-![alt text](https://github.com/TamirMishali/TrainingManager/blob/ex_db_change/Screenshots/2024-02-21/1-WorkoutNow_ChoseWorkout.jpg?raw=true)
+<div align="center"><img src="https://github.com/TamirMishali/TrainingManager/blob/ex_db_change/Screenshots/2024-02-21/1-WorkoutNow_ChoseWorkout.jpg?raw=true" width="300" /></div>
+
 * Chosing the desired workout will channel you to the documentation window:
-![alt text](https://github.com/TamirMishali/TrainingManager/blob/ex_db_change/Screenshots/2024-02-21/2-WorkoutNow_ActiveWorkout.jpg?raw=true)
+<div align="center"><img src="https://github.com/TamirMishali/TrainingManager/blob/ex_db_change/Screenshots/2024-02-21/2-WorkoutNow_ActiveWorkout.jpg?raw=true" width="300" /></div>
+
 * For the first workout, all exercises will have 0 sets. add sets by clicking the "+" sign on the right edge of each exercise name.
 ## Features
 **Active Workout:**
@@ -71,7 +77,7 @@ The Training Manager App allows users to:
 **Past workouts:**
 - All past routines and their workouts can be observed by clicking "Workout history" on the main screen.
 
-** General features:**
+**General features:**
 - Deletion from DB by sweeping from left to right: 
   - In "working history": workout instances.
   - In "Edit workouts": routines, the workouts within the routines, and the exercises within the workouts. 
