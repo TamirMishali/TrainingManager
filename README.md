@@ -13,8 +13,13 @@ The Training Manager App allows users to:
 * Add workouts to their routines.
 * Add customable exercises to each workout categorized by muscle group.
 * Log exercises with sets, reps, and weights.
+
 ## Installation
 
+**Option 1**
+1. download and install apk file from ".\app\release\TrainingManager.apk"
+
+**Option 2**
 1. Clone this repository to your local machine:
 
 ```bash
@@ -22,6 +27,7 @@ The Training Manager App allows users to:
 ```
 2. Open the project in Android Studio.
 3. Build and run the app on an emulator or physical device.
+
 ## Usage/Examples
 
 1. **Creating a routine:**
