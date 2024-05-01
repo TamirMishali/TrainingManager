@@ -136,7 +136,9 @@ public class ShowRoutines extends AppCompatActivity {
         }
         else if(requestCode == EDIT_ROUTINE_REQUEST && resultCode == RESULT_OK){
             //check if valid id
-            int routineId = data.getIntExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID, -1);
+            //int routineId = data.getIntExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID, -1);
+            int routineId;
+            routineId = Integer.parseInt(data.getStringExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID));
             if (routineId == -1){
                 Toast.makeText(this, "Routine can't be updated", Toast.LENGTH_SHORT).show();
                 return;

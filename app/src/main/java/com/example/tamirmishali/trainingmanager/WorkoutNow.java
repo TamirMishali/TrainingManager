@@ -1,15 +1,19 @@
 package com.example.tamirmishali.trainingmanager;
 
+import static com.example.tamirmishali.trainingmanager.MainActivity.ACTION_FINISH_WORKOUT;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
@@ -21,21 +25,12 @@ import com.example.tamirmishali.trainingmanager.Set.SetViewModel;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
 import com.example.tamirmishali.trainingmanager.Workout.WorkoutViewModel;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import static com.example.tamirmishali.trainingmanager.MainActivity.ACTION_FINISH_WORKOUT;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
+import java.util.Objects;
 
 public class WorkoutNow extends AppCompatActivity {
 
@@ -101,7 +96,7 @@ public class WorkoutNow extends AppCompatActivity {
             }
 
             //Existing Workout - finished workout from history
-            else if(callingClassName.equals("com.example.tamirmishali.trainingmanager.History.ViewPracticalWorkouts") || intent.getAction()==ACTION_FINISH_WORKOUT){
+            else if(callingClassName.equals("com.example.tamirmishali.trainingmanager.History.ViewPracticalWorkouts") || Objects.equals(intent.getAction(), ACTION_FINISH_WORKOUT)){
                 currentWorkout = workoutViewModel.getWorkout(sourceWorkoutID);
                 currentWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(currentWorkout.getId()), true));
 
@@ -159,7 +154,7 @@ public class WorkoutNow extends AppCompatActivity {
         // https://developer.android.com/develop/ui/views/touch-and-input/keyboard-input/visibility
 
         // Try to change the focus to the ExpandableListView so when i click an element inside it,
-        //  it will already be focused, and the focus jumps inside it will be less noticable.
+        //  it will already be focused, and the focus jumps inside it will be less noticeable.
         //  current state: when clicking the "Reps" EditText, the focus changes to the
         //  ExpandableListView first, then to the relevant child, and then to the first element in
         //  the child's linear layout, which is the "Weight" EditText. I believe that if the
