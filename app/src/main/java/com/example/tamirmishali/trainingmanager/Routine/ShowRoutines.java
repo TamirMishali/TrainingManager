@@ -24,6 +24,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
+// ToDo: (Medium) show number of weekly Sets for each muscle group.
+
 public class ShowRoutines extends AppCompatActivity {
     public static final int ADD_ROUTINE_REQUEST = 1;
     public static final int EDIT_ROUTINE_REQUEST = 2;

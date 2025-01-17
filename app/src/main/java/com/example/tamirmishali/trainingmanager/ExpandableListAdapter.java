@@ -2,10 +2,12 @@ package com.example.tamirmishali.trainingmanager;
 
 import static android.view.View.FOCUS_RIGHT;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,6 +94,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
         this._listDataChildPrev = fillDataChildPrev(prevWorkout,currentWorkout);
         this._listDataChildCurrent = fillDataChildCurrent(currentWorkout);
+
+        // Force the layout direction to be left-to-right
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            ((Activity) context).getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        }
 
     }
 
