@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ import java.util.Locale;
 
 import static android.widget.Toast.*;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
@@ -87,11 +89,34 @@ public class MainActivity extends AppCompatActivity {
     private ExerciseViewModel exerciseViewModel;
     private SetViewModel setViewModel;
 
+    private ActivityResultLauncher<Intent> importDbLauncher;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
+
+        importDbLauncher = registerForActivityResult(
+                new androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri uri = result.getData().getData();
+                        if (uri != null) {
+                            try {
+                                importDatabase(uri);
+                                Toast.makeText(this, "Database restored successfully", Toast.LENGTH_SHORT).show();
+                                restartApp(); // Optional but useful
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                Toast.makeText(this, "Failed to restore database", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }
+        );
+
+
         setContentView(R.layout.activity_main);
 
         // new AndroidX thing:
@@ -364,11 +389,39 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void openFileChooser(){
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+    private void openFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("*/*");
-        startActivityForResult(intent, GET_DB_PATH_REQUEST_CODE);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        importDbLauncher.launch(intent);
     }
+
+    private void importDatabase(Uri uri) throws IOException {
+        InputStream inputStream = getContentResolver().openInputStream(uri);
+
+        File dbFile = getDatabasePath(DATABASE_NAME + ".db"); // use your correct .db file name
+        OutputStream outputStream = new FileOutputStream(dbFile);
+
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputStream.read(buffer)) > 0) {
+            outputStream.write(buffer, 0, length);
+        }
+
+        outputStream.flush();
+        outputStream.close();
+        inputStream.close();
+    }
+
+    private void restartApp() {
+        Intent intent = getBaseContext().getPackageManager()
+                .getLaunchIntentForPackage(getBaseContext().getPackageName());
+        if (intent != null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
+    }
+
 
     // https://stackoverflow.com/questions/6540906/simple-export-and-import-of-a-sqlite-database-on-android
     private boolean exportDB() {
@@ -410,17 +463,18 @@ public class MainActivity extends AppCompatActivity {
     // This is the 3 dots options in main activity.
     // It triggers the openFileChooser function that opens the data storage to pick a file to backup from
     // https://www.youtube.com/watch?v=go5BdWCKLFk&ab_channel=SWIKbyMirTahaAli
+    private static final int IMPORT_DB_REQUEST_CODE = 1001;
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.import_db:
-                // openFileChooser();
-                Toast.makeText(this, "Import database - not yet implemented", Toast.LENGTH_SHORT).show();
+                openFileChooser();
                 return true;
 
             case R.id.export_db:
-                if (exportDB()){
-                    Toast.makeText(this, "DB export file can be found in download folder" , Toast.LENGTH_SHORT).show();
+                if (exportDB()) {
+                    Toast.makeText(this, "DB export file can be found in download folder", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "DB export failed", Toast.LENGTH_SHORT).show();
                 }
@@ -429,7 +483,8 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
+
+
 }
 
