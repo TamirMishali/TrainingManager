@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tamirmishali.trainingmanager.PreferenceUtils;
 import com.example.tamirmishali.trainingmanager.R;
 import com.example.tamirmishali.trainingmanager.Workout.ShowRoutineWorkouts;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -97,17 +98,38 @@ public class ShowRoutines extends AppCompatActivity {
             }
         }).attachToRecyclerView(recyclerView);
 
-        //Edit Routine name and date
+//        //Edit Routine name and date
+//        adapter.setOnItemLongClickListener(new RoutineAdapter.OnItemLongClickListener() {
+//            @Override
+//            public void onItemLongClick(Routine routine) {
+//                Intent intent = new Intent(ShowRoutines.this, AddEditRoutineActivity.class);
+//                intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID, routine.getUid());
+//                intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_NAME, routine.getRoutineName());
+//                intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_DATE, routine.getRoutineDate().toString());
+//                startActivityForResult(intent, EDIT_ROUTINE_REQUEST);
+//            }
+//        });
+
         adapter.setOnItemLongClickListener(new RoutineAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(Routine routine) {
-                Intent intent = new Intent(ShowRoutines.this, AddEditRoutineActivity.class);
-                intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_ID, routine.getUid());
-                intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_NAME, routine.getRoutineName());
-                intent.putExtra(AddEditRoutineActivity.EXTRA_ROUTINE_DATE, routine.getRoutineDate().toString());
-                startActivityForResult(intent, EDIT_ROUTINE_REQUEST);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ShowRoutines.this);
+                builder.setTitle("Choose an option");
+                builder.setItems(new String[]{"Make main routine"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            // Save to SharedPreferences
+                            PreferenceUtils.saveMainRoutineId(ShowRoutines.this, routine.getUid());
+                            Toast.makeText(ShowRoutines.this, "Main routine set", Toast.LENGTH_SHORT).show();
+                            adapter.notifyDataSetChanged(); // Refresh to update border
+                        }
+                    }
+                });
+                builder.show();
             }
         });
+
 
         //Edit Workouts in that routine
         adapter.setOnItemClickListener(new RoutineAdapter.OnItemClickListener() {

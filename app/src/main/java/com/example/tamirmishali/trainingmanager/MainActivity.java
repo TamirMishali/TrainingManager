@@ -1,6 +1,7 @@
 package com.example.tamirmishali.trainingmanager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -305,7 +306,10 @@ public class MainActivity extends AppCompatActivity {
     public void open_dialog(View v){
         // get all last practical workouts using the most updated routine:
         List<Workout> lastPracticalWorkouts;
-        lastPracticalWorkouts = workoutViewModel.getWorkoutsForDialog(workoutViewModel.getNewestRoutineId());
+
+        // Get desired routine from preferences
+        int mainRoutineId = com.example.tamirmishali.trainingmanager.PreferenceUtils.getMainRoutineId(this);
+        lastPracticalWorkouts = workoutViewModel.getWorkoutsForDialog(mainRoutineId);
 
         // build dialog and its view and show it:
         AlertDialog.Builder builder= new AlertDialog.Builder(this);
@@ -428,3 +432,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 }
+

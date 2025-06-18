@@ -9,8 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tamirmishali.trainingmanager.PreferenceUtils;
 import com.example.tamirmishali.trainingmanager.R;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
+import com.google.android.material.card.MaterialCardView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,30 +38,32 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineH
         return new RoutineHolder(itemView);
     }
 
+
+    @NonNull
     @Override
     public void onBindViewHolder(@NonNull RoutineHolder holder, final int position) {
-
         Routine currentRoutine = routines.get(position);
         holder.textViewRoutine.setText(currentRoutine.getRoutineName());
 
-        SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         Date d = new Date(currentRoutine.getRoutineDate().getTime());
         holder.textViewroutinedate.setText(formatter.format(d));
 
-        // todo: (LOW) change description to "# Workouts"
-        holder.textViewDescription.setText("");
-        holder.itemView.setTag(holder);
+        holder.textViewDescription.setText(""); // Optional: add "# Workouts" here
+
+        // Get the main routine ID from SharedPreferences
+        int mainRoutineId = PreferenceUtils.getMainRoutineId(holder.itemView.getContext());
+
+        // Change stroke color based on whether it's the main routine
+        if (currentRoutine.getUid() == mainRoutineId) {
+            holder.cardView.setStrokeColor(android.graphics.Color.RED);
+            holder.cardView.setStrokeWidth(6);  // you can adjust thickness
+        } else {
+            holder.cardView.setStrokeColor(android.graphics.Color.LTGRAY);
+            holder.cardView.setStrokeWidth(2);  // default
+        }
     }
 
-    /*View.OnClickListener mClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            RoutineHolder holder = (RoutineHolder) view.getTag();
-            int position = holder.getAdapterPosition();
-
-            Toast.makeText(view.getContext(), "worked?", Toast.LENGTH_SHORT).show();
-        }
-    };*/
 
     @Override
     public int getItemCount() {
@@ -91,6 +95,7 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineH
         private TextView textViewRoutine;
         private TextView textViewroutinedate;
         private TextView textViewDescription;
+        private MaterialCardView cardView;
 
 
         public RoutineHolder(View itemView) {
@@ -98,6 +103,8 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineH
             textViewRoutine = itemView.findViewById(R.id.text_view_routinetext);
             textViewroutinedate = itemView.findViewById(R.id.text_view_routinedate);
             textViewDescription = itemView.findViewById(R.id.text_view_description);
+            cardView = itemView.findViewById(R.id.card_view);
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
