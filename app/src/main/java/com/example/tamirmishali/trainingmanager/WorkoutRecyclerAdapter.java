@@ -12,6 +12,7 @@ import android.view.ViewParent;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -147,6 +148,54 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
+    private void setFieldVisibility(TextView titleView, TextView valueView, String value, String defaultTitle) {
+        if (value == null || value.isEmpty() || value.equals("N/A")) {
+            titleView.setVisibility(View.GONE);
+            valueView.setVisibility(View.GONE);
+        } else {
+            titleView.setVisibility(View.VISIBLE);
+            valueView.setVisibility(View.VISIBLE);
+            titleView.setText(defaultTitle);
+            valueView.setText(value);
+        }
+    }
+
+    private void collapseEmptyDetailsSection(View parentView, int containerId) {
+        LinearLayout container = parentView.findViewById(containerId);
+        if (container == null) return;
+
+        boolean hasVisibleChildren = false;
+        int childCount = container.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View child = container.getChildAt(i);
+            if (child instanceof LinearLayout) {
+                LinearLayout fieldGroup = (LinearLayout) child;
+                boolean hasAnyVisible = false;
+                for (int j = 0; j < fieldGroup.getChildCount(); j++) {
+                    View fieldChild = fieldGroup.getChildAt(j);
+                    if (fieldChild.getVisibility() == View.VISIBLE) {
+                        hasAnyVisible = true;
+                        break;
+                    }
+                }
+                if (!hasAnyVisible) {
+                    child.setVisibility(View.GONE);
+                } else {
+                    child.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+
+        // Also collapse the whole section if nothing is visible
+        for (int i = 0; i < container.getChildCount(); i++) {
+            if (container.getChildAt(i).getVisibility() == View.VISIBLE) {
+                hasVisibleChildren = true;
+                break;
+            }
+        }
+        container.setVisibility(hasVisibleChildren ? View.VISIBLE : View.GONE);
+    }
+
     private void bindExerciseHeader(ExerciseHeaderViewHolder holder, WorkoutItem item) {
         Exercise exercise = item.exercise;
         ExerciseAbstract ea = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs());
@@ -180,15 +229,30 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         boolean allComplete = areAllSetsFilled(currentSets);
         holder.completionIndicator.setVisibility(allComplete ? View.VISIBLE : View.GONE);
 
-        // Update ExerciseAbstract info fields
-        holder.loadTypeValue.setText(ea.getLoad_type());
-        holder.separateHandsValue.setText(ea.getSeparate_sides());
+        // Load Type
+        setFieldVisibility(holder.loadTypeTitle, holder.loadTypeValue, ea.getLoad_type(), "Load Type");
 
-        holder.positionValue.setText(ea.getPosition());
-        holder.angleValue.setText(ea.getAngle());
+        // Separate Sides
+        setFieldVisibility(holder.separateHandsTitle, holder.separateHandsValue,
+                ea.getSeparate_sides(), "Separate Sides");
 
-        holder.gripWidthValue.setText(ea.getGrip_width());
-        holder.thumbsDirectionValue.setText(ea.getThumbs_direction());
+        // Position
+        setFieldVisibility(holder.positionTitle, holder.positionValue, ea.getPosition(), "Position");
+
+        // Angle
+        setFieldVisibility(holder.angleTitle, holder.angleValue, ea.getAngle(), "Angle");
+
+        // Grip Width
+        setFieldVisibility(holder.gripWidthTitle, holder.gripWidthValue,
+                ea.getGrip_width(), "Grip Width");
+
+        // Thumbs Direction
+        setFieldVisibility(holder.thumbsDirectionTitle, holder.thumbsDirectionValue,
+                ea.getThumbs_direction(), "Thumbs Direction");
+
+        // Collapse entire sections if needed
+        collapseEmptyDetailsSection(holder.itemView, R.id.extended_ea_info_pos_and_angle);
+        collapseEmptyDetailsSection(holder.itemView, R.id.extended_ea_info_grip_and_thumbs);
     }
 
     private void bindSetRow(SetRowViewHolder holder, WorkoutItem item, int position) {
@@ -480,43 +544,53 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         return items.size();
     }
 
+    private boolean isEmpty(String str) {
+        return str == null || str.trim().isEmpty() || str.equals("N/A");
+    }
+
     // ViewHolder classes
     static class ExerciseHeaderViewHolder extends RecyclerView.ViewHolder {
         TextView exerciseName;
         ImageView completionIndicator;
         ImageButton addSetButton;
 
-        // Exercise Abstract Fields
-        TextView loadTypeTitle, loadTypeValue;
-        TextView separateHandsTitle, separateHandsValue;
-        TextView positionTitle, positionValue;
-        TextView angleTitle, angleValue;
-        TextView gripWidthTitle, gripWidthValue;
-        TextView thumbsDirectionTitle, thumbsDirectionValue;
+        // Exercise Abstract Fields - Titles
+        TextView loadTypeTitle;
+        TextView separateHandsTitle;
+        TextView positionTitle;
+        TextView angleTitle;
+        TextView gripWidthTitle;
+        TextView thumbsDirectionTitle;
+
+        // Exercise Abstract Fields - Values
+        TextView loadTypeValue;
+        TextView separateHandsValue;
+        TextView positionValue;
+        TextView angleValue;
+        TextView gripWidthValue;
+        TextView thumbsDirectionValue;
 
         public ExerciseHeaderViewHolder(@NonNull View itemView) {
             super(itemView);
+
             exerciseName = itemView.findViewById(R.id.lblListHeader);
             completionIndicator = itemView.findViewById(R.id.completed_exercise_group_item);
             addSetButton = itemView.findViewById(R.id.add_button_group_item);
 
-            // Exercise Abstract Info
+            // Titles
             loadTypeTitle = itemView.findViewById(R.id.text_view_exerciseabs_load_type_title);
-            loadTypeValue = itemView.findViewById(R.id.text_view_exerciseabs_load_type_value);
-
             separateHandsTitle = itemView.findViewById(R.id.text_view_exerciseabs_separate_hands_title);
-            separateHandsValue = itemView.findViewById(R.id.text_view_exerciseabs_separate_hands_value);
-
             positionTitle = itemView.findViewById(R.id.text_view_exerciseabs_position_title);
-            positionValue = itemView.findViewById(R.id.text_view_exerciseabs_position_value);
-
             angleTitle = itemView.findViewById(R.id.text_view_exerciseabs_angle_title);
-            angleValue = itemView.findViewById(R.id.text_view_exerciseabs_angle_value);
-
             gripWidthTitle = itemView.findViewById(R.id.text_view_exerciseabs_grip_width_title);
-            gripWidthValue = itemView.findViewById(R.id.text_view_exerciseabs_grip_width_value);
-
             thumbsDirectionTitle = itemView.findViewById(R.id.text_view_exerciseabs_thumbs_direction_title);
+
+            // Values
+            loadTypeValue = itemView.findViewById(R.id.text_view_exerciseabs_load_type_value);
+            separateHandsValue = itemView.findViewById(R.id.text_view_exerciseabs_separate_hands_value);
+            positionValue = itemView.findViewById(R.id.text_view_exerciseabs_position_value);
+            angleValue = itemView.findViewById(R.id.text_view_exerciseabs_angle_value);
+            gripWidthValue = itemView.findViewById(R.id.text_view_exerciseabs_grip_width_value);
             thumbsDirectionValue = itemView.findViewById(R.id.text_view_exerciseabs_thumbs_direction_value);
         }
     }
