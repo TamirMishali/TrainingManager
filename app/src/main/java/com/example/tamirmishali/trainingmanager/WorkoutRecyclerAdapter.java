@@ -151,32 +151,44 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         Exercise exercise = item.exercise;
         ExerciseAbstract ea = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs());
 
+        if (ea == null) {
+            Log.e("WorkoutRecyclerAdapter", "ExerciseAbstract is null for id: " + exercise.getId_exerciseabs());
+            return;
+        }
+
+        // Set exercise name
         holder.exerciseName.setText(ea.generateExerciseAbstractName());
 
-        // Calculate and display total loads
+        // Get current/previous sets
         List<Set> currentSets = getCurrentSetsForExercise(exercise.getId_exerciseabs());
         List<Set> prevSets = prevWorkoutSets.get(exercise.getId_exerciseabs());
 
         int currentTotal = calculateTotalLoad(currentSets);
         int prevTotal = calculateTotalLoad(prevSets);
 
-//        holder.totalLoadCurrent.setText("Current: " + (currentTotal > 0 ? currentTotal + " kg" : "N/A"));
-//        holder.totalLoadPrev.setText("Previous: " + (prevTotal > 0 ? prevTotal + " kg" : "N/A"));
-
         // Color coding based on progress
         if (prevTotal > 0 && currentTotal > 0) {
             int color = currentTotal >= prevTotal ?
-                       ContextCompat.getColor(context, R.color.green) :
-                       ContextCompat.getColor(context, R.color.red);
+                    ContextCompat.getColor(context, R.color.green) :
+                    ContextCompat.getColor(context, R.color.red);
             holder.exerciseName.setTextColor(color);
+        } else {
+            holder.exerciseName.setTextColor(ContextCompat.getColor(context, R.color.text_primary));
         }
 
         // Set completion indicator
         boolean allComplete = areAllSetsFilled(currentSets);
         holder.completionIndicator.setVisibility(allComplete ? View.VISIBLE : View.GONE);
 
-        // Add set button
-        holder.addSetButton.setOnClickListener(v -> addNewSet(exercise));
+        // Update ExerciseAbstract info fields
+        holder.loadTypeValue.setText(ea.getLoad_type());
+        holder.separateHandsValue.setText(ea.getSeparate_sides());
+
+        holder.positionValue.setText(ea.getPosition());
+        holder.angleValue.setText(ea.getAngle());
+
+        holder.gripWidthValue.setText(ea.getGrip_width());
+        holder.thumbsDirectionValue.setText(ea.getThumbs_direction());
     }
 
     private void bindSetRow(SetRowViewHolder holder, WorkoutItem item, int position) {
@@ -271,7 +283,7 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             int currentTotal = calculateTotalLoad(sets);
             int prevTotal = calculatePrevTotal(exercise.getId_exerciseabs());
 
-            if (prevTotal > 0 && currentTotal > 0) {
+            if (prevTotal > 0 && currentTotal > 0 && allComplete) {
                 int color = currentTotal >= prevTotal ?
                         ContextCompat.getColor(context, R.color.green) :
                         ContextCompat.getColor(context, R.color.red);
@@ -469,16 +481,43 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     // ViewHolder classes
-    public static class ExerciseHeaderViewHolder extends RecyclerView.ViewHolder {
-        TextView exerciseName, totalLoadCurrent, totalLoadPrev;
+    static class ExerciseHeaderViewHolder extends RecyclerView.ViewHolder {
+        TextView exerciseName;
         ImageView completionIndicator;
         ImageButton addSetButton;
+
+        // Exercise Abstract Fields
+        TextView loadTypeTitle, loadTypeValue;
+        TextView separateHandsTitle, separateHandsValue;
+        TextView positionTitle, positionValue;
+        TextView angleTitle, angleValue;
+        TextView gripWidthTitle, gripWidthValue;
+        TextView thumbsDirectionTitle, thumbsDirectionValue;
 
         public ExerciseHeaderViewHolder(@NonNull View itemView) {
             super(itemView);
             exerciseName = itemView.findViewById(R.id.lblListHeader);
             completionIndicator = itemView.findViewById(R.id.completed_exercise_group_item);
             addSetButton = itemView.findViewById(R.id.add_button_group_item);
+
+            // Exercise Abstract Info
+            loadTypeTitle = itemView.findViewById(R.id.text_view_exerciseabs_load_type_title);
+            loadTypeValue = itemView.findViewById(R.id.text_view_exerciseabs_load_type_value);
+
+            separateHandsTitle = itemView.findViewById(R.id.text_view_exerciseabs_separate_hands_title);
+            separateHandsValue = itemView.findViewById(R.id.text_view_exerciseabs_separate_hands_value);
+
+            positionTitle = itemView.findViewById(R.id.text_view_exerciseabs_position_title);
+            positionValue = itemView.findViewById(R.id.text_view_exerciseabs_position_value);
+
+            angleTitle = itemView.findViewById(R.id.text_view_exerciseabs_angle_title);
+            angleValue = itemView.findViewById(R.id.text_view_exerciseabs_angle_value);
+
+            gripWidthTitle = itemView.findViewById(R.id.text_view_exerciseabs_grip_width_title);
+            gripWidthValue = itemView.findViewById(R.id.text_view_exerciseabs_grip_width_value);
+
+            thumbsDirectionTitle = itemView.findViewById(R.id.text_view_exerciseabs_thumbs_direction_title);
+            thumbsDirectionValue = itemView.findViewById(R.id.text_view_exerciseabs_thumbs_direction_value);
         }
     }
 
