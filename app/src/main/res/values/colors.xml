@@ -10,5 +10,33 @@
     <color name="black">#000000</color>
     <color name="lightGrey">#A0A0A0</color>
     <color name="red">#FF0000</color>
+    <color name="totalLoadPassed">#00FF00</color>
+
+    <!-- Primary Colors Claude-->
+    <color name="background_primary">#F8F9FA</color>
+    <color name="card_background_primary">#FFFFFF</color>
+    <color name="card_background_accent">#F0F7FF</color>
+    <color name="expanded_background">#FAFBFC</color>
+    <color name="set_card_background">#FFFFFF</color>
+
+    <!-- Accent Colors -->
+    <color name="accent_color">#2196F3</color>
+    <color name="success_color">#4CAF50</color>
+    <color name="danger_color">#FF5722</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+
+    <!-- Border Colors -->
+    <color name="card_stroke">#E0E0E0</color>
+    <color name="set_card_stroke">#EEEEEE</color>
+
+    <!-- Input Colors -->
+    <color name="input_background">#F5F5F5</color>
+
+    <!-- Utility -->
+    <color name="white">#FFFFFF</color>
+    <color name="green">#00FF00</color>
 
 </resources>

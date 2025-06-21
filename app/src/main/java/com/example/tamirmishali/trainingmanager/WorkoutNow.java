@@ -14,6 +14,9 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
@@ -50,14 +53,12 @@ public class WorkoutNow extends AppCompatActivity {
 
     private static final String TAG = WorkoutNow.class.getName();
 
-    ExpandableListAdapter listAdapter;
-    ExpandableListView expListView;
+    private RecyclerView exerciseRecyclerView;
+    private WorkoutRecyclerAdapter workoutRecyclerAdapter;
 
 
-
-    @SuppressLint("SetTextI18n")
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.workoutnow_layout);
 
@@ -65,103 +66,180 @@ public class WorkoutNow extends AppCompatActivity {
         TextView textViewWorkoutName = findViewById(R.id.workoutnow_current_workout);
         TextView textViewWorkoutDate = findViewById(R.id.workoutnow_workout_date);
 
+        // ViewModels
         workoutViewModel = new ViewModelProvider(this).get(WorkoutViewModel.class);
         exerciseAbstractViewModel = new ViewModelProvider(this).get(ExerciseAbstractViewModel.class);
         routineViewModel = new ViewModelProvider(this).get(RoutineViewModel.class);
         exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
         setViewModel = new ViewModelProvider(this).get(SetViewModel.class);
 
-
-
-        //Get workout ID for viewing the relevant workout
+        // Handle incoming intent and load workouts
         Intent intent = getIntent();
-        if (intent.hasExtra(EXTRA_WORKOUT_ID)){
-            String callingClassName = getCallingActivity().getClassName(); //.getShortClassName();
-            Log.d(TAG, "Class name= " + callingClassName);
+        if (intent.hasExtra(EXTRA_WORKOUT_ID)) {
             sourceWorkoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
+            String callingClassName = getCallingActivity().getClassName();
 
-            //New Workout that was picked from the list of workouts in current routine or id
-            // of unfinished workout to reload.
-            if(callingClassName.equals("com.example.tamirmishali.trainingmanager.MainActivity") && intent.getAction()==null){ //.toString().equals(ACTION_FINISH_WORKOUT)){
-                // ToDo: create prevWorkout such as it is not literally the previous workout, but it
-                //  contains the exercises that are in currentWorkout, but filled with the most
-                //  recent Set reps and weight data:
+            if (callingClassName.equals("com.example.tamirmishali.trainingmanager.MainActivity") && intent.getAction() == null) {
                 prevWorkout = workoutViewModel.getWorkout(sourceWorkoutID);
                 prevWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(prevWorkout.getId()), true));
-
-                // Create reference workout and new empty workout with the right number of Sets:
                 currentWorkout = constructNewWorkout(prevWorkout);
                 refWorkout = constructRefWorkout(prevWorkout, currentWorkout);
-
-            }
-
-            //Existing Workout - finished workout from history
-            else if(callingClassName.equals("com.example.tamirmishali.trainingmanager.History.ViewPracticalWorkouts") || Objects.equals(intent.getAction(), ACTION_FINISH_WORKOUT)){
+            } else if (callingClassName.equals("com.example.tamirmishali.trainingmanager.History.ViewPracticalWorkouts") || Objects.equals(intent.getAction(), ACTION_FINISH_WORKOUT)) {
                 currentWorkout = workoutViewModel.getWorkout(sourceWorkoutID);
                 currentWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(currentWorkout.getId()), true));
-
                 prevWorkout = workoutViewModel.getPrevWorkout(currentWorkout.getWorkoutName(), currentWorkout.getWorkoutDate());
-                if (prevWorkout == null){
-                    prevWorkout = workoutViewModel.getAbstractWorkoutFromPractical(
-                            currentWorkout.getId_routine(),currentWorkout.getWorkoutName());
+                if (prevWorkout == null) {
+                    prevWorkout = workoutViewModel.getAbstractWorkoutFromPractical(currentWorkout.getId_routine(), currentWorkout.getWorkoutName());
                 }
-
                 prevWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(prevWorkout.getId()), true));
                 refWorkout = constructRefWorkout(prevWorkout, currentWorkout);
             }
-        }
-        //im on WorkoutNow Activity
-        else{
-            setResult(RESULT_CANCELED,intent);
+        } else {
+            setResult(RESULT_CANCELED, intent);
             finish();
             return;
         }
 
-        // Insert names of routine, workout and date at the top of the screen
+        // Set header info
         try {
             textViewRoutineName.setText("Routine: " + routineViewModel.getRoutine(currentWorkout.getId_routine()).getRoutineName());
             textViewWorkoutName.setText("Workout: " + currentWorkout.getWorkoutName());
-
-            //https://stackabuse.com/how-to-get-current-date-and-time-in-java/
-            SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyyy 'at' HH:mm");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy 'at' HH:mm");
             Date d = new Date(currentWorkout.getDate().getTime());
             textViewWorkoutDate.setText(formatter.format(d));
-
         } catch (Exception e) {
             Toast.makeText(this, "couldn't load last workout", Toast.LENGTH_SHORT).show();
         }
 
+        // Setup RecyclerView
+        exerciseRecyclerView = findViewById(R.id.exercise_recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        exerciseRecyclerView.setLayoutManager(layoutManager);
 
-        // get the listview
-        expListView = findViewById(R.id.lvExp);
+        workoutRecyclerAdapter = new WorkoutRecyclerAdapter(
+                this,
+                currentWorkout,
+                refWorkout,
+                setViewModel,
+                exerciseViewModel,
+                exerciseAbstractViewModel
+        );
 
-        listAdapter = new ExpandableListAdapter(this, currentWorkout, refWorkout,
-                setViewModel,exerciseViewModel,exerciseAbstractViewModel);
-        // setting list adapter
-        expListView.setAdapter(listAdapter);
-        // MY SAVIOUR!!!! Fixed the text jumps!!! <3<3<3 (06.12.2022)
-        // https://stackoverflow.com/questions/18632084/expandablelistview-child-items-edittext-cant-keep-focus
-        expListView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+        exerciseRecyclerView.setAdapter(workoutRecyclerAdapter);
+        workoutRecyclerAdapter.expandAll(); // Or conditionally based on filled sets
 
-        if (!currentWorkout.getExercises().get(0).areAllSetsFilled()) {
-            int count = listAdapter.getGroupCount();
-            for (int i = 0; i < count; i++)
-                expListView.expandGroup(i);
-            // expListView.expandGroup(0);
-        }
-
-        // found the command that makes the keyboard go as closest to be under all header children:
-        // https://developer.android.com/develop/ui/views/touch-and-input/keyboard-input/visibility
-
-        // Try to change the focus to the ExpandableListView so when i click an element inside it,
-        //  it will already be focused, and the focus jumps inside it will be less noticeable.
-        //  current state: when clicking the "Reps" EditText, the focus changes to the
-        //  ExpandableListView first, then to the relevant child, and then to the first element in
-        //  the child's linear layout, which is the "Weight" EditText. I believe that if the
-        //  ExpandableListView element is programmatically focused first, it will solve it.
-        expListView.requestFocus();
-
+        // Attach drag-to-reorder helper
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new WorkoutItemTouchCallback(workoutRecyclerAdapter));
+        itemTouchHelper.attachToRecyclerView(exerciseRecyclerView);
     }
+
+//    @SuppressLint("SetTextI18n")
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.workoutnow_layout);
+//
+//        TextView textViewRoutineName = findViewById(R.id.workoutnow_current_routine);
+//        TextView textViewWorkoutName = findViewById(R.id.workoutnow_current_workout);
+//        TextView textViewWorkoutDate = findViewById(R.id.workoutnow_workout_date);
+//
+//        workoutViewModel = new ViewModelProvider(this).get(WorkoutViewModel.class);
+//        exerciseAbstractViewModel = new ViewModelProvider(this).get(ExerciseAbstractViewModel.class);
+//        routineViewModel = new ViewModelProvider(this).get(RoutineViewModel.class);
+//        exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
+//        setViewModel = new ViewModelProvider(this).get(SetViewModel.class);
+//
+//
+//
+//        //Get workout ID for viewing the relevant workout
+//        Intent intent = getIntent();
+//        if (intent.hasExtra(EXTRA_WORKOUT_ID)){
+//            String callingClassName = getCallingActivity().getClassName(); //.getShortClassName();
+//            Log.d(TAG, "Class name= " + callingClassName);
+//            sourceWorkoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
+//
+//            //New Workout that was picked from the list of workouts in current routine or id
+//            // of unfinished workout to reload.
+//            if(callingClassName.equals("com.example.tamirmishali.trainingmanager.MainActivity") && intent.getAction()==null){ //.toString().equals(ACTION_FINISH_WORKOUT)){
+//                // Too: create prevWorkout such as it is not literally the previous workout, but it
+//                //  contains the exercises that are in currentWorkout, but filled with the most
+//                //  recent Set reps and weight data:
+//                prevWorkout = workoutViewModel.getWorkout(sourceWorkoutID);
+//                prevWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(prevWorkout.getId()), true));
+//
+//                // Create reference workout and new empty workout with the right number of Sets:
+//                currentWorkout = constructNewWorkout(prevWorkout);
+//                refWorkout = constructRefWorkout(prevWorkout, currentWorkout);
+//
+//            }
+//
+//            //Existing Workout - finished workout from history
+//            else if(callingClassName.equals("com.example.tamirmishali.trainingmanager.History.ViewPracticalWorkouts") || Objects.equals(intent.getAction(), ACTION_FINISH_WORKOUT)){
+//                currentWorkout = workoutViewModel.getWorkout(sourceWorkoutID);
+//                currentWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(currentWorkout.getId()), true));
+//
+//                prevWorkout = workoutViewModel.getPrevWorkout(currentWorkout.getWorkoutName(), currentWorkout.getWorkoutDate());
+//                if (prevWorkout == null){
+//                    prevWorkout = workoutViewModel.getAbstractWorkoutFromPractical(
+//                            currentWorkout.getId_routine(),currentWorkout.getWorkoutName());
+//                }
+//
+//                prevWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(prevWorkout.getId()), true));
+//                refWorkout = constructRefWorkout(prevWorkout, currentWorkout);
+//            }
+//        }
+//        //im on WorkoutNow Activity
+//        else{
+//            setResult(RESULT_CANCELED,intent);
+//            finish();
+//            return;
+//        }
+//
+//        // Insert names of routine, workout and date at the top of the screen
+//        try {
+//            textViewRoutineName.setText("Routine: " + routineViewModel.getRoutine(currentWorkout.getId_routine()).getRoutineName());
+//            textViewWorkoutName.setText("Workout: " + currentWorkout.getWorkoutName());
+//
+//            //https://stackabuse.com/how-to-get-current-date-and-time-in-java/
+//            SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyyy 'at' HH:mm");
+//            Date d = new Date(currentWorkout.getDate().getTime());
+//            textViewWorkoutDate.setText(formatter.format(d));
+//
+//        } catch (Exception e) {
+//            Toast.makeText(this, "couldn't load last workout", Toast.LENGTH_SHORT).show();
+//        }
+//
+//
+//        // get the listview
+//        expListView = findViewById(R.id.lvExp);
+//
+//        listAdapter = new ExpandableListAdapter(this, currentWorkout, refWorkout,
+//                setViewModel,exerciseViewModel,exerciseAbstractViewModel);
+//        // setting list adapter
+//        expListView.setAdapter(listAdapter);
+//        // MY SAVIOUR!!!! Fixed the text jumps!!! <3<3<3 (06.12.2022)
+//        // https://stackoverflow.com/questions/18632084/expandablelistview-child-items-edittext-cant-keep-focus
+//        expListView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+//
+//        if (!currentWorkout.getExercises().get(0).areAllSetsFilled()) {
+//            int count = listAdapter.getGroupCount();
+//            for (int i = 0; i < count; i++)
+//                expListView.expandGroup(i);
+//            // expListView.expandGroup(0);
+//        }
+//
+//        // found the command that makes the keyboard go as closest to be under all header children:
+//        // https://developer.android.com/develop/ui/views/touch-and-input/keyboard-input/visibility
+//
+//        // Try to change the focus to the ExpandableListView so when i click an element inside it,
+//        //  it will already be focused, and the focus jumps inside it will be less noticeable.
+//        //  current state: when clicking the "Reps" EditText, the focus changes to the
+//        //  ExpandableListView first, then to the relevant child, and then to the first element in
+//        //  the child's linear layout, which is the "Weight" EditText. I believe that if the
+//        //  ExpandableListView element is programmatically focused first, it will solve it.
+//        expListView.requestFocus();
+//
+//    }
 
     @Override
     public void onBackPressed() {

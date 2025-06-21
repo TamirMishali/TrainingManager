@@ -221,7 +221,6 @@ public class MainActivity extends AppCompatActivity {
             }
             Uri uri_db = data.getData();
             Toast.makeText(this, uri_db.getPath(), LENGTH_SHORT).show();
-            // TODO: (Low) Finish the part the loads the DB file to SQLite.
         }
 
         else {
@@ -334,7 +333,13 @@ public class MainActivity extends AppCompatActivity {
 
         // Get desired routine from preferences
         int mainRoutineId = com.example.tamirmishali.trainingmanager.PreferenceUtils.getMainRoutineId(this);
-        lastPracticalWorkouts = workoutViewModel.getWorkoutsForDialog(mainRoutineId);
+        if (mainRoutineId == -1){
+            lastPracticalWorkouts = workoutViewModel.getWorkoutsForDialog(workoutViewModel.getNewestRoutineId());
+        }
+        else{
+            lastPracticalWorkouts = workoutViewModel.getWorkoutsForDialog(mainRoutineId);
+        }
+
 
         // build dialog and its view and show it:
         AlertDialog.Builder builder= new AlertDialog.Builder(this);
