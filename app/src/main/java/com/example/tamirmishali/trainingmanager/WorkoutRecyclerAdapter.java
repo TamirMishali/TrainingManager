@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -201,14 +202,14 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         ExerciseAbstract ea = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs());
 
         if (ea == null) {
-            Log.e("WorkoutRecyclerAdapter", "ExerciseAbstract is null for id: " + exercise.getId_exerciseabs());
+            Log.e("WorkoutAdapter", "ExerciseAbstract is null for id: " + exercise.getId_exerciseabs());
             return;
         }
 
         // Set exercise name
         holder.exerciseName.setText(ea.generateExerciseAbstractName());
 
-        // Get current/previous sets
+        // Get current sets
         List<Set> currentSets = getCurrentSetsForExercise(exercise.getId_exerciseabs());
         List<Set> prevSets = prevWorkoutSets.get(exercise.getId_exerciseabs());
 
@@ -218,41 +219,44 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         // Color coding based on progress
         if (prevTotal > 0 && currentTotal > 0) {
             int color = currentTotal >= prevTotal ?
-                    ContextCompat.getColor(context, R.color.green) :
-                    ContextCompat.getColor(context, R.color.red);
-            holder.exerciseName.setTextColor(color);
+                    ContextCompat.getColor(context, R.color.fail_color) :
+                    ContextCompat.getColor(context, R.color.fail_color);
+            holder.completionIndicatorContainer.setCardBackgroundColor(color);
         } else {
             holder.exerciseName.setTextColor(ContextCompat.getColor(context, R.color.text_primary));
         }
+
+        // Add set button
+        holder.addSetButton.setOnClickListener(v -> addNewSet(exercise));
 
         // Set completion indicator
         boolean allComplete = areAllSetsFilled(currentSets);
         holder.completionIndicator.setVisibility(allComplete ? View.VISIBLE : View.GONE);
 
-        // Load Type
+        // Load Type + Separate Sides
         setFieldVisibility(holder.loadTypeTitle, holder.loadTypeValue, ea.getLoad_type(), "Load Type");
+        setFieldVisibility(holder.separateHandsTitle, holder.separateHandsValue, ea.getSeparate_sides(), "Separate Sides");
 
-        // Separate Sides
-        setFieldVisibility(holder.separateHandsTitle, holder.separateHandsValue,
-                ea.getSeparate_sides(), "Separate Sides");
-
-        // Position
+        // Position + Angle
         setFieldVisibility(holder.positionTitle, holder.positionValue, ea.getPosition(), "Position");
-
-        // Angle
         setFieldVisibility(holder.angleTitle, holder.angleValue, ea.getAngle(), "Angle");
 
-        // Grip Width
-        setFieldVisibility(holder.gripWidthTitle, holder.gripWidthValue,
-                ea.getGrip_width(), "Grip Width");
+        // Grip Width + Thumbs Direction
+        setFieldVisibility(holder.gripWidthTitle, holder.gripWidthValue, ea.getGrip_width(), "Grip Width");
+        setFieldVisibility(holder.thumbsDirectionTitle, holder.thumbsDirectionValue, ea.getThumbs_direction(), "Thumbs Direction");
 
-        // Thumbs Direction
-        setFieldVisibility(holder.thumbsDirectionTitle, holder.thumbsDirectionValue,
-                ea.getThumbs_direction(), "Thumbs Direction");
+        // Now collapse entire rows if needed
+        collapseEmptyRow(holder.rowLoadTypeAndSides,
+                holder.containerLoadType,
+                holder.containerSeparateSides);
 
-        // Collapse entire sections if needed
-        collapseEmptyDetailsSection(holder.itemView, R.id.extended_ea_info_pos_and_angle);
-        collapseEmptyDetailsSection(holder.itemView, R.id.extended_ea_info_grip_and_thumbs);
+//        collapseEmptyRow(holder.rowPositionAndAngle,
+//                holder.containerPosition,
+//                holder.containerAngle);
+//
+//        collapseEmptyRow(holder.rowGripAndThumbs,
+//                holder.containerGripWidth,
+//                holder.containerThumbsDirection);
     }
 
     private void bindSetRow(SetRowViewHolder holder, WorkoutItem item, int position) {
@@ -349,9 +353,9 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             if (prevTotal > 0 && currentTotal > 0 && allComplete) {
                 int color = currentTotal >= prevTotal ?
-                        ContextCompat.getColor(context, R.color.green) :
-                        ContextCompat.getColor(context, R.color.red);
-                headerHolder.exerciseName.setTextColor(color);
+                        ContextCompat.getColor(context, R.color.success_color) :
+                        ContextCompat.getColor(context, R.color.fail_color);
+                headerHolder.completionIndicatorContainer.setCardBackgroundColor(color);
             } else {
                 headerHolder.exerciseName.setTextColor(ContextCompat.getColor(context, R.color.text_primary));
             }
@@ -435,9 +439,9 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         if (prevTotal > 0 && currentTotal > 0) {
             int color = currentTotal >= prevTotal ?
-                    ContextCompat.getColor(context, R.color.green) :
-                    ContextCompat.getColor(context, R.color.red);
-            holder.exerciseName.setTextColor(color);
+                    ContextCompat.getColor(context, R.color.success_color) :
+                    ContextCompat.getColor(context, R.color.fail_color);
+            holder.completionIndicatorContainer.setCardBackgroundColor(color);
         } else {
             holder.exerciseName.setTextColor(ContextCompat.getColor(context, R.color.text_primary));
         }
@@ -548,50 +552,85 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         return str == null || str.trim().isEmpty() || str.equals("N/A");
     }
 
+    private void collapseEmptyRow(LinearLayout rowContainer, LinearLayout... fieldContainers) {
+        boolean anyVisible = false;
+        for (LinearLayout container : fieldContainers) {
+            if (container.getVisibility() == View.VISIBLE) {
+                anyVisible = true;
+                break;
+            }
+        }
+
+        rowContainer.setVisibility(anyVisible ? View.VISIBLE : View.GONE);
+    }
+
     // ViewHolder classes
     static class ExerciseHeaderViewHolder extends RecyclerView.ViewHolder {
+        CardView completionIndicatorContainer;
         TextView exerciseName;
         ImageView completionIndicator;
         ImageButton addSetButton;
 
-        // Exercise Abstract Fields - Titles
-        TextView loadTypeTitle;
-        TextView separateHandsTitle;
-        TextView positionTitle;
-        TextView angleTitle;
-        TextView gripWidthTitle;
-        TextView thumbsDirectionTitle;
+        // Field Titles and Values
+        TextView loadTypeTitle, loadTypeValue;
+        TextView separateHandsTitle, separateHandsValue;
+        TextView positionTitle, positionValue;
+        TextView angleTitle, angleValue;
+        TextView gripWidthTitle, gripWidthValue;
+        TextView thumbsDirectionTitle, thumbsDirectionValue;
 
-        // Exercise Abstract Fields - Values
-        TextView loadTypeValue;
-        TextView separateHandsValue;
-        TextView positionValue;
-        TextView angleValue;
-        TextView gripWidthValue;
-        TextView thumbsDirectionValue;
+        // Row Containers
+        LinearLayout rowLoadTypeAndSides;
+        LinearLayout rowPositionAndAngle;
+        LinearLayout rowGripAndThumbs;
+
+        // Individual Field Containers
+        LinearLayout containerLoadType;
+        LinearLayout containerSeparateSides;
+        LinearLayout containerPosition;
+        LinearLayout containerAngle;
+        LinearLayout containerGripWidth;
+        LinearLayout containerThumbsDirection;
 
         public ExerciseHeaderViewHolder(@NonNull View itemView) {
             super(itemView);
 
             exerciseName = itemView.findViewById(R.id.lblListHeader);
             completionIndicator = itemView.findViewById(R.id.completed_exercise_group_item);
+            completionIndicatorContainer = itemView.findViewById(R.id.completed_exercise_group_item_container);
             addSetButton = itemView.findViewById(R.id.add_button_group_item);
 
-            // Titles
+            // Field Views
             loadTypeTitle = itemView.findViewById(R.id.text_view_exerciseabs_load_type_title);
-            separateHandsTitle = itemView.findViewById(R.id.text_view_exerciseabs_separate_hands_title);
-            positionTitle = itemView.findViewById(R.id.text_view_exerciseabs_position_title);
-            angleTitle = itemView.findViewById(R.id.text_view_exerciseabs_angle_title);
-            gripWidthTitle = itemView.findViewById(R.id.text_view_exerciseabs_grip_width_title);
-            thumbsDirectionTitle = itemView.findViewById(R.id.text_view_exerciseabs_thumbs_direction_title);
-
-            // Values
             loadTypeValue = itemView.findViewById(R.id.text_view_exerciseabs_load_type_value);
+
+            separateHandsTitle = itemView.findViewById(R.id.text_view_exerciseabs_separate_hands_title);
             separateHandsValue = itemView.findViewById(R.id.text_view_exerciseabs_separate_hands_value);
+
+            positionTitle = itemView.findViewById(R.id.text_view_exerciseabs_position_title);
             positionValue = itemView.findViewById(R.id.text_view_exerciseabs_position_value);
+
+            angleTitle = itemView.findViewById(R.id.text_view_exerciseabs_angle_title);
             angleValue = itemView.findViewById(R.id.text_view_exerciseabs_angle_value);
+
+            gripWidthTitle = itemView.findViewById(R.id.text_view_exerciseabs_grip_width_title);
             gripWidthValue = itemView.findViewById(R.id.text_view_exerciseabs_grip_width_value);
+
+            thumbsDirectionTitle = itemView.findViewById(R.id.text_view_exerciseabs_thumbs_direction_title);
             thumbsDirectionValue = itemView.findViewById(R.id.text_view_exerciseabs_thumbs_direction_value);
+
+            // Row Containers
+            rowLoadTypeAndSides = itemView.findViewById(R.id.row_load_type_and_separate_sides);
+            rowPositionAndAngle = itemView.findViewById(R.id.row_position_and_angle);
+            rowGripAndThumbs = itemView.findViewById(R.id.row_grip_and_thumbs);
+
+            // Field Containers
+            containerLoadType = itemView.findViewById(R.id.container_load_type);
+            containerSeparateSides = itemView.findViewById(R.id.container_separate_hands);
+            containerPosition = itemView.findViewById(R.id.container_position);
+            containerAngle = itemView.findViewById(R.id.container_angle);
+            containerGripWidth = itemView.findViewById(R.id.container_grip_width);
+            containerThumbsDirection = itemView.findViewById(R.id.container_thumbs_direction);
         }
     }
 

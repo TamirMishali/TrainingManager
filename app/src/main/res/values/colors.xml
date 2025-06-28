@@ -15,18 +15,21 @@
     <!-- Primary Colors Claude-->
     <color name="background_primary">#F8F9FA</color>
     <color name="card_background_primary">#FFFFFF</color>
-    <color name="card_background_accent">#F0F7FF</color>
     <color name="expanded_background">#FAFBFC</color>
     <color name="set_card_background">#FFFFFF</color>
 
     <!-- Accent Colors -->
-    <color name="accent_color">#2196F3</color>
-    <color name="success_color">#4CAF50</color>
     <color name="danger_color">#FF5722</color>
+    <color name="dark_red">#FFBA0000</color>
 
     <!-- Text Colors -->
-    <color name="text_primary">#212121</color>
+    <color name="text_primary">@color/black</color>
+    <color name="accent_color">#FF5722</color> <!-- Material Red -->
+    <color name="card_background_accent">#2E2E2E</color> <!-- Lighter gray -->
+    <color name="success_color">#0EC30E</color> <!-- For completion indicator -->
+    <color name="fail_color">#1D2A98</color>     <!-- For error/failure indicator -->
     <color name="text_secondary">#757575</color>
+    <color name="hint_color">#444444</color>
 
     <!-- Border Colors -->
     <color name="card_stroke">#E0E0E0</color>
