@@ -34,7 +34,6 @@
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"/>
         <activity android:name=".History.History" />
         <activity android:name=".History.ViewPracticalWorkouts" />
-        <activity android:name=".History.ViewOldWorkout" />
 
         <meta-data
             android:name="preloaded_fonts"
