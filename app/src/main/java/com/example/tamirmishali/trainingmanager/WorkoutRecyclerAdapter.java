@@ -219,7 +219,7 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         // Color coding based on progress
         if (prevTotal > 0 && currentTotal > 0) {
             int color = currentTotal >= prevTotal ?
-                    ContextCompat.getColor(context, R.color.fail_color) :
+                    ContextCompat.getColor(context, R.color.success_color) :
                     ContextCompat.getColor(context, R.color.fail_color);
             holder.completionIndicatorContainer.setCardBackgroundColor(color);
         } else {
