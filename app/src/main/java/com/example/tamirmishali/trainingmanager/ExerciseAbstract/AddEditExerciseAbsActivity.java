@@ -144,7 +144,11 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             // Handle exerciseAbstract
             ExerciseAbstract currentExerciseAbstract = exerciseAbstractViewModel.getExerciseAbsFromId(
                                                             exerciseAbstractID);
-
+            if (currentExerciseAbstract == null) {
+                Toast.makeText(this, "Could not load exercise", Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
             setExerciseAbstractToView(currentExerciseAbstract);
             operationAdapter.notifyDataSetChanged();
             nicknameAdapter.notifyDataSetChanged();
@@ -392,12 +396,17 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             // if some other Exercise is linked to it, it will still be deleted, so i must check it before:
             try {
                 List<Exercise> exerciseList = exerciseViewModel.getExercisesForEA(exerciseAbstractID);
-                if (exerciseList.isEmpty()) {
-                    exerciseAbstractViewModel.delete(exerciseAbstractViewModel.getExerciseAbsFromId(exerciseAbstractID));
-                    Log.d(TAG, "Deleted old unlinked ExerciseAbstract id: " + exerciseAbstractID);
+                if (exerciseList == null || exerciseList.isEmpty()) {
+                    ExerciseAbstract oldEa = exerciseAbstractViewModel.getExerciseAbsFromId(exerciseAbstractID);
+                    if (oldEa != null) {
+                        exerciseAbstractViewModel.delete(oldEa);
+                        Log.d(TAG, "Deleted old unlinked ExerciseAbstract id: " + exerciseAbstractID);
+                    }
+                } else {
+                    Log.d(TAG, "Could not delete old ExerciseAbstract because it is linked in db. id = " + exerciseAbstractID);
                 }
-            } finally {
-                Log.d(TAG, "Could not delete old ExerciseAbstract because it is linked in db. id = " + exerciseAbstractID);
+            } catch (Exception e) {
+                Log.d(TAG, "Error while trying to delete old ExerciseAbstract id: " + exerciseAbstractID);
             }
         }
 

@@ -77,7 +77,8 @@ public class WorkoutNow extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_WORKOUT_ID)) {
             sourceWorkoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1);
-            String callingClassName = getCallingActivity().getClassName();
+            android.content.ComponentName callingActivity = getCallingActivity();
+            String callingClassName = callingActivity != null ? callingActivity.getClassName() : "";
 
             if (callingClassName.equals("com.example.tamirmishali.trainingmanager.MainActivity") && intent.getAction() == null) {
                 prevWorkout = workoutViewModel.getWorkout(sourceWorkoutID);
@@ -90,6 +91,11 @@ public class WorkoutNow extends AppCompatActivity {
                 prevWorkout = workoutViewModel.getPrevWorkout(currentWorkout.getWorkoutName(), currentWorkout.getWorkoutDate());
                 if (prevWorkout == null) {
                     prevWorkout = workoutViewModel.getAbstractWorkoutFromPractical(currentWorkout.getId_routine(), currentWorkout.getWorkoutName());
+                }
+                if (prevWorkout == null) {
+                    Toast.makeText(this, "Could not load previous workout data", Toast.LENGTH_SHORT).show();
+                    finish();
+                    return;
                 }
                 prevWorkout.setExercises(fillExerciseData(exerciseViewModel.getExercisesForWorkout(prevWorkout.getId()), true));
                 refWorkout = constructRefWorkout(prevWorkout, currentWorkout);
@@ -251,7 +257,8 @@ public class WorkoutNow extends AppCompatActivity {
     private List<Exercise> fillExerciseData(List<Exercise> exerciseList, Boolean fillSets){
         for(int i=0; i<exerciseList.size(); i++){
             Exercise exercise = exerciseList.get(i);
-            exercise.setExerciseAbstract(exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs()));
+            ExerciseAbstract ea = exerciseAbstractViewModel.getExerciseAbsFromId(exercise.getId_exerciseabs());
+            if (ea != null) exercise.setExerciseAbstract(ea);
 
             if (fillSets) {
                 exercise.setSets(setViewModel.getSetsForExercise(exercise.getId()));
@@ -275,6 +282,9 @@ public class WorkoutNow extends AppCompatActivity {
 
         // Get AbstractWorkout in order to obtain its exercises:
         Workout absWorkout = workoutViewModel.getAbstractWorkoutFromPractical(prevWorkout.getId_routine(), prevWorkout.getWorkoutName());
+        if (absWorkout == null) {
+            return new Workout(prevWorkout.getId_routine(), prevWorkout.getName(), false);
+        }
         // populate Workout Exercises:
         absWorkout.setExercises(exerciseViewModel.getExercisesForWorkout(absWorkout.getId()));
         // and populate each Exercise ExerciseAbstract data: (abstract Workout doesn't have Sets)
@@ -357,8 +367,11 @@ public class WorkoutNow extends AppCompatActivity {
         //  1. get abstract Workout from practical workout: absWO
         //  2. get exercises from abstract workout using absWO.id: exercisesList
         List<Exercise> exercisesList;
-        exercisesList = exerciseViewModel.getExercisesForWorkout(
-                workoutViewModel.getAbstractWorkoutFromPractical(newWorkout.getId_routine(), newWorkout.getName()).getId());
+        Workout absWorkoutForNew = workoutViewModel.getAbstractWorkoutFromPractical(newWorkout.getId_routine(), newWorkout.getName());
+        if (absWorkoutForNew == null) {
+            return newWorkout;
+        }
+        exercisesList = exerciseViewModel.getExercisesForWorkout(absWorkoutForNew.getId());
 
         Iterator<Exercise> iteratorCurrentExercise = exercisesList.iterator();
 
@@ -388,6 +401,7 @@ public class WorkoutNow extends AppCompatActivity {
             // get exercise abstract
             ExerciseAbstract exerciseAbstract = exerciseAbstractViewModel.getExerciseAbsFromId(
                     newWorkout.getExercises().get(i).getId_exerciseabs());
+            if (exerciseAbstract == null) continue;
             // fill its String fields
             exerciseAbstract = exerciseAbstractViewModel.ExerciseAbstractIdsToStrings(exerciseAbstract);
             // assign it to Exercise in newWorkout

@@ -63,7 +63,7 @@ public class WorkoutViewModel extends AndroidViewModel {
     public List<Workout> getWorkoutsForDialog(int routineId){
         List<Workout> result = new ArrayList<>();
         List<Workout> abstractWorkouts= getAbstractWorkoutsForRoutine(routineId);
-        if (abstractWorkouts.isEmpty() || abstractWorkouts == null){
+        if (abstractWorkouts == null || abstractWorkouts.isEmpty()){
             return null;
         }
 
@@ -86,8 +86,8 @@ public class WorkoutViewModel extends AndroidViewModel {
         // roll number
         public int compare(Workout a, Workout b)
         {
-            if((a.getDate() == null ||  a.getDate().toString() == "")||
-                    (b.getDate() == null || b.getDate().toString()==""))
+            if((a.getDate() == null || a.getDate().toString().isEmpty())||
+                    (b.getDate() == null || b.getDate().toString().isEmpty()))
                 return 0;
             else if(a.getDate().after(b.getDate()))
                 return 1;

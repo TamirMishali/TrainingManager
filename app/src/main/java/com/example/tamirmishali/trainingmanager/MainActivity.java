@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // If last workout filled properly, set text to "start new workout now". else set
                 // text to the current workout and routine name.
-                if (!(sets.isEmpty() || sets == null)) {
+                if (sets != null && !sets.isEmpty()) {
                     layoutStatus = "continue_workout";
 
                 }
@@ -364,7 +364,11 @@ public class MainActivity extends AppCompatActivity {
                 Workout abstractWorkoutOfSelectedWorkout = workoutViewModel.getAbstractWorkoutFromPractical(
                         workoutViewModel.getNewestRoutineId(),
                         selectedWorkout.getWorkoutName());
-                List<Exercise> exerciseList = (exerciseViewModel.getExercisesForWorkout(abstractWorkoutOfSelectedWorkout.getId()));
+                if (abstractWorkoutOfSelectedWorkout == null) {
+                    Toast.makeText(MainActivity.this,"Selected workout has no exercises",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                List<Exercise> exerciseList = exerciseViewModel.getExercisesForWorkout(abstractWorkoutOfSelectedWorkout.getId());
 
                 if (exerciseList.isEmpty()){
                     Toast.makeText(MainActivity.this,"Selected workout has no exercises",Toast.LENGTH_SHORT).show();
