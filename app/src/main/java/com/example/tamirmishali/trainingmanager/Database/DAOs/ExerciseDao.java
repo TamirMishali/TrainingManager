@@ -47,19 +47,18 @@ public interface ExerciseDao {
            "WHERE e.id_workout = :workoutId AND ea.id_muscle = :muscleId")
     List<Exercise> getExercisesForWorkoutAndMuscle(int workoutId, int muscleId);
 
-    //get (most recent)/(newest) exercise from all workouts in a routine.
-    // This is for building the right number of sets and get the most recent number of reps in an exercise in a new workout.
-    // This query resulted from the need to get most recent time i did an exercise. if i have ex1
-    //  in workout1 and workout2, the following time i do the ex1, i want the app to get the most
-    //  recent data. This means the it need to get the data from most recent workout i did ex1.
-    // This replace taking the data from same prev workout, and not from the recent of all workouts.
+    //get (most recent)/(newest) exercise from the same-named workout in a routine.
+    // Only looks back at previous instances of the same workout (e.g. "Chest" → previous "Chest"),
+    // not across different workout types.
     @Query("select * " +
             "from exercise_table " +
             "where exercise_table.id_exercise = " +
             "    (select id_exercise " +
             "    from workout_table " +
             "    join exercise_table ON workout_table.id_workout = exercise_table.id_workout " +
-            "    where (id_routine=:id_routine) and (date is NOT NULL) and (exercise_table.id_exerciseabs=:id_exerciseabs) and (workout_table.date < " +
+            "    where (id_routine=:id_routine) and (date is NOT NULL) and (exercise_table.id_exerciseabs=:id_exerciseabs) " +
+            "    and (workout_table.name = (select name from workout_table where id_workout=:id_workout)) " +
+            "    and (workout_table.date < " +
             "       (select wot1.date " +
             "        from workout_table as wot1 " +
             "        where wot1.id_workout=:id_workout)" +
