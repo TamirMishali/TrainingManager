@@ -5,4 +5,8 @@
         android:id="@+id/delete_all_workouts"
         android:title="Clear all exercises"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/table_view"
+        android:title="Table View"
+        app:showAsAction="always"/>
 </menu>

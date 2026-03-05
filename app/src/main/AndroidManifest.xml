@@ -32,6 +32,9 @@
             android:name=".WorkoutNow"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"/>
+        <activity
+            android:name=".Routine.RoutineTableActivity"
+            android:parentActivityName=".Workout.ShowRoutineWorkouts"/>
         <activity android:name=".History.History" />
         <activity android:name=".History.ViewPracticalWorkouts" />
 

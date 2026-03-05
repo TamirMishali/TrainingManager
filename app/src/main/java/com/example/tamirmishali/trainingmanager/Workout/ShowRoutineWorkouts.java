@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ShowWorkoutAbstractExercises;
 import com.example.tamirmishali.trainingmanager.R;
+import com.example.tamirmishali.trainingmanager.Routine.RoutineTableActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -211,6 +212,12 @@ public class ShowRoutineWorkouts extends AppCompatActivity {
             case R.id.delete_all_workouts:
                 //workoutViewModel.deleteAllWorkouts();
                 Toast.makeText(this, "All workouts deleted", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.table_view:
+                Intent tableIntent = new Intent(ShowRoutineWorkouts.this, RoutineTableActivity.class);
+                tableIntent.putExtra(RoutineTableActivity.EXTRA_ROUTINE_ID, sourceRoutineID);
+                tableIntent.putExtra(RoutineTableActivity.EXTRA_ROUTINE_NAME, sourceRoutineName);
+                startActivity(tableIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

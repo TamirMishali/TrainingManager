@@ -42,6 +42,11 @@ public interface ExerciseDao {
     @Query("SELECT * FROM exercise_table WHERE id_exerciseabs=:EA_ID")
     List<Exercise> getExercisesForEA(final int EA_ID);
 
+    @Query("SELECT e.* FROM exercise_table e " +
+           "JOIN exerciseabs_table ea ON e.id_exerciseabs = ea.id_exerciseabs " +
+           "WHERE e.id_workout = :workoutId AND ea.id_muscle = :muscleId")
+    List<Exercise> getExercisesForWorkoutAndMuscle(int workoutId, int muscleId);
+
     //get (most recent)/(newest) exercise from all workouts in a routine.
     // This is for building the right number of sets and get the most recent number of reps in an exercise in a new workout.
     // This query resulted from the need to get most recent time i did an exercise. if i have ex1
