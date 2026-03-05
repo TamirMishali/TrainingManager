@@ -61,7 +61,7 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
 //    public LiveData<List<ExerciseAbstractNickname>> getAllExerciseAbstractNicknames(){ return allNicknames;}
     public int getExerciseAbstractInfoValueId(String value){return repository.getExerciseAbstractInfoValueId(value);}
     public int getExerciseAbstractOperationId(String id_muscle, String operation){return repository.getExerciseAbstractOperationId(id_muscle, operation);}
-    public int getExerciseAbstractNicknameId(String nickname){return repository.getExerciseAbstractNicknameId(nickname);}
+    public int getExerciseAbstractNicknameId(int id_operation, String nickname){return repository.getExerciseAbstractNicknameId(id_operation, nickname);}
     private String getExerciseAbstractInfoValueValue(int id_value){return repository.getExerciseAbstractInfoValueValue(id_value);}
     private String getExerciseAbstractOperationOperation(int id_operation){return repository.getExerciseAbstractOperationOperation(id_operation);}
     private String getExerciseAbstractNicknameNickname(int id_nickname){return repository.getExerciseAbstractNicknameNickname(id_nickname);}
@@ -151,7 +151,7 @@ public class ExerciseAbstractViewModel extends AndroidViewModel {
         // If nickname string is not null or empty, set its id to be right.
 //        if (!(exerciseAbstract.getNickname() == null || exerciseAbstract.getNickname().isEmpty())){
         if (!(exerciseAbstract.getNickname().isEmpty())){
-            exerciseAbstract.setId_nickname(getExerciseAbstractNicknameId(exerciseAbstract.getNickname()));
+            exerciseAbstract.setId_nickname(getExerciseAbstractNicknameId(exerciseAbstract.getId_operation(), exerciseAbstract.getNickname()));
         }
         // If load_type string is not null or empty, set its id to be right.
 //        if (!(exerciseAbstract.getLoad_type() == null || exerciseAbstract.getLoad_type().isEmpty())){

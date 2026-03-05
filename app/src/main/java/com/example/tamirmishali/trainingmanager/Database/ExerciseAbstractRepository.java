@@ -116,10 +116,10 @@ public class ExerciseAbstractRepository {
         }
         return id;
     }
-    public int getExerciseAbstractNicknameId(String nickname){
+    public int getExerciseAbstractNicknameId(int id_operation, String nickname){
         int id = 0;
         try {
-            id = new GetExerciseAbstractNicknameIdAsyncTask(exerciseAbstractDao).execute(nickname).get();
+            id = new GetExerciseAbstractNicknameIdAsyncTask(exerciseAbstractDao).execute(String.valueOf(id_operation), nickname).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -349,7 +349,7 @@ public class ExerciseAbstractRepository {
 
         @Override
         protected Integer doInBackground(String... params) {
-            return exerciseAbstractDao.getExerciseAbstractNicknameId(params[0]);
+            return exerciseAbstractDao.getExerciseAbstractNicknameId(params[0], params[1]);
         }
     }
 

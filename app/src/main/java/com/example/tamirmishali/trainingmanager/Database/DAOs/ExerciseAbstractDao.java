@@ -60,6 +60,7 @@ public interface ExerciseAbstractDao {
 
     @Query("SELECT id_exerciseabs FROM exerciseabs_table WHERE (id_muscle=:id_muscle) " +
             "and (id_operation=:id_operation) " +
+            "and (id_nickname IS NULL) " +
             "and (id_load_type=:id_load_type) " +
             "and (id_position=:id_position) " +
             "and (id_angle=:id_angle) " +
@@ -123,8 +124,8 @@ public interface ExerciseAbstractDao {
     @Query("select * from exerciseabs_nickname ")
     LiveData<List<ExerciseAbstractNickname>> getAllExerciseAbstractNicknames();
 
-    @Query("SELECT id FROM exerciseabs_nickname WHERE nickname=:nickname")
-    int getExerciseAbstractNicknameId(String nickname);
+    @Query("SELECT id FROM exerciseabs_nickname WHERE id_exerciseabs_operation=:id_operation AND nickname=:nickname")
+    int getExerciseAbstractNicknameId(String id_operation, String nickname);
 
     @Query("SELECT nickname FROM exerciseabs_nickname WHERE id=:id")
     String getExerciseAbstractNicknameNickname(int id);
