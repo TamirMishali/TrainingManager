@@ -36,7 +36,8 @@ import java.util.List;
 import java.util.Map;
 
 
-
+// TODO: (Medium) Collapse and Expand sets (in a new Git branch)
+// TODO: (LOW) add progress bar to each set
 
 public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -213,8 +214,8 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         List<Set> currentSets = getCurrentSetsForExercise(exercise.getId_exerciseabs());
         List<Set> prevSets = prevWorkoutSets.get(exercise.getId_exerciseabs());
 
-        int currentTotal = calculateTotalLoad(currentSets);
-        int prevTotal = calculateTotalLoad(prevSets);
+        double currentTotal = calculateTotalLoad(currentSets);
+        double prevTotal = calculateTotalLoad(prevSets);
 
         // Color coding based on progress
         if (prevTotal > 0 && currentTotal > 0) {
@@ -303,7 +304,7 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         return null;
     }
 
-    private int calculatePrevTotal(int exerciseAbsId) {
+    private double calculatePrevTotal(int exerciseAbsId) {
         List<Set> prevSets = prevWorkoutSets.get(exerciseAbsId);
         return calculateTotalLoad(prevSets);
     }
@@ -348,8 +349,8 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 headerHolder.completionIndicator.setVisibility(View.GONE);
             }
 
-            int currentTotal = calculateTotalLoad(sets);
-            int prevTotal = calculatePrevTotal(exercise.getId_exerciseabs());
+            double currentTotal = calculateTotalLoad(sets);
+            double prevTotal = calculatePrevTotal(exercise.getId_exerciseabs());
 
             if (prevTotal > 0 && currentTotal > 0 && allComplete) {
                 int color = currentTotal >= prevTotal ?
@@ -434,8 +435,8 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         boolean allComplete = areAllSetsFilled(sets);
         holder.completionIndicator.setVisibility(allComplete ? View.VISIBLE : View.GONE);
 
-        int currentTotal = calculateTotalLoad(sets);
-        int prevTotal = calculatePrevTotal(exercise.getId_exerciseabs());
+        double currentTotal = calculateTotalLoad(sets);
+        double prevTotal = calculatePrevTotal(exercise.getId_exerciseabs());
 
         if (prevTotal > 0 && currentTotal > 0) {
             int color = currentTotal >= prevTotal ?
@@ -520,13 +521,13 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         return true;
     }
 
-    private int calculateTotalLoad(List<Set> sets) {
+    private double calculateTotalLoad(List<Set> sets) {
         if (sets == null || sets.isEmpty()) return -1;
 
-        int total = 0;
+        double total = 0;
         for (Set set : sets) {
             if (set.getReps() <= 0 || set.getWeight() <= 0) continue;
-            total += set.getReps() * (int) set.getWeight();
+            total += set.getReps() * set.getWeight();
         }
         return total;
     }
