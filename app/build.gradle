@@ -92,6 +92,9 @@ dependencies {
     // it is recommended you also explicitly depend on Persistence Room's latest version for bug fixes and new features.
     implementation 'androidx.room:room-runtime:2.0.0'
 
+    // MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
     // play Task library
     implementation 'com.google.android.play:app-update:2.1.0'
     implementation 'com.google.android.play:app-update-ktx:2.1.0' // for Kotlin

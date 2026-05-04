@@ -35,6 +35,8 @@
         <activity
             android:name=".Routine.RoutineTableActivity"
             android:parentActivityName=".Workout.ShowRoutineWorkouts"/>
+        <activity android:name=".ExerciseGraph.ExerciseGraphActivity"
+            android:parentActivityName=".WorkoutNow"/>
         <activity android:name=".History.History" />
         <activity android:name=".History.ViewPracticalWorkouts" />
 

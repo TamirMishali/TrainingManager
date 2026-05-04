@@ -1,6 +1,7 @@
 package com.example.tamirmishali.trainingmanager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 //import android.util.SparseBooleanArray;
@@ -24,6 +25,7 @@ import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstract;
 import com.example.tamirmishali.trainingmanager.ExerciseAbstract.ExerciseAbstractViewModel;
+import com.example.tamirmishali.trainingmanager.ExerciseGraph.ExerciseGraphActivity;
 import com.example.tamirmishali.trainingmanager.Set.Set;
 import com.example.tamirmishali.trainingmanager.Set.SetViewModel;
 import com.example.tamirmishali.trainingmanager.Workout.Workout;
@@ -239,6 +241,15 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         // Add set button
         holder.addSetButton.setOnClickListener(v -> addNewSet(exercise));
+
+        // Graph button
+        holder.graphButton.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ExerciseGraphActivity.class);
+            intent.putExtra(ExerciseGraphActivity.EXTRA_EXERCISE_ABS_ID, exercise.getId_exerciseabs());
+            intent.putExtra(ExerciseGraphActivity.EXTRA_ROUTINE_ID, currentWorkout.getId_routine());
+            intent.putExtra(ExerciseGraphActivity.EXTRA_EXERCISE_NAME, ea.generateExerciseAbstractName());
+            context.startActivity(intent);
+        });
 
         // Set completion indicator
         boolean allComplete = areAllSetsFilled(currentSets);
@@ -567,6 +578,7 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         TextView exerciseName;
         ImageView completionIndicator;
         ImageButton addSetButton;
+        ImageButton graphButton;
 
         // Field Titles and Values
         TextView loadTypeTitle, loadTypeValue;
@@ -593,6 +605,7 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             completionIndicator = itemView.findViewById(R.id.completed_exercise_group_item);
             completionIndicatorContainer = itemView.findViewById(R.id.completed_exercise_group_item_container);
             addSetButton = itemView.findViewById(R.id.add_button_group_item);
+            graphButton = itemView.findViewById(R.id.graph_button_group_item);
 
             // Field Views
             loadTypeTitle = itemView.findViewById(R.id.text_view_exerciseabs_load_type_title);
