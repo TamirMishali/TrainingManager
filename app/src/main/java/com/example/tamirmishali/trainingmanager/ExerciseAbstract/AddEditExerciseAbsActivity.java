@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
 import com.example.tamirmishali.trainingmanager.R;
+import com.example.tamirmishali.trainingmanager.Set.Set;
+import com.example.tamirmishali.trainingmanager.Set.SetViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -62,8 +65,11 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
     private AutoCompleteTextView autoCompleteTextView_SeparateHands;
 
 
+    private NumberPicker numberPickerSets;
+
     private ExerciseAbstractViewModel exerciseAbstractViewModel;
     private ExerciseViewModel exerciseViewModel;
+    private SetViewModel setViewModel;
 
     private List<String> operationValues = new ArrayList<>();
     private List<String> nicknameValues = new ArrayList<>();
@@ -86,8 +92,14 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
         autoCompleteTextView_ThumbsDirection = findViewById(R.id.autoCompleteTextView_ThumbsDirection);
         autoCompleteTextView_SeparateHands = findViewById(R.id.autoCompleteTextView_SeparateHands);
 
+        numberPickerSets = findViewById(R.id.numberPicker_sets);
+        numberPickerSets.setMinValue(1);
+        numberPickerSets.setMaxValue(15);
+        numberPickerSets.setValue(3);
+
         exerciseAbstractViewModel = new ViewModelProvider(this).get(ExerciseAbstractViewModel.class);
         exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
+        setViewModel = new ViewModelProvider(this).get(SetViewModel.class);
 
         // Free text views:
         ArrayAdapter<String> operationAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item, operationValues);
@@ -153,6 +165,14 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             operationAdapter.notifyDataSetChanged();
             nicknameAdapter.notifyDataSetChanged();
             setExerciseabsNameEditText();
+
+            // Load existing set count for this exercise
+            Exercise existingExercise = exerciseViewModel.getExerciseForWorkout(exerciseAbstractID, workoutID);
+            if (existingExercise != null) {
+                List<Set> existingSets = setViewModel.getSetsForExercise(existingExercise.getId());
+                int count = existingSets.size();
+                numberPickerSets.setValue(Math.min(Math.max(count, 1), 15));
+            }
 
 
         } else if (intent.hasExtra(EXTRA_WORKOUT_ID)) {
@@ -371,6 +391,17 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
                 // Insert new exercise to DB:
                 exerciseViewModel.insert(exercise);
                 Log.d(TAG, "Inserted new Exercise to DB");
+
+                // Insert planned sets for this exercise in the abstract workout
+                Exercise insertedExercise = exerciseViewModel.getExerciseForWorkout(
+                        currentExerciseAbstract.getId(), workoutID);
+                if (insertedExercise != null) {
+                    int setCount = numberPickerSets.getValue();
+                    for (int i = 0; i < setCount; i++) {
+                        setViewModel.insert(new Set(insertedExercise.getId(), -1.0, -1));
+                    }
+                    Log.d(TAG, "Inserted " + setCount + " planned sets");
+                }
             }
             else{
                 Toast.makeText(this, "Exercise already exists in this workout", Toast.LENGTH_SHORT).show();
@@ -391,6 +422,21 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
             // UPDATED exercise with new/old EA for that workout:
             exerciseViewModel.update(exercise);
             Log.d(TAG, "Updated Exercise to DB with an updated ExerciseAbstract");
+
+            // Update planned set count for this exercise in the abstract workout
+            int newSetCount = numberPickerSets.getValue();
+            List<Set> currentSets = setViewModel.getSetsForExercise(exercise.getId());
+            int currentSetCount = currentSets.size();
+            if (newSetCount > currentSetCount) {
+                for (int i = 0; i < newSetCount - currentSetCount; i++) {
+                    setViewModel.insert(new Set(exercise.getId(), -1.0, -1));
+                }
+            } else if (newSetCount < currentSetCount) {
+                for (int i = currentSets.size() - 1; i >= newSetCount; i--) {
+                    setViewModel.delete(currentSets.get(i));
+                }
+            }
+            Log.d(TAG, "Updated set count to " + newSetCount);
 
             // now try to delete the old exerciseAbstract that we started editing in the first place.
             // if some other Exercise is linked to it, it will still be deleted, so i must check it before:

@@ -14,7 +14,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -162,6 +161,17 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
+    private void bindField(LinearLayout container, TextView titleView, TextView valueView,
+                           String label, String value) {
+        if (isEmpty(value)) {
+            container.setVisibility(View.GONE);
+        } else {
+            container.setVisibility(View.VISIBLE);
+            titleView.setText(label);
+            valueView.setText(value);
+        }
+    }
+
     private void collapseEmptyDetailsSection(View parentView, int containerId) {
         LinearLayout container = parentView.findViewById(containerId);
         if (container == null) return;
@@ -234,30 +244,20 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         boolean allComplete = areAllSetsFilled(currentSets);
         holder.completionIndicator.setVisibility(allComplete ? View.VISIBLE : View.GONE);
 
-        // Load Type + Separate Sides
-        setFieldVisibility(holder.loadTypeTitle, holder.loadTypeValue, ea.getLoad_type(), "Load Type");
-        setFieldVisibility(holder.separateHandsTitle, holder.separateHandsValue, ea.getSeparate_sides(), "Separate Sides");
+        // Bind fields: each container is hidden entirely when value is empty,
+        // FlexboxLayout reflows remaining visible items automatically.
+        bindField(holder.containerLoadType, holder.loadTypeTitle, holder.loadTypeValue, "Load Type", ea.getLoad_type());
+        bindField(holder.containerSeparateSides, holder.separateHandsTitle, holder.separateHandsValue, "Separate Sides", ea.getSeparate_sides());
+        bindField(holder.containerPosition, holder.positionTitle, holder.positionValue, "Position", ea.getPosition());
+        bindField(holder.containerAngle, holder.angleTitle, holder.angleValue, "Angle", ea.getAngle());
+        bindField(holder.containerGripWidth, holder.gripWidthTitle, holder.gripWidthValue, "Grip Width", ea.getGrip_width());
+        bindField(holder.containerThumbsDirection, holder.thumbsDirectionTitle, holder.thumbsDirectionValue, "Thumbs Direction", ea.getThumbs_direction());
 
-        // Position + Angle
-        setFieldVisibility(holder.positionTitle, holder.positionValue, ea.getPosition(), "Position");
-        setFieldVisibility(holder.angleTitle, holder.angleValue, ea.getAngle(), "Angle");
-
-        // Grip Width + Thumbs Direction
-        setFieldVisibility(holder.gripWidthTitle, holder.gripWidthValue, ea.getGrip_width(), "Grip Width");
-        setFieldVisibility(holder.thumbsDirectionTitle, holder.thumbsDirectionValue, ea.getThumbs_direction(), "Thumbs Direction");
-
-        // Now collapse entire rows if needed
-        collapseEmptyRow(holder.rowLoadTypeAndSides,
-                holder.containerLoadType,
-                holder.containerSeparateSides);
-
-//        collapseEmptyRow(holder.rowPositionAndAngle,
-//                holder.containerPosition,
-//                holder.containerAngle);
-//
-//        collapseEmptyRow(holder.rowGripAndThumbs,
-//                holder.containerGripWidth,
-//                holder.containerThumbsDirection);
+        // Hide the entire details section when all fields are empty
+        boolean hasDetails = !isEmpty(ea.getLoad_type()) || !isEmpty(ea.getSeparate_sides()) ||
+                !isEmpty(ea.getPosition()) || !isEmpty(ea.getAngle()) ||
+                !isEmpty(ea.getGrip_width()) || !isEmpty(ea.getThumbs_direction());
+        holder.extendedEaInfo.setVisibility(hasDetails ? View.VISIBLE : View.GONE);
     }
 
     private void bindSetRow(SetRowViewHolder holder, WorkoutItem item, int position) {
@@ -284,9 +284,19 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         // Current workout data - with focus management
         setupEditText(holder.currentWeight, currentSet.getWeight(), text -> updateSetWeight(currentSet, text), currentSet, holder, position, exercise);
         setupEditText(holder.currentReps, currentSet.getReps(), text -> updateSetReps(currentSet, text), currentSet, holder, position, exercise);
-        // Copy from previous set button
-        holder.copyButton.setOnClickListener(v -> copyFromPrevious(currentSet, prevSet, holder));
-        holder.copyButton.setEnabled(prevSet != null);
+        // Tap prev weight → copy only weight
+        holder.prevWeight.setOnClickListener(prevSet != null ? v -> {
+            currentSet.setWeight(prevSet.getWeight());
+            setViewModel.update(currentSet);
+            holder.currentWeight.setText(formatNumber(prevSet.getWeight()));
+        } : null);
+
+        // Tap prev reps → copy only reps
+        holder.prevReps.setOnClickListener(prevSet != null ? v -> {
+            currentSet.setReps(prevSet.getReps());
+            setViewModel.update(currentSet);
+            holder.currentReps.setText(formatNumber(prevSet.getReps()));
+        } : null);
 
         // Delete set button
         holder.deleteButton.setOnClickListener(v -> deleteSet(currentSet, position, holder));
@@ -402,20 +412,6 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         } catch (NumberFormatException e) {
             // Invalid input, keep previous value
         }
-    }
-
-    private void copyFromPrevious(Set currentSet, Set prevSet, SetRowViewHolder holder) {
-        if (prevSet == null) return;
-
-        currentSet.setWeight(prevSet.getWeight());
-        currentSet.setReps(prevSet.getReps());
-        setViewModel.update(currentSet);
-
-        // Update UI
-        holder.currentWeight.setText(formatNumber(prevSet.getWeight()));
-        holder.currentReps.setText(formatNumber(prevSet.getReps()));
-
-//        Toast.makeText(context, "Copied from previous set", Toast.LENGTH_SHORT).show();
     }
 
     private void addNewSet(Exercise exercise) {
@@ -580,10 +576,7 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         TextView gripWidthTitle, gripWidthValue;
         TextView thumbsDirectionTitle, thumbsDirectionValue;
 
-        // Row Containers
-        LinearLayout rowLoadTypeAndSides;
-        LinearLayout rowPositionAndAngle;
-        LinearLayout rowGripAndThumbs;
+        LinearLayout extendedEaInfo;
 
         // Individual Field Containers
         LinearLayout containerLoadType;
@@ -620,10 +613,7 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             thumbsDirectionTitle = itemView.findViewById(R.id.text_view_exerciseabs_thumbs_direction_title);
             thumbsDirectionValue = itemView.findViewById(R.id.text_view_exerciseabs_thumbs_direction_value);
 
-            // Row Containers
-            rowLoadTypeAndSides = itemView.findViewById(R.id.row_load_type_and_separate_sides);
-            rowPositionAndAngle = itemView.findViewById(R.id.row_position_and_angle);
-            rowGripAndThumbs = itemView.findViewById(R.id.row_grip_and_thumbs);
+            extendedEaInfo = itemView.findViewById(R.id.extended_ea_info);
 
             // Field Containers
             containerLoadType = itemView.findViewById(R.id.container_load_type);
@@ -638,7 +628,7 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public static class SetRowViewHolder extends RecyclerView.ViewHolder {
         TextView setNumber, prevWeight, prevReps;
         TextInputEditText currentWeight, currentReps;
-        ImageButton copyButton, deleteButton;
+        ImageButton deleteButton;
 
         public SetRowViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -646,7 +636,6 @@ public class WorkoutRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             prevReps = itemView.findViewById(R.id.lblListItemEditextPrevReps);
             currentWeight = itemView.findViewById(R.id.lblListItemEditextNowWeight);
             currentReps = itemView.findViewById(R.id.lblListItemEditextNowReps);
-            copyButton = itemView.findViewById(R.id.arrow_forward_button_duplicate_set);
             deleteButton = itemView.findViewById(R.id.delete_button_list_item);
         }
     }

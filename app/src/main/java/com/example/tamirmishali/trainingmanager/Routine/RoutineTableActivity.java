@@ -210,6 +210,9 @@ public class RoutineTableActivity extends AppCompatActivity {
 
     private void buildTableViews(List<Workout> workouts,
                                  List<Map<Integer, List<ExerciseDisplay>>> data) {
+        // Preserve horizontal scroll position across rebuilds
+        final int savedScrollX = scrollViews.isEmpty() ? 0 : scrollViews.get(0).getScrollX();
+
         tableContainer.removeAllViews();
         scrollViews.clear();
 
@@ -250,6 +253,13 @@ public class RoutineTableActivity extends AppCompatActivity {
                     isSyncing = false;
                 }
             });
+        }
+
+        // Restore scroll position after layout pass
+        if (savedScrollX > 0) {
+            for (HorizontalScrollView hsv : scrollViews) {
+                hsv.post(() -> hsv.scrollTo(savedScrollX, 0));
+            }
         }
     }
 
@@ -416,32 +426,78 @@ public class RoutineTableActivity extends AppCompatActivity {
         return cell;
     }
 
-    private TextView makeExerciseChip(ExerciseDisplay ed) {
-        TextView chip = new TextView(this);
-        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
+    private LinearLayout makeExerciseChip(ExerciseDisplay ed) {
+        LinearLayout row = new LinearLayout(this);
+        LinearLayout.LayoutParams rowP = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        p.setMargins(0, 1, 0, 1);
-        chip.setLayoutParams(p);
-        chip.setText(ed.name + " (" + ed.setCount + ")");
-        chip.setTextSize(11);
-        chip.setTextColor(Color.WHITE);
-        chip.setBackgroundColor(Color.parseColor("#607D8B"));
-        chip.setPadding(6, 4, 6, 4);
-        chip.setMaxLines(2);
+        rowP.setMargins(0, 1, 0, 1);
+        row.setLayoutParams(rowP);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setBackgroundColor(Color.parseColor("#607D8B"));
+        row.setPadding(0, 2, 0, 2);
 
-        chip.setOnClickListener(v -> {
+        // Name label — tap to edit exercise
+        TextView nameView = new TextView(this);
+        nameView.setLayoutParams(new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+        nameView.setText(ed.name);
+        nameView.setTextSize(11);
+        nameView.setTextColor(Color.WHITE);
+        nameView.setPadding(6, 4, 2, 4);
+        nameView.setMaxLines(2);
+        nameView.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddEditExerciseAbsActivity.class);
             intent.putExtra(AddEditExerciseAbsActivity.EXTRA_EXERCISEABS_ID, ed.exerciseAbsId);
             intent.putExtra(AddEditExerciseAbsActivity.EXTRA_WORKOUT_ID, ed.workoutId);
             startActivityForResult(intent, EDIT_EXERCISE_REQUEST);
         });
+        row.addView(nameView);
 
-        chip.setOnLongClickListener(v -> {
+        // Minus button
+        TextView minusBtn = new TextView(this);
+        minusBtn.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        minusBtn.setText("−");
+        minusBtn.setTextSize(13);
+        minusBtn.setTextColor(Color.parseColor("#FFCDD2"));
+        minusBtn.setGravity(Gravity.CENTER);
+        minusBtn.setPadding(6, 2, 4, 2);
+        minusBtn.setOnClickListener(v -> {
+            if (ed.setCount > 0) changeSetCount(ed.exerciseId, ed.setCount, ed.setCount - 1);
+        });
+        row.addView(minusBtn);
+
+        // Set count display
+        TextView countView = new TextView(this);
+        countView.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        countView.setText(String.valueOf(ed.setCount));
+        countView.setTextSize(12);
+        countView.setTextColor(Color.WHITE);
+        countView.setTypeface(null, Typeface.BOLD);
+        countView.setGravity(Gravity.CENTER);
+        countView.setPadding(4, 2, 4, 2);
+        row.addView(countView);
+
+        // Plus button
+        TextView plusBtn = new TextView(this);
+        plusBtn.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        plusBtn.setText("+");
+        plusBtn.setTextSize(13);
+        plusBtn.setTextColor(Color.parseColor("#C8E6C9"));
+        plusBtn.setGravity(Gravity.CENTER);
+        plusBtn.setPadding(4, 2, 6, 2);
+        plusBtn.setOnClickListener(v -> changeSetCount(ed.exerciseId, ed.setCount, ed.setCount + 1));
+        row.addView(plusBtn);
+
+        // Long press for exact-count dialog
+        row.setOnLongClickListener(v -> {
             showChangeSetCountDialog(ed);
             return true;
         });
 
-        return chip;
+        return row;
     }
 
     private LinearLayout buildTotalsRow(List<Workout> workouts,

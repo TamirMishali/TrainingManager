@@ -92,108 +92,95 @@
                 android:background="@drawable/gradient_divider"
                 android:layout_marginHorizontal="16dp"/>
 
-            <!-- Row 1: Load Type + Separate Sides -->
-            <LinearLayout
-                android:id="@+id/row_load_type_and_separate_sides"
+            <!-- FlexboxLayout: reflows on GONE items -->
+            <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="4dp"
+                app:flexWrap="wrap"
+                app:alignItems="flex_start"
+                app:alignContent="flex_start">
 
-                <!-- Load Type -->
                 <LinearLayout
                     android:id="@+id/container_load_type"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:orientation="vertical"
-                    android:layout_marginEnd="8dp">
-
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:paddingBottom="8dp"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1">
                     <TextView
                         android:id="@+id/text_view_exerciseabs_load_type_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Load Type"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="@color/dark_red"
                         android:textAllCaps="true"
                         android:letterSpacing="0.1"/>
-
                     <TextView
                         android:id="@+id/text_view_exerciseabs_load_type_value"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Load type1"
                         android:textSize="14sp"
                         android:textColor="@color/text_primary"
                         android:layout_marginTop="2dp"/>
                 </LinearLayout>
 
-                <!-- Separate Sides -->
                 <LinearLayout
                     android:id="@+id/container_separate_hands"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:orientation="vertical"
-                    android:layout_marginStart="8dp">
-
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:paddingBottom="8dp"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1">
                     <TextView
                         android:id="@+id/text_view_exerciseabs_separate_hands_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Separate Sides"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="@color/dark_red"
                         android:textAllCaps="true"
                         android:letterSpacing="0.1"/>
-
                     <TextView
                         android:id="@+id/text_view_exerciseabs_separate_hands_value"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Yes"
                         android:textSize="14sp"
                         android:textColor="@color/text_primary"
                         android:layout_marginTop="2dp"/>
                 </LinearLayout>
-            </LinearLayout>
-
-            <!-- Row 2: Position + Angle -->
-            <LinearLayout
-                android:id="@+id/row_position_and_angle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="12dp">
 
                 <LinearLayout
                     android:id="@+id/container_position"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:orientation="vertical"
-                    android:layout_marginEnd="8dp">
-
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:paddingBottom="8dp"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1">
                     <TextView
                         android:id="@+id/text_view_exerciseabs_position_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Position"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="@color/dark_red"
                         android:textAllCaps="true"
                         android:letterSpacing="0.1"/>
-
                     <TextView
                         android:id="@+id/text_view_exerciseabs_position_value"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Position1"
                         android:textSize="14sp"
                         android:textColor="@color/text_primary"
                         android:layout_marginTop="2dp"/>
@@ -201,65 +188,55 @@
 
                 <LinearLayout
                     android:id="@+id/container_angle"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:orientation="vertical"
-                    android:layout_marginStart="8dp">
-
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:paddingBottom="8dp"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1">
                     <TextView
                         android:id="@+id/text_view_exerciseabs_angle_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Angle"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="@color/dark_red"
                         android:textAllCaps="true"
                         android:letterSpacing="0.1"/>
-
                     <TextView
                         android:id="@+id/text_view_exerciseabs_angle_value"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="angle1"
                         android:textSize="14sp"
                         android:textColor="@color/text_primary"
                         android:layout_marginTop="2dp"/>
                 </LinearLayout>
-            </LinearLayout>
-
-            <!-- Row 3: Grip Width + Thumbs Direction -->
-            <LinearLayout
-                android:id="@+id/row_grip_and_thumbs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/container_grip_width"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:orientation="vertical"
-                    android:layout_marginEnd="8dp">
-
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:paddingBottom="8dp"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1">
                     <TextView
                         android:id="@+id/text_view_exerciseabs_grip_width_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Grip Width"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="@color/dark_red"
                         android:textAllCaps="true"
                         android:letterSpacing="0.1"/>
-
                     <TextView
                         android:id="@+id/text_view_exerciseabs_grip_width_value"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Grip width1"
                         android:textSize="14sp"
                         android:textColor="@color/text_primary"
                         android:layout_marginTop="2dp"/>
@@ -267,33 +244,33 @@
 
                 <LinearLayout
                     android:id="@+id/container_thumbs_direction"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:orientation="vertical"
-                    android:layout_marginStart="8dp">
-
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:paddingBottom="8dp"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1">
                     <TextView
                         android:id="@+id/text_view_exerciseabs_thumbs_direction_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Thumbs Direction"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="@color/dark_red"
                         android:textAllCaps="true"
                         android:letterSpacing="0.1"/>
-
                     <TextView
                         android:id="@+id/text_view_exerciseabs_thumbs_direction_value"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Inwards"
                         android:textSize="14sp"
                         android:textColor="@color/text_primary"
                         android:layout_marginTop="2dp"/>
                 </LinearLayout>
-            </LinearLayout>
+
+            </com.google.android.flexbox.FlexboxLayout>
         </LinearLayout>
 
         <!-- Sets RecyclerView Container -->

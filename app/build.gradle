@@ -3,12 +3,16 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         TamirMishali {
+            storeFile file('C:/Tamir/Projects/TamirMishali.jks')
+            storePassword ''
+            keyAlias ''
+            keyPassword ''
         }
     }
     compileSdkVersion 33
     defaultConfig {
-        applicationId "com.example.tamirmishali.trainingmanager.test"
-        minSdk 27//don't forget to change this back on master branch
+        applicationId "com.example.tamirmishali.trainingmanager"
+        minSdk 27
         targetSdkVersion 33
         versionCode 2
         versionName "2.0"
@@ -25,14 +29,16 @@ android {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
-        signingConfig signingConfigs.debug
+        signingConfig signingConfigs.TamirMishali
     }
     buildTypes {
+        debug {
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable false
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.TamirMishali
         }
     }
     externalNativeBuild {

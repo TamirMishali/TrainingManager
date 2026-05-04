@@ -22,11 +22,11 @@
         android:gravity="center_vertical"
         android:background="@drawable/exercise_header_background">
 
-        <!-- Delete Button with Modern Styling -->
+        <!-- Delete Button -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="8dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="0dp"
             app:cardBackgroundColor="@android:color/transparent">
@@ -48,17 +48,19 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginEnd="2dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PREV WEIGHT"
-                android:textSize="10sp"
+                android:text="PREV W"
+                android:textSize="9sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_secondary"
                 android:textAllCaps="true"
-                android:letterSpacing="0.1"/>
+                android:maxLines="1"
+                android:letterSpacing="0.05"/>
 
             <TextView
                 android:id="@+id/lblListItemEditextPrevWeight"
@@ -67,11 +69,16 @@
                 android:text="0.0"
                 android:gravity="center"
                 android:textAlignment="center"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_primary"
                 android:layout_marginTop="4dp"
                 android:padding="8dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
                 android:background="@drawable/previous_value_background"/>
 
         </LinearLayout>
@@ -83,17 +90,18 @@
             android:layout_weight="1"
             android:orientation="vertical"
             android:gravity="center"
-            android:layout_marginHorizontal="4dp">
+            android:layout_marginStart="2dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PREV REPS"
-                android:textSize="10sp"
+                android:text="PREV R"
+                android:textSize="9sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_secondary"
                 android:textAllCaps="true"
-                android:letterSpacing="0.1"/>
+                android:maxLines="1"
+                android:letterSpacing="0.05"/>
 
             <TextView
                 android:id="@+id/lblListItemEditextPrevReps"
@@ -102,26 +110,28 @@
                 android:text="0"
                 android:gravity="center"
                 android:textAlignment="center"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_primary"
                 android:layout_marginTop="4dp"
                 android:padding="8dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
                 android:background="@drawable/previous_value_background"/>
 
         </LinearLayout>
 
-        <!-- Duplicate Arrow Button -->
-        <ImageButton
-            android:id="@+id/arrow_forward_button_duplicate_set"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_workout_now_duplicate_set"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="5dp"
-            android:layout_marginHorizontal="8dp"
-            android:contentDescription="Copy previous values"
-            app:tint="@color/red"/>
+        <!-- Separator -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginVertical="2dp"
+            android:background="@color/text_secondary"
+            android:alpha="0.35"/>
 
         <!-- Current Weight Column -->
         <LinearLayout
@@ -130,17 +140,18 @@
             android:layout_weight="1"
             android:orientation="vertical"
             android:gravity="center"
-            android:layout_marginHorizontal="4dp">
+            android:layout_marginEnd="2dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="WEIGHT"
-                android:textSize="10sp"
+                android:textSize="9sp"
                 android:textStyle="bold"
                 android:textColor="@color/dark_red"
                 android:textAllCaps="true"
-                android:letterSpacing="0.1"/>
+                android:maxLines="1"
+                android:letterSpacing="0.05"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -155,7 +166,7 @@
                 app:boxStrokeWidth="0dp"
                 app:boxStrokeWidthFocused="2dp"
                 app:boxStrokeColor="@color/accent_color"
-                app:hintTextColor="@color/hint_color">
+                app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/lblListItemEditextNowWeight"
@@ -163,8 +174,10 @@
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
                     android:textAlignment="center"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
+                    android:paddingHorizontal="4dp"
+                    android:paddingVertical="10dp"
                     android:textColor="@color/text_primary"
                     android:textColorHint="@color/hint_color"/>
 
@@ -178,17 +191,19 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginStart="2dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="REPS"
-                android:textSize="10sp"
+                android:textSize="9sp"
                 android:textStyle="bold"
                 android:textColor="@color/dark_red"
                 android:textAllCaps="true"
-                android:letterSpacing="0.1"/>
+                android:maxLines="1"
+                android:letterSpacing="0.05"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -203,7 +218,7 @@
                 app:boxStrokeWidth="0dp"
                 app:boxStrokeWidthFocused="2dp"
                 app:boxStrokeColor="@color/accent_color"
-                app:hintTextColor="@color/hint_color">
+                app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/lblListItemEditextNowReps"
@@ -212,8 +227,10 @@
                     android:inputType="number"
                     android:textAlignment="center"
                     android:textColor="@color/text_primary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
+                    android:paddingHorizontal="4dp"
+                    android:paddingVertical="10dp"
                     android:textColorHint="@color/hint_color"/>
 
             </com.google.android.material.textfield.TextInputLayout>
