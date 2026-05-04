@@ -48,3 +48,15 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# APK binaries
+*.apk
+
+# SQLite databases
+*.db
+
+# Claude Code
+.claude/
+
+# Documentation
+documentation/
