@@ -26,8 +26,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="4dp"
         app:singleSelection="true"
         app:selectionRequired="true">
 
@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:text="This Routine"
             android:textSize="13sp"
+            android:textColor="@color/accent_color"
             app:strokeColor="@color/accent_color"
             app:strokeWidth="1dp"/>
 
@@ -48,12 +49,47 @@
             android:layout_height="wrap_content"
             android:text="All Time"
             android:textSize="13sp"
+            android:textColor="@color/accent_color"
             app:strokeColor="@color/accent_color"
             app:strokeWidth="1dp"/>
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
-    <!-- Chart -->
+    <!-- Graph type toggle -->
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/toggle_graph_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"
+        app:singleSelection="true"
+        app:selectionRequired="true">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_overload"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Overload"
+            android:textSize="13sp"
+            android:textColor="@color/colorPrimary"
+            app:strokeColor="@color/colorPrimary"
+            app:strokeWidth="1dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_reps_weight"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reps &amp; Weight"
+            android:textSize="13sp"
+            android:textColor="@color/colorPrimary"
+            app:strokeColor="@color/colorPrimary"
+            app:strokeWidth="1dp"/>
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <!-- Overload chart (CombinedChart) -->
     <com.github.mikephil.charting.charts.CombinedChart
         android:id="@+id/combined_chart"
         android:layout_width="match_parent"
@@ -61,6 +97,54 @@
         android:layout_weight="1"
         android:layout_marginHorizontal="8dp"
         android:layout_marginBottom="8dp"/>
+
+    <!-- Reps & Weight stacked charts (hidden by default) -->
+    <LinearLayout
+        android:id="@+id/stacked_charts_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:text="AVG WEIGHT (KG)"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:textColor="@color/text_secondary"/>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/weight_chart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:text="AVG REPS"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:textColor="@color/text_secondary"/>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/reps_chart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="8dp"/>
+
+    </LinearLayout>
 
     <!-- Stats bar -->
     <LinearLayout
@@ -103,6 +187,7 @@
             android:orientation="vertical"
             android:gravity="center">
             <TextView
+                android:id="@+id/stat_best_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="BEST SESSION"
@@ -127,6 +212,7 @@
             android:orientation="vertical"
             android:gravity="center">
             <TextView
+                android:id="@+id/stat_avg_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="AVG SET"
