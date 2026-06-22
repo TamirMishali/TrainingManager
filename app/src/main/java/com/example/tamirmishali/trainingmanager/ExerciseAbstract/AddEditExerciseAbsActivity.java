@@ -515,7 +515,7 @@ public class AddEditExerciseAbsActivity extends AppCompatActivity {
                         autoCompleteTextView_Operation.getText().toString();
             }
         }
-        textInputEditText_exName.setText(exerciseAbstractNameTitle.strip());
+        textInputEditText_exName.setText(exerciseAbstractNameTitle.trim());
     }
 
 

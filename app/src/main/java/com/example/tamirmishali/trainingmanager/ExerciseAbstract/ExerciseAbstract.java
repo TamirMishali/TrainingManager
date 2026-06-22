@@ -312,7 +312,7 @@ public class ExerciseAbstract{
         else{
             name = this.nickname + " " + this.operation;
         }
-        return name.strip();
+        return name.trim();
     }
 
     //https://beginnersbook.com/2013/12/java-arraylist-of-object-sort-example-comparable-and-comparator/
