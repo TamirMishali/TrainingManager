@@ -60,3 +60,9 @@ google-services.json
 
 # Documentation
 documentation/
+
+# Build output metadata
+app/release/output-metadata.json
+
+# Scratch / pasted content
+pastedContentForClaude/
