@@ -39,6 +39,8 @@
         <activity android:name=".ExerciseGraph.ExerciseGraphActivity"
             android:parentActivityName=".WorkoutNow"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".Dashboard.DashboardActivity"
+            android:parentActivityName=".MainActivity"/>
         <activity android:name=".History.History" />
         <activity android:name=".History.ViewPracticalWorkouts" />
 

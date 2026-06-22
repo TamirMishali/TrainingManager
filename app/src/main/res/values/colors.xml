@@ -42,4 +42,9 @@
     <color name="white">#FFFFFF</color>
     <color name="green">#00FF00</color>
 
+    <!-- Chart colors (overridden in values-night/colors.xml for dark mode) -->
+    <color name="chart_surface">#FFFFFF</color>
+    <color name="chart_axis_text">#757575</color>
+    <color name="chart_value_text">#000000</color>
+
 </resources>

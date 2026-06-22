@@ -32,6 +32,9 @@ public interface RoutineDao{
     @Query("SELECT * from routine_table Order by date DESC")
     LiveData<List<Routine>> getAllRoutines();
 
+    @Query("SELECT * from routine_table Order by date DESC")
+    List<Routine> getAllRoutinesList();
+
     @Query("select * from routine_table where id = :id_routine")
     Routine getRoutine(int id_routine);
 

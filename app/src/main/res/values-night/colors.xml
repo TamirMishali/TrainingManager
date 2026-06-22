@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Dark-mode overrides for the dashboard / graph charts.
+         Only chart colors are flipped here; the rest of the app uses a
+         light-designed UI (fixed light drawables and hardcoded colors),
+         so a full app-wide dark theme is intentionally out of scope. -->
+    <color name="chart_surface">#1E1E1E</color>
+    <color name="chart_axis_text">#B0B0B0</color>
+    <color name="chart_value_text">#FFFFFF</color>
+
+</resources>

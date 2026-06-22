@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tamirmishali.trainingmanager.Dashboard.DashboardActivity;
 import com.example.tamirmishali.trainingmanager.Exercise.Exercise;
 import com.example.tamirmishali.trainingmanager.Exercise.ExerciseViewModel;
 import com.example.tamirmishali.trainingmanager.History.History;
@@ -140,6 +141,11 @@ public class MainActivity extends AppCompatActivity {
         TextView editWorkoutsTextView = findViewById(R.id.linearLayout_edit_workouts_tv);
         editWorkoutsTextView.setPaintFlags(historyTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
+        // Dashboard
+        LinearLayout button_Dashboard = findViewById(R.id.linearLayout_dashboard);
+        TextView dashboardTextView = findViewById(R.id.linearLayout_dashboard_tv);
+        dashboardTextView.setPaintFlags(dashboardTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
         // Update textview to "start new workout" or "continue prev workout":
         update_text_workout_now_layout();
 
@@ -190,6 +196,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), ShowRoutines.class);
+                startActivity(intent);
+            }
+        });
+
+        button_Dashboard.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), DashboardActivity.class);
                 startActivity(intent);
             }
         });

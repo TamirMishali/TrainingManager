@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Routine"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+
+        <Spinner
+            android:id="@+id/dashboard_routine_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+
+            <Button
+                android:id="@+id/dashboard_start_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:text="Start"/>
+
+            <Button
+                android:id="@+id/dashboard_end_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:text="End"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/dashboard_days_between"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="6dp"
+            android:text="0 days"/>
+
+        <TextView
+            android:id="@+id/dashboard_summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:padding="6dp"
+            android:text=""/>
+
+        <TextView
+            android:id="@+id/dashboard_total_volume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:padding="6dp"
+            android:layout_marginBottom="8dp"
+            android:text=""/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Workouts per month"
+            android:textStyle="bold"/>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/dashboard_chart_workouts_month"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sets per muscle group"
+            android:textStyle="bold"/>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/dashboard_chart_muscle"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total volume per month (kg)"
+            android:textStyle="bold"/>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/dashboard_chart_volume_month"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start-time distribution (by hour)"
+            android:textStyle="bold"/>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/dashboard_chart_hour"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:layout_marginBottom="16dp"/>
+
+    </LinearLayout>
+
+</ScrollView>
