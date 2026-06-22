@@ -71,6 +71,9 @@ public class DashboardActivity extends AppCompatActivity {
     private int selectedRoutineId = -1;
     private long startMillis;
     private long endMillis;
+    // Selectable date bounds for the current routine: start date → last workout date.
+    private long routineMinMillis;
+    private long routineMaxMillis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,13 +145,33 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void onRoutineSelected(Routine routine) {
         selectedRoutineId = routine.getUid();
-        // Defaults: start = routine start date, end = now.
-        long routineStart = routine.getRoutineDate() != null
+        final int routineId = routine.getUid();
+        final long routineStart = routine.getRoutineDate() != null
                 ? routine.getRoutineDate().getTime() : System.currentTimeMillis();
-        startMillis = startOfDay(routineStart);
-        endMillis = endOfDay(System.currentTimeMillis());
-        refreshDateButtons();
-        recompute();
+        // The last workout date needs a DB lookup, so resolve bounds on a background thread.
+        new Thread(() -> {
+            long lastWorkout = routineStart;
+            List<Workout> practical = db.workoutDao().getPracticalWorkoutsForRoutine(routineId);
+            if (practical != null) {
+                for (Workout w : practical) {
+                    if (w.getDate() != null && w.getDate().getTime() > lastWorkout) {
+                        lastWorkout = w.getDate().getTime();
+                    }
+                }
+            }
+            final long finalLast = lastWorkout;
+            runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) return;
+                // Bounds: routine start date → last workout date.
+                routineMinMillis = startOfDay(routineStart);
+                routineMaxMillis = endOfDay(finalLast);
+                // Defaults span the whole bounded range.
+                startMillis = routineMinMillis;
+                endMillis = routineMaxMillis;
+                refreshDateButtons();
+                recompute();
+            });
+        }).start();
     }
 
     private void pickDate(boolean isStart) {
@@ -165,6 +188,9 @@ public class DashboardActivity extends AppCompatActivity {
             refreshDateButtons();
             recompute();
         }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        // Restrict selection to the routine's start date → last workout date.
+        dialog.getDatePicker().setMinDate(routineMinMillis);
+        dialog.getDatePicker().setMaxDate(routineMaxMillis);
         dialog.show();
     }
 
@@ -201,8 +227,6 @@ public class DashboardActivity extends AppCompatActivity {
             if (t < start || t > end) continue;
 
             s.totalWorkouts++;
-            if (t < s.firstWorkoutMillis) s.firstWorkoutMillis = t;
-            if (t > s.lastWorkoutMillis) s.lastWorkoutMillis = t;
 
             String monthKey = new SimpleDateFormat("yyyy-MM", Locale.US).format(new Date(t));
             s.workoutsPerMonth.merge(monthKey, 1, Integer::sum);
@@ -252,18 +276,9 @@ public class DashboardActivity extends AppCompatActivity {
     // ---- Rendering ----
 
     private void render(Stats s) {
-        // Average per week is measured over the ACTIVE window (first → last workout
-        // in range), not the whole selected span, so empty stretches before you
-        // started or after you moved on don't dilute it.
-        double avgPerWeek = 0;
-        if (s.totalWorkouts > 0) {
-            long spanMs = s.lastWorkoutMillis - s.firstWorkoutMillis;
-            // Inclusive day count; at least 1 day so a single week of training
-            // doesn't blow up to a huge per-week figure.
-            double activeDays = Math.max(spanMs / (double) DAY_MS + 1, 1.0);
-            double activeWeeks = activeDays / 7.0;
-            avgPerWeek = s.totalWorkouts / activeWeeks;
-        }
+        // Avg/week is based on the selected range: (end date − start date) in days.
+        double days = Math.max((endMillis - startMillis) / (double) DAY_MS, 1.0);
+        double avgPerWeek = s.totalWorkouts / (days / 7.0);
         summaryView.setText(String.format(Locale.US,
                 "Workouts: %d     •     Avg/week: %.1f", s.totalWorkouts, avgPerWeek));
         totalVolumeView.setText(String.format(Locale.US,
@@ -418,8 +433,6 @@ public class DashboardActivity extends AppCompatActivity {
     private static class Stats {
         int totalWorkouts = 0;
         int timedWorkouts = 0;
-        long firstWorkoutMillis = Long.MAX_VALUE;
-        long lastWorkoutMillis = Long.MIN_VALUE;
         double totalVolume = 0;
         final TreeMap<String, Integer> workoutsPerMonth = new TreeMap<>();
         final TreeMap<String, Double> volumePerMonth = new TreeMap<>();
