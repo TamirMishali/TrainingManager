@@ -201,6 +201,8 @@ public class DashboardActivity extends AppCompatActivity {
             if (t < start || t > end) continue;
 
             s.totalWorkouts++;
+            if (t < s.firstWorkoutMillis) s.firstWorkoutMillis = t;
+            if (t > s.lastWorkoutMillis) s.lastWorkoutMillis = t;
 
             String monthKey = new SimpleDateFormat("yyyy-MM", Locale.US).format(new Date(t));
             s.workoutsPerMonth.merge(monthKey, 1, Integer::sum);
@@ -250,9 +252,18 @@ public class DashboardActivity extends AppCompatActivity {
     // ---- Rendering ----
 
     private void render(Stats s) {
-        long days = Math.round((endMillis - startMillis) / (double) DAY_MS);
-        double weeks = Math.max(days / 7.0, 1.0 / 7.0);
-        double avgPerWeek = s.totalWorkouts / weeks;
+        // Average per week is measured over the ACTIVE window (first → last workout
+        // in range), not the whole selected span, so empty stretches before you
+        // started or after you moved on don't dilute it.
+        double avgPerWeek = 0;
+        if (s.totalWorkouts > 0) {
+            long spanMs = s.lastWorkoutMillis - s.firstWorkoutMillis;
+            // Inclusive day count; at least 1 day so a single week of training
+            // doesn't blow up to a huge per-week figure.
+            double activeDays = Math.max(spanMs / (double) DAY_MS + 1, 1.0);
+            double activeWeeks = activeDays / 7.0;
+            avgPerWeek = s.totalWorkouts / activeWeeks;
+        }
         summaryView.setText(String.format(Locale.US,
                 "Workouts: %d     •     Avg/week: %.1f", s.totalWorkouts, avgPerWeek));
         totalVolumeView.setText(String.format(Locale.US,
@@ -407,6 +418,8 @@ public class DashboardActivity extends AppCompatActivity {
     private static class Stats {
         int totalWorkouts = 0;
         int timedWorkouts = 0;
+        long firstWorkoutMillis = Long.MAX_VALUE;
+        long lastWorkoutMillis = Long.MIN_VALUE;
         double totalVolume = 0;
         final TreeMap<String, Integer> workoutsPerMonth = new TreeMap<>();
         final TreeMap<String, Double> volumePerMonth = new TreeMap<>();
